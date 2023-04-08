@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
@@ -12,10 +15,6 @@
         "laravel/tinker": "^2.7"
     },
     "require-dev": {
-<<<<<<< HEAD
-        "bennett-treptow/laravel-migration-generator": "^4.3",
-=======
->>>>>>> 753db924549979263ea57c8a9c0029c67dd59edc
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.0.1",

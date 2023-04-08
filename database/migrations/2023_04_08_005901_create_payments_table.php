@@ -13,9 +13,9 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('payments', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->integer('total_pay');
-            $table->foreignId('transaction_id')->constrained('transactions');
+            $table->foreignId('transaction_id')->references('invoice_code')->on('transactions');
             $table->timestamps();
         });
     }
@@ -30,3 +30,4 @@ return new class extends Migration {
         Schema::dropIfExists('payments');
     }
 };
+

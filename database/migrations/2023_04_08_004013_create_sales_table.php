@@ -14,9 +14,12 @@ class CreateSalesTable extends Migration
     public function up()
     {
         Schema::create('sales', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('sales_name');
+            $table->string('username');
             $table->char('phone_number', 14);
+            $table->string('password');
+            $table->string('city_​​branch');
             $table->timestamps();
         });
     }

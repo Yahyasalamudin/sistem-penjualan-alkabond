@@ -14,8 +14,8 @@ class CreateTransactionsTable extends Migration
     public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->foreignId('product_id')->constrained('products');
+            $table->id('invoice_code');
+            $table->foreignId('product_id')->references('product_code')->on('products');
             $table->integer('quantity');
             $table->integer('total');
             $table->foreignId('store_id')->constrained('stores');
@@ -35,3 +35,4 @@ class CreateTransactionsTable extends Migration
         Schema::dropIfExists('transactions');
     }
 }
+
