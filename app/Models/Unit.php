@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Unit extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+    protected $fillable = ['unit_name', 'amount'];
 }

@@ -15,7 +15,7 @@ return new class extends Migration {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->integer('total_pay');
-            $table->foreignId('transaction_id')->references('invoice_code')->on('transactions');
+            $table->foreignId('transaction_id')->constrained('transactions');
             $table->timestamps();
         });
     }

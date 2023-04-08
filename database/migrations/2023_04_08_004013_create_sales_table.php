@@ -19,7 +19,7 @@ class CreateSalesTable extends Migration
             $table->string('username');
             $table->char('phone_number', 14);
             $table->string('password');
-            $table->string('city_​​branch');
+            $table->string('city_branch');
             $table->timestamps();
         });
     }
