@@ -19,8 +19,9 @@ return new class extends Migration
             $table->string('username');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->char('phone_number', 14);
             $table->string('password');
-            $table->string('city_​branch');
+            $table->string('city_branch')->nullable();
             $table->enum('role', ['owner', 'admin']);
             $table->rememberToken();
             $table->timestamps();

@@ -17,9 +17,10 @@ class CreateSalesTable extends Migration
             $table->id();
             $table->string('sales_name');
             $table->string('username');
+            $table->string('email')->unique();
             $table->char('phone_number', 14);
             $table->string('password');
-            $table->string('city_branch');
+            $table->string('city_branch')->nullable();
             $table->timestamps();
         });
     }

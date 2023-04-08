@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class Sales extends Model
+class Sales extends User
 {
-    use HasFactory;
+    use HasApiTokens, HasFactory, Notifiable;
 
-    protected $fillable = ['sales_name', 'username', 'phone_number', 'password', 'city_branch'];
+    protected $fillable = ['sales_name', 'username','email' ,'phone_number', 'password', 'city_branch'];
 }
