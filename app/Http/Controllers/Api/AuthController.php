@@ -14,16 +14,16 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        if($request->role != 'sales') {
-            $validator = Validator::make($request->all(),[
-                'name' => 'required|string|max:255',
-                'username' => 'required|string|min:5|max:255|unique:users|unique:sales',
-                'email' => 'required|string|email|max:255|unique:users|unique:sales',
-                'phone_number' => 'required|numeric|digits_between:10,14',
-                'password' => 'required|string|min:8',
-                'role' => 'required'
-            ]);
+        $validator = Validator::make($request->all(),[
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|min:5|max:255|unique:users|unique:sales',
+            'email' => 'required|string|email|max:255|unique:users|unique:sales',
+            'phone_number' => 'required|numeric|digits_between:10,14',
+            'password' => 'required|string|min:8',
+            'role' => 'required'
+        ]);
 
+        if($request->role != 'sales') {
             if($validator->fails()){
                 return response()->json([
                     'data' => [],
@@ -41,14 +41,6 @@ class AuthController extends Controller
                 'role' => $request->role
              ]);
         } else {
-            $validator = Validator::make($request->all(),[
-                'name' => 'required|string|max:255',
-                'username' => 'required|string|min:5|max:255|unique:users|unique:sales',
-                'email' => 'required|string|email|max:255|unique:users|unique:sales',
-                'phone_number' => 'required|numeric|digits_between:10,14',
-                'password' => 'required|string|min:8',
-            ]);
-
             if($validator->fails()){
                 return response()->json([
                     'data' => [],
