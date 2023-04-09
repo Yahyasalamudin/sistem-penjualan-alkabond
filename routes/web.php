@@ -19,6 +19,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', [AuthController::class, 'dashboard']);
-Route::get('/login', [AuthController::class, 'login']);
+Route::get('/register', function () {
+    return view('register');
+});
+
+Route::post('/register', [AuthController::class, 'register'])->name('actionRegister');
+Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'actionLogin'])->name('actionLogin');
 Route::get('/city', [CityController::class, 'index']);
