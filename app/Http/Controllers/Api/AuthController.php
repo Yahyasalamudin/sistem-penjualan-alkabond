@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Auth;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Sales;
@@ -14,8 +14,8 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        if($request->role != 'sales') {
-            $validator = Validator::make($request->all(),[
+        if ($request->role != 'sales') {
+            $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
                 'username' => 'required|string|min:5|max:255|unique:users|unique:sales',
                 'email' => 'required|string|email|max:255|unique:users|unique:sales',
@@ -24,7 +24,7 @@ class AuthController extends Controller
                 'role' => 'required'
             ]);
 
-            if($validator->fails()){
+            if ($validator->fails()) {
                 return response()->json([
                     'data' => [],
                     'message' => $validator->errors(),
@@ -39,9 +39,9 @@ class AuthController extends Controller
                 'phone_number' => $request->phone_number,
                 'password' => Hash::make($request->password),
                 'role' => $request->role
-             ]);
+            ]);
         } else {
-            $validator = Validator::make($request->all(),[
+            $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
                 'username' => 'required|string|min:5|max:255|unique:users|unique:sales',
                 'email' => 'required|string|email|max:255|unique:users|unique:sales',
@@ -49,7 +49,7 @@ class AuthController extends Controller
                 'password' => 'required|string|min:8',
             ]);
 
-            if($validator->fails()){
+            if ($validator->fails()) {
                 return response()->json([
                     'data' => [],
                     'message' => $validator->errors(),
@@ -63,33 +63,31 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'phone_number' => $request->phone_number,
                 'password' => Hash::make($request->password),
-             ]);
+            ]);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()
-            ->json(['data' => $user,'access_token' => $token, 'token_type' => 'Bearer', ]);
+            ->json(['data' => $user, 'access_token' => $token, 'token_type' => 'Bearer',]);
     }
 
     public function login(Request $request)
     {
-        if (Auth::attempt($request->only('email', 'password')))
-        {
+        if (Auth::attempt($request->only('email', 'password'))) {
             $user = User::where('email', $request['email'])->firstOrFail();
 
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()
-                ->json(['message' => 'Hi '.$user->name.', welcome to '.$user->role.' home','access_token' => $token, 'token_type' => 'Bearer', ]);
-        } else if (Auth::guard('sales')->attempt($request->only('email', 'password')))
-        {
+                ->json(['message' => 'Hi ' . $user->name . ', welcome to ' . $user->role . ' home', 'access_token' => $token, 'token_type' => 'Bearer',]);
+        } else if (Auth::guard('sales')->attempt($request->only('email', 'password'))) {
             $user = Sales::where('email', $request['email'])->firstOrFail();
 
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()
-                ->json(['message' => 'Hi '.$user->sales_name.', welcome to Sales home','access_token' => $token, 'token_type' => 'Bearer', ]);
+                ->json(['message' => 'Hi ' . $user->sales_name . ', welcome to Sales home', 'access_token' => $token, 'token_type' => 'Bearer',]);
         } else {
             dd('gagal');
         }
