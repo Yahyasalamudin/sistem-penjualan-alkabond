@@ -63,7 +63,7 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'phone_number' => $request->phone_number,
                 'password' => Hash::make($request->password),
-            ]);
+             ]);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -90,9 +90,9 @@ class AuthController extends Controller
 
             return response()
                 ->json(['message' => 'Hi '.$user->sales_name.', welcome to Sales home','access_token' => $token, 'token_type' => 'Bearer', ]);
+        } else {
+            dd('gagal');
         }
-
-        return response()->json(['message' => 'Unauthorized'], 401);
     }
 
     // method for user logout and delete token

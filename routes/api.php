@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CityController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,7 +36,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
     Route::resource('/city', CityController::class);
 
-    Route::get('/profile', function(Request $request) {
+    Route::get('/profile', function (Request $request) {
         return auth()->user();
     });
 
