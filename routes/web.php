@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,15 +16,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('/register', function () {
-    return view('register');
-});
+// Route::get('/register', function () {
+//     return view('register');
+// });
 
-Route::post('/register', [AuthController::class, 'register'])->name('actionRegister');
+// Route::post('/process-register', [AuthController::class, 'processRegister'])->name('actionRegister');
+
 Route::get('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/login', [AuthController::class, 'actionLogin'])->name('actionLogin');
-Route::get('/city', [CityController::class, 'index']);
+
+Route::post('/process-login', [AuthController::class, 'actionLogin'])->name('actionLogin');
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('actionlogout');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Sales;
 use App\Models\User;
-use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -17,7 +16,7 @@ class AuthController extends Controller
             'username' => 'required|string|min:5|max:255|unique:users|unique:sales',
             'email' => 'required|string|email|max:255|unique:users|unique:sales',
             'phone_number' => 'required|numeric|digits_between:10,14',
-            'password' => 'required|string|min:8'
+            'password' => 'required|string|min:6'
         ]);
 
         if($request->role == '') {
@@ -33,12 +32,13 @@ class AuthController extends Controller
                 'role' => 'required'
             ]);
 
-            Sales::create([
-                'sales_name' => $request->name,
+            User::create([
+                'name' => $request->name,
                 'username' => $request->username,
                 'email' => $request->email,
                 'phone_number' => $request->phone_number,
                 'password' => Hash::make($request->password),
+                'role' => $request->role
             ]);
         }
 
@@ -47,35 +47,37 @@ class AuthController extends Controller
 
     public function login() {
         if(Auth::check()) {
-            return redirect('dasboard');
+            return redirect('dashboard');
         } else {
+            // dd('test');
             return view('auth.login');
         }
     }
 
-    public function actionLogin(Request $request) {
+    public function actionLogin(Request $request)
+    {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required',
+            'password' => 'required|min:6'
         ]);
 
-        $data = [
-            'email' => $request->input('email'),
-            'password' => $request->input('password')
-        ];
-
-        if (Auth::attempt($data))
+        if (Auth::attempt($request->only('email', 'password')))
         {
             if(auth()->user()->role == 'owner') {
-                return ('owner');
+                return view('owner.index')->with('success', 'Selamat Datang ');
             } else {
-                return ('admin');
+                return view('admin.index')->with('success', 'Selamat Datang ');
             }
-        } else if (Auth::guard('sales')->attempt($data))
-        {
-            return ('sales');
-        } else {
-            return redirect()->back()->with('error', 'email atau password salah');
+        } else if (Auth::guard('sales')->attempt($request->only('email', 'password'))) {
+            return view('sales')->with('success', 'Selamat Datang ');
         }
+
+        return redirect()->back()->with('error', 'Email atau Password Salah');
+
+    }
+
+    public function logout() {
+        Auth::logout();
+        return redirect('/login');
     }
 }
