@@ -25,7 +25,7 @@
                                             <input type="email"
                                                 class="form-control form-control-user @error('email') is-invalid @enderror"
                                                 name="email" id="email" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address...">
+                                                placeholder="Enter Email Address..." value="{{ old('email') }}">
 
                                             @error('email')
                                                 <span class="invalid-feedback" role="alert">

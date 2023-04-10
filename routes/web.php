@@ -3,6 +3,8 @@
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TypeController;
+use App\Http\Controllers\UnitController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,4 +32,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('/cities', CityController::class);
+    Route::resource('/units', UnitController::class);
+    Route::resource('/type', TypeController::class);
 });

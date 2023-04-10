@@ -16,7 +16,9 @@ class CityController extends Controller
     {
         $city = City::get();
 
-        return view('cities.index', compact('city'));
+        $title = 'Data Kota';
+
+        return view('cities.index', compact('city', 'title'));
     }
 
     /**
@@ -59,14 +61,18 @@ class CityController extends Controller
     public function update(Request $request, City $city)
     {
         $request->validate([
-            'city' => 'required|string'
+            'city' => 'required|regex:/^[a-zA-Z\s]*$/|unique:cities'
+        ], [
+            'city.regex' => 'Nama Kota tidak boleh berupa angka'
         ]);
 
         $city->update([
             'city' => $request->city
+        ], [
+            'city' => 'Nama Kota tidak boleh berupa angka'
         ]);
 
-        return redirect('cities.index')->with('success', 'Kota berhasil diubah');
+        return redirect('cities')->with('success', 'Kota berhasil diubah');
     }
 
     /**

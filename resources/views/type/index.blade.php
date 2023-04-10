@@ -4,10 +4,10 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">Table Kota</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Table Jenis Produk</h6>
 
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                Tambah Kota
+                Tambah Jenis Produk
             </button>
         </div>
 
@@ -20,12 +20,12 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('cities.store') }}" method="post">
+                    <form action="{{ route('type.store') }}" method="post">
                         @csrf
                         <div class="modal-body">
-                            <label for="city">Nama Kota</label>
-                            <input class="form-control" type="text" name="city" id="city"
-                                placeholder="Masukkan Nama Kota">
+                            <label for="city">Nama Jenis Produk</label>
+                            <input class="form-control" type="text" name="type" id="type"
+                                placeholder="Masukkan Jenis Produk">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -46,7 +46,7 @@
                     </div>
                 @endif
 
-                @error('city')
+                @error('type')
                     <div class="d-flex justify-content-center">
                         <div class="alert alert-danger text-center col-sm-4 text-dark">
                             {{ $message }}
@@ -56,23 +56,23 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Kota</th>
+                            <th>Jenis Produk</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($city as $c)
+                        @foreach ($type as $t)
                             <tr>
-                                <td class="col-lg-7">{{ $c->city }}</td>
+                                <td class="col-lg-7">{{ $t->type }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('cities.edit', $c->id) }}" class="btn btn-warning btn-icon-split">
+                                        <a href="{{ route('type.edit', $t->id) }}" class="btn btn-warning btn-icon-split">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-pencil-alt"></i>
                                             </span>
                                             <span class="text">Edit Kota</span>
                                         </a>
-                                        <form action="{{ route('cities.destroy', $c->id) }}" method="post">
+                                        <form action="{{ route('type.destroy', $t->id) }}" method="post">
                                             @csrf
                                             @method('delete')
                                             <button type="submit" class="btn btn-danger btn-icon-split ml-5">
