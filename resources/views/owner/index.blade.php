@@ -16,7 +16,7 @@
         </div>
     @endif
 
-    <form action="{{ route('actionlogout') }}" method="post">
+    <form action="{{ route('actionlogout') }}">
         @csrf
         <button type="submit"></button>
     </form>

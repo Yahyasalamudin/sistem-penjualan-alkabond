@@ -13,7 +13,7 @@
                                         <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                     </div>
 
-                                    @if (Session::get('error'))
+                                    @if (session('error'))
                                         <div class="alert alert-danger" style="color: white">
                                             {{ session('error') }}
                                         </div>
@@ -21,6 +21,7 @@
 
                                     <form class="user" action="{{ Route('actionLogin') }}" method="post">
                                         @csrf
+
                                         <div class="form-group">
                                             <input type="email"
                                                 class="form-control form-control-user @error('email') is-invalid @enderror"
