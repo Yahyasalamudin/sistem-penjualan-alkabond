@@ -1,59 +1,72 @@
 @extends('layouts.master')
 
 @section('app')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-12 col-md-9">
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
-                                    </div>
 
-                                    @if (session('error'))
-                                        <div class="alert alert-danger text-center">
-                                            {{ session('error') }}
-                                        </div>
-                                    @endif
 
-                                    <form class="user" action="{{ Route('actionLogin') }}" method="post">
-                                        @csrf
-                                        <div class="form-group">
-                                            <input type="email"
-                                                class="form-control form-control-user @error('email') is-invalid @enderror"
-                                                name="email" id="email" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address...">
+<div class="container-fluid">
+    <div class="baris main-content bg-success text-center">
+        <div class="col-md-5 text-center company__info">
 
-                                            @error('email')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password"
-                                                class="form-control form-control-user @error('password') is-invalid @enderror"
-                                                name="password" id="password" placeholder="Password">
+            <span class="company__logo mb-3"><img src="{{ asset("img/logo.png") }}" width="90px" alt=""></span>
 
-                                            @error('password')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                        <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            Login
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
+            <h4 class="company_title">Sejahtera Bersama</h4>
+        </div>
+        <div class="col-md-8 col-xs-12 col-sm-12 login_form ">
+            <div class="container-fluid">
+                <div class="baris">
+                    <h2>Log In</h2>
+                </div>
+                @if (session('error'))
+                <div class="alert alert-danger text-center">
+                    {{ session('error') }}
+                </div>
+                @endif
+                <div class="baris">
+                    <form class="form-group formu" action="{{ Route('actionLogin') }}" method="post">
+                        @csrf
+                        <div class="baris">
+                            <input type="email"
+                            class="form__input @error('email') is-invalid @enderror"
+                            name="email" id="email" aria-describedby="emailHelp"
+                            placeholder="Masukkan Email..." autocomplete="off">
+
+                        @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+
                         </div>
-                    </div>
+
+                        <div class="baris">
+                            <input type="password"
+                            class="form__input  @error('password') is-invalid @enderror"
+                            name="password" id="password" placeholder="Masukkan Password..." autocomplete="off">
+
+                        @error('password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+
+                        </div>
+
+                        <div class="baris" style="
+                        padding-left: 20px;
+                    ">
+                            <input type="submit" value="Submit" class="tombol">
+                        </div>
+                    </form>
+                </div>
+                <div class="baris">
+                    <p>Don't have an account? <a href="#">Register Here</a></p>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+
+
 @endsection
+
