@@ -17,28 +17,28 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Route::group(['middleware' => ['auth:sanctum']], function () {
 
-Route::resource('/unit', UnitController::class);
+// Route::resource('/unit', UnitController::class);
 
-Route::resource('/type', TypeController::class);
+// Route::resource('/type', TypeController::class);
 
-Route::resource('/product', ProductController::class);
+// Route::resource('/product', ProductController::class);
 
 // Sales
-Route::get('/sales', [SalesController::class, 'index']);
-Route::post('/sales', [SalesController::class, 'store']);
-Route::get('/sales/{sales}', [SalesController::class, 'show']);
-Route::put('/sales/{sales}', [SalesController::class, 'update']);
-Route::delete('/sales/{sales}', [SalesController::class, 'destroy']);
+// Route::get('/sales', [SalesController::class, 'index']);
+// Route::post('/sales', [SalesController::class, 'store']);
+// Route::get('/sales/{sales}', [SalesController::class, 'show']);
+// Route::put('/sales/{sales}', [SalesController::class, 'update']);
+// Route::delete('/sales/{sales}', [SalesController::class, 'destroy']);
 
-Route::resource('/store', StoreController::class);
+// Route::resource('/store', StoreController::class);
 
 Route::resource('/transaction', TransactionController::class);
 
-Route::resource('/city', CityController::class);
+// Route::resource('/city', CityController::class);
 
-Route::get('/profile', function (Request $request) {
-    return auth()->user();
-});
+// Route::get('/profile', function (Request $request) {
+//     return auth()->user();
+// });
 
 //Logout
 Route::post('/logout', [AuthController::class, 'logout']);

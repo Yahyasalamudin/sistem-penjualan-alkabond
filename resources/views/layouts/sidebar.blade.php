@@ -38,6 +38,8 @@
              <div class="bg-white py-2 collapse-inner rounded">
                  <h6 class="collapse-header">Master Data:</h6>
                  <a class="collapse-item" href="{{ route('cities.index') }}">Kota</a>
+                 <a class="collapse-item" href="{{ route('units.index') }}">Unit</a>
+                 <a class="collapse-item" href="{{ route('type.index') }}">Jenis Produk</a>
              </div>
          </div>
      </li>
