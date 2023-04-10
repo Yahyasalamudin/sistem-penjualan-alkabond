@@ -14,14 +14,13 @@
                                     </div>
 
                                     @if (session('error'))
-                                        <div class="alert alert-danger" style="color: white">
+                                        <div class="alert alert-danger text-center">
                                             {{ session('error') }}
                                         </div>
                                     @endif
 
                                     <form class="user" action="{{ Route('actionLogin') }}" method="post">
                                         @csrf
-
                                         <div class="form-group">
                                             <input type="email"
                                                 class="form-control form-control-user @error('email') is-invalid @enderror"
