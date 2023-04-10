@@ -28,4 +28,6 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('actionlogout');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::resource('/cities', CityController::class);
 });

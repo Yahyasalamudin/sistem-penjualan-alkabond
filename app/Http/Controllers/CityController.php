@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use Illuminate\Http\Request;
 
-class DashboardController extends Controller
+class CityController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,17 +14,9 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
-    }
+        $city = City::get();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return view('cities.index', compact('city'));
     }
 
     /**
@@ -34,18 +27,15 @@ class DashboardController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'city' => 'required|string|unique:cities'
+        ]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        City::create([
+            'city' => $request->city
+        ]);
+
+        return redirect()->back()->with('success', 'Kota berhasil ditambahkan');
     }
 
     /**
@@ -54,9 +44,9 @@ class DashboardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(City $city)
     {
-        //
+        return view('cities.edit', compact('city'));
     }
 
     /**
@@ -66,9 +56,17 @@ class DashboardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, City $city)
     {
-        //
+        $request->validate([
+            'city' => 'required|string'
+        ]);
+
+        $city->update([
+            'city' => $request->city
+        ]);
+
+        return redirect('cities.index')->with('success', 'Kota berhasil diubah');
     }
 
     /**
@@ -77,8 +75,10 @@ class DashboardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(City $city)
     {
-        //
+        $city->delete();
+
+        return redirect()->back()->with('success', 'Kota berhasil dihapus');
     }
 }
