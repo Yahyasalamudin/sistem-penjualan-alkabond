@@ -16,13 +16,14 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->string('invoice_code');
-            $table->foreignId('product_id')->constrained('products');
-            $table->integer('quantity');
-            $table->integer('price');
+            // $table->foreignId('product_id')->constrained('products');
+            // $table->integer('quantity');
+            // $table->integer('price');
             $table->integer('total');
             $table->foreignId('store_id')->constrained('stores');
+            $table->foreignId('sales_id')->constrained('sales');
             $table->enum('payment_method', ['cash', 'tempo']);
-            $table->enum('status', ['paid', 'unpaid', 'partial'])->comment('sudah, belum, cicil');
+            $table->enum('status', ['paid', 'unpaid', 'partial']);
             $table->timestamps();
         });
     }
@@ -37,4 +38,3 @@ class CreateTransactionsTable extends Migration
         Schema::dropIfExists('transactions');
     }
 }
-

@@ -18,10 +18,10 @@ class SalesFactory extends Factory
     public function definition()
     {
         return [
-            'sales_name' => fake()->name(),
-            'username' => fake()->userName(),
-            'email' => fake()->unique()->safeEmail(),
-            'phone_number' => '08' . $this->faker->numberBetween(9,12) . $this->faker->randomNumber(9),
+            'sales_name' => $this->faker->name(),
+            'username' => $this->faker->userName(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'phone_number' => '08' . $this->faker->numberBetween(9, 12) . $this->faker->randomNumber(9),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
         ];
     }
