@@ -102,7 +102,7 @@
                                 <td>{{ $p->product_code }}</td>
                                 <td>{{ $p->product_name }}</td>
                                 <td>{{ $p->product_brand }}</td>
-                                <td>{{ $p->unit_name }} @ {{ $p->amount }}</td>
+                                <td>{{ $p->unit_weight }}</td>
                                 <td>
                                     {{-- <div class="d-flex justify-content-center"> --}}
                                     {{-- <a href="{{ route('product.edit', $p->id) }}" class="btn btn-warning btn-icon-split">
