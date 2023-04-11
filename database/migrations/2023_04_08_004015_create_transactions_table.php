@@ -24,6 +24,7 @@ class CreateTransactionsTable extends Migration
             $table->foreignId('sales_id')->constrained('sales');
             $table->enum('payment_method', ['cash', 'tempo']);
             $table->enum('status', ['paid', 'unpaid', 'partial']);
+            $table->enum('status_delivery', ['unsent', 'sent', 'proccess']);
             $table->timestamps();
         });
     }
