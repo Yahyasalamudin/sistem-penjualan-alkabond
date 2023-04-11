@@ -26,7 +26,8 @@ class DatabaseSeeder extends Seeder
             'username' => 'yahyasalamudin',
             'email' => 'yahyasalamudin@gmail.com',
             'phone_number' => '081233247969',
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            // password
             'city_branch' => 'Semboro',
             'role' => 'owner'
         ]);
@@ -36,8 +37,20 @@ class DatabaseSeeder extends Seeder
             'username' => 'dwikhusnul',
             'email' => 'dwikhusnul632@gmail.com',
             'phone_number' => '081233247969',
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            // password
             'city_branch' => 'GadingRejo',
+            'role' => 'admin'
+        ]);
+
+        \App\Models\User::factory()->create([
+            'name' => 'Jenira Sekar',
+            'username' => 'sekar',
+            'email' => 'sekar@gmail.com',
+            'phone_number' => '081233247969',
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            // password
+            'city_branch' => 'Semboro',
             'role' => 'admin'
         ]);
 
@@ -46,7 +59,8 @@ class DatabaseSeeder extends Seeder
             'username' => 'rahmat',
             'email' => 'rahmat@gmail.com',
             'phone_number' => '081234567890',
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            // password
             'city_branch' => 'Semboro',
         ]);
     }
