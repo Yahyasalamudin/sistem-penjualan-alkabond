@@ -9,5 +9,5 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product_code', 'product_name', 'product_brand', 'unit_id'];
+    protected $fillable = ['product_code', 'product_name', 'product_brand', 'unit_weight'];
 }

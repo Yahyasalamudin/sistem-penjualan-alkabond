@@ -30,7 +30,7 @@ class ProductController extends Controller
             'unit_id' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'data' => [],
                 'message' => $validator->errors(),
@@ -38,10 +38,17 @@ class ProductController extends Controller
             ]);
         }
 
+        $words = explode(" ", $request->product_name);
+        $output = "";
+        foreach ($words as $word) {
+            $output .= substr($word, 0, 1);
+        }
+        dd($output);
+
         $now = Carbon::now();
         $date = date('Ym', strtotime($now));
         $check = Product::count();
-        if($check == 0){
+        if ($check == 0) {
             $code = 10000001;
             $product_code = 'BRG' . $date . $code;
         } else {
@@ -81,7 +88,7 @@ class ProductController extends Controller
             'unit_id' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'data' => [],
                 'message' => $validator->errors(),

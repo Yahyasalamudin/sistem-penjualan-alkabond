@@ -51,7 +51,6 @@ class AuthController extends Controller
         if (Auth::check()) {
             return redirect('dashboard');
         } else {
-            // dd('test');
             return view('auth.login');
         }
     }
@@ -59,22 +58,15 @@ class AuthController extends Controller
     public function actionLogin(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required',
             'password' => 'required|min:6'
         ]);
 
         if (Auth::attempt($request->only('email', 'password'))) {
-            if (auth()->user()->role == 'owner') {
-                return view('owner.index')->with('success', 'Selamat Datang ');
-            } else {
-                return view('admin.index')->with('success', 'Selamat Datang ');
-            }
-        } else if (Auth::guard('sales')->attempt($request->only('email', 'password'))) {
-            return view('sales')->with('success', 'Selamat Datang ');
+            return redirect('dashboard');
         }
 
-        return redirect()->back()->with('error', 'Email atau Password Salah');
-
+        return back()->with('error', 'Email atau Password Salah');
     }
 
     public function logout()
