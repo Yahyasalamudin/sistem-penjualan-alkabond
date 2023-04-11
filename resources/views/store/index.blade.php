@@ -4,10 +4,10 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">Table Unit</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Table Toko</h6>
 
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                Tambah Unit
+                Tambah Toko
             </button>
         </div>
 
@@ -15,21 +15,23 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Unit Create</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('units.store') }}" method="post">
+                    <form action="{{ route('store.store') }}" method="post">
                         @csrf
                         <div class="modal-body">
-                            <label for="unit">Nama Unit</label>
-                            <input class="form-control mb-3" type="text" name="unit_name" id="unit"
-                                placeholder="Masukkan Nama Unit">
-
-                            <label for="amount">Berat</label>
-                            <input class="form-control" type="text" name="amount" id="amount"
-                                placeholder="Masukkan Berat">
+                            <label for="store_name">Nama Toko</label>
+                            <input class="form-control mb-3" type="text" name="store_name" id="store_name"
+                                placeholder="Masukkan Nama Toko">
+                            <label for="address">Alamat Toko</label>
+                            <input class="form-control mb-3" type="text" name="address" id="address"
+                                placeholder="Masukkan Alamat Toko">
+                            <label for="phone_number">Nomer Hp</label>
+                            <input class="form-control mb-3" type="text" name="phone_number" id="phone_number"
+                                placeholder="Masukkan Nomer Hp">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -50,50 +52,64 @@
                     </div>
                 @endif
 
-                @error('unit_name')
+                @error('store_name')
                     <div class="d-flex justify-content-center">
                         <div class="alert alert-danger text-center col-sm-4 text-dark">
                             {{ $message }}
                         </div>
                     </div>
                 @enderror
-
-                @error('amount')
+                @error('address')
                     <div class="d-flex justify-content-center">
                         <div class="alert alert-danger text-center col-sm-4 text-dark">
                             {{ $message }}
                         </div>
                     </div>
                 @enderror
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                @error('phone_number')
+                    <div class="d-flex justify-content-center">
+                        <div class="alert alert-danger text-center col-sm-4 text-dark">
+                            {{ $message }}
+                        </div>
+                    </div>
+                @enderror
+                @error('sales_id')
+                    <div class="d-flex justify-content-center">
+                        <div class="alert alert-danger text-center col-sm-4 text-dark">
+                            {{ $message }}
+                        </div>
+                    </div>
+                @enderror
+                <table class="table table-bordered text-center text-center" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Bungkus</th>
-                            <th>Berat</th>
+                            <th>Toko</th>
+                            <th>Alamat</th>
+                            <th>Nomer Hp</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($unit as $u)
+                        @foreach ($store as $s)
                             <tr>
-                                <td>{{ $u->unit_name }}</td>
-                                <td>{{ $u->amount }}</td>
-                                <td class="col-4">
+                                <td>{{ $s->store_name }}</td>
+                                <td>{{ $s->address }}</td>
+                                <td>{{ $s->phone_number }}</td>
+                                <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('units.edit', $u->id) }}" class="btn btn-warning btn-icon-split">
+                                        <a href="{{ route('store.edit', $s->id) }}"
+                                            class="btn btn-sm btn-warning btn-icon-split">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-pencil-alt"></i>
                                             </span>
-                                            <span class="text">Edit unit</span>
                                         </a>
-                                        <form action="{{ route('units.destroy', $u->id) }}" method="post">
+                                        <form action="{{ route('store.destroy', $s->id) }}" method="post">
                                             @csrf
                                             @method('delete')
-                                            <button type="submit" class="btn btn-danger btn-icon-split ml-5">
+                                            <button type="submit" class="btn btn-sm btn-danger btn-icon-split ml-3">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-trash"></i>
                                                 </span>
-                                                <span class="text">Hapus unit</span>
                                             </button>
                                         </form>
                                     </div>

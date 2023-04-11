@@ -7,11 +7,6 @@ use Illuminate\Http\Request;
 
 class CityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $city = City::get();
@@ -21,12 +16,6 @@ class CityController extends Controller
         return view('cities.index', compact('city', 'title'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -37,27 +26,18 @@ class CityController extends Controller
             'city' => $request->city
         ]);
 
-        return redirect()->back()->with('success', 'Kota berhasil ditambahkan');
+        return back()->with('success', 'Kota berhasil ditambahkan');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(City $city)
     {
+        dd($city);
+        Crypt::decrypt($city);
+        $city = City::find($city);
+
         return view('cities.edit', compact('city'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, City $city)
     {
         $request->validate([
@@ -75,16 +55,10 @@ class CityController extends Controller
         return redirect('cities')->with('success', 'Kota berhasil diubah');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(City $city)
     {
         $city->delete();
 
-        return redirect()->back()->with('success', 'Kota berhasil dihapus');
+        return back()->with('success', 'Kota berhasil dihapus');
     }
 }

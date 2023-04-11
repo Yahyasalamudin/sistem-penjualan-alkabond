@@ -3,6 +3,9 @@
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StoreController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\UnitController;
 use Illuminate\Support\Facades\Route;
@@ -26,7 +29,6 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 
 Route::post('/process-login', [AuthController::class, 'actionLogin'])->name('actionLogin');
 
-Route::get('/logout', [AuthController::class, 'logout'])->name('actionlogout');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -34,4 +36,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('/cities', CityController::class);
     Route::resource('/units', UnitController::class);
     Route::resource('/type', TypeController::class);
+    Route::resource('/store', StoreController::class);
+    Route::resource('/product', ProductController::class);
+    Route::resource('/transaction', TransactionController::class);
+
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });

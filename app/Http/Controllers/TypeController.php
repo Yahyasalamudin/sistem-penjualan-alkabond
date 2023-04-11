@@ -26,7 +26,7 @@ class TypeController extends Controller
             'type' => $request->type
         ]);
 
-        return redirect()->back()->with('success', 'Data Type berhasil dibuat');
+        return back()->with('success', 'Data Type berhasil dibuat');
     }
 
     public function edit(Type $type)
@@ -51,6 +51,6 @@ class TypeController extends Controller
     {
         $type->delete();
 
-        return redirect()->back()->with('success', 'Data Type berhasil dihapus');
+        return back()->with('success', 'Data Type berhasil dihapus');
     }
 }

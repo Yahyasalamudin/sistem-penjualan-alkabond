@@ -53,7 +53,7 @@
                         </div>
                     </div>
                 @enderror
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Jenis Produk</th>
@@ -66,7 +66,8 @@
                                 <td class="col-lg-7">{{ $t->type }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('type.edit', $t->id) }}" class="btn btn-warning btn-icon-split">
+                                        <a href="{{ route('type.edit', $t->id) }}"
+                                            class="btn btn-sm btn-warning btn-icon-split">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-pencil-alt"></i>
                                             </span>
@@ -75,7 +76,7 @@
                                         <form action="{{ route('type.destroy', $t->id) }}" method="post">
                                             @csrf
                                             @method('delete')
-                                            <button type="submit" class="btn btn-danger btn-icon-split ml-5">
+                                            <button type="submit" class="btn btn-sm btn-danger btn-icon-split ml-5">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-trash"></i>
                                                 </span>
