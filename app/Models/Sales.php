@@ -11,5 +11,10 @@ class Sales extends User
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $fillable = ['sales_name', 'username','email' ,'phone_number', 'password', 'city_branch'];
+    protected $fillable = ['sales_name', 'username', 'email', 'phone_number', 'password', 'city_branch'];
+
+    public function transactions()
+    {
+        return $this->hashMany(Transaction::class, 'sales_id', 'id');
+    }
 }

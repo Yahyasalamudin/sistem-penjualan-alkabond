@@ -22,7 +22,8 @@ class AuthController extends Controller
             return response()
                 ->json(['message' => 'Hi ' . $user->sales_name . ', welcome to home', 'access_token' => $token, 'token_type' => 'Bearer',]);
         } else {
-            dd('gagal');
+            return response()
+                ->json(['message' => 'Unauthorized'], 401);
         }
     }
 

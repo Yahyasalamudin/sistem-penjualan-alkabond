@@ -32,10 +32,36 @@
                         @enderror
 
                         <label for="phone_number">Nomer Toko</label>
-                        <input type="text" class="form-control @error('phone_number') is-invalid @enderror" name="phone_number"
-                            id="phone_number" value="{{ old('phone_number', $store->phone_number ?? '') }}">
+                        <input type="text" class="form-control @error('phone_number') is-invalid @enderror"
+                            name="phone_number" id="phone_number"
+                            value="{{ old('phone_number', $store->phone_number ?? '') }}">
 
                         @error('phone_number')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+
+                        <label for="sales_id">Sales Pengelola Toko</label>
+                        <select class="form-control mb-3" name="sales_id" id="sales_id">
+                            <option value="{{ $store->sales_id }}">{{ $store->sales_id }}</option>
+                            @foreach ($sales as $s)
+                                <option value="{{ $s->id }}">{{ $s->sales_name }}</option>
+                            @endforeach
+                        </select>
+
+                        @error('sales_id')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+
+                        <label for="city_branch">Kota Toko</label>
+                        <select class="form-control mb-3" name="city_branch" id="city_branch" disabled>
+                            <option>{{ $store->city_branch }}</option>
+                        </select>
+
+                        @error('city_branch')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>

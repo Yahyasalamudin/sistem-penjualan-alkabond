@@ -25,7 +25,7 @@
                         <div class="modal-body">
                             <label for="product_name">Nama Produk</label>
                             <select class="form-control mb-3" name="product_name" id="product_name">
-                                <option>Pilih Nama/Jenis Produk</option>
+                                <option value="">- Pilih Nama/Jenis Produk -</option>
                                 @foreach ($type as $t)
                                     <option value="{{ $t->type }}">{{ $t->type }}</option>
                                 @endforeach

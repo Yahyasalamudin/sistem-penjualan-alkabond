@@ -34,7 +34,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('/cities', CityController::class);
-    Route::resource('/units', UnitController::class);
     Route::resource('/type', TypeController::class);
     Route::resource('/store', StoreController::class);
     Route::resource('/product', ProductController::class);

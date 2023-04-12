@@ -14,17 +14,14 @@ class CreateTransactionsTable extends Migration
     public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
-            $table->string('invoice_code');
-            // $table->foreignId('product_id')->constrained('products');
-            // $table->integer('quantity');
-            // $table->integer('price');
-            $table->integer('total');
+            $table->char('invoice_code', 15)->primary();
+            $table->integer('grand_total');
             $table->foreignId('store_id')->constrained('stores');
             $table->foreignId('sales_id')->constrained('sales');
             $table->enum('payment_method', ['cash', 'tempo']);
             $table->enum('status', ['paid', 'unpaid', 'partial']);
-            $table->enum('status_delivery', ['unsent', 'sent', 'proccess']);
+            $table->string('city_branch')->nullable();
+            $table->enum('status_delivery', ['unsent', 'sent', 'proccess'])->default('unsent');
             $table->timestamps();
         });
     }

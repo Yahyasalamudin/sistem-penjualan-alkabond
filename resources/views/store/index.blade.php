@@ -26,12 +26,30 @@
                             <label for="store_name">Nama Toko</label>
                             <input class="form-control mb-3" type="text" name="store_name" id="store_name"
                                 placeholder="Masukkan Nama Toko">
+
                             <label for="address">Alamat Toko</label>
                             <input class="form-control mb-3" type="text" name="address" id="address"
                                 placeholder="Masukkan Alamat Toko">
+
                             <label for="phone_number">Nomer Hp</label>
                             <input class="form-control mb-3" type="text" name="phone_number" id="phone_number"
                                 placeholder="Masukkan Nomer Hp">
+
+                            <label for="sales_id">Sales Pengelola Toko</label>
+                            <select class="form-control mb-3" name="sales_id" id="sales_id">
+                                <option value=""> - Pilih Sales - </option>
+                                @foreach ($sales as $s)
+                                    <option value="{{ $s->id }}">{{ $s->sales_name }}</option>
+                                @endforeach
+                            </select>
+
+                            <label for="city_branch">Kota Toko</label>
+                            <select class="form-control mb-3" name="city_branch" id="city_branch">
+                                <option value=""> - Pilih Kota - </option>
+                                @foreach ($city as $t)
+                                    <option value="{{ $t->city }}">{{ $t->city }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -80,6 +98,14 @@
                         </div>
                     </div>
                 @enderror
+                @error('city_branch')
+                    <div class="d-flex justify-content-center">
+                        <div class="alert alert-danger text-center col-sm-4 text-dark">
+                            {{ $message }}
+                        </div>
+                    </div>
+                @enderror
+
                 <table class="table table-bordered text-center text-center" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>

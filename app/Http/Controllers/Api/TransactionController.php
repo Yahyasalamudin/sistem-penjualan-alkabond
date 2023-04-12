@@ -34,7 +34,7 @@ class TransactionController extends Controller
             'status' => 'required',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'data' => [],
                 'message' => $validator->errors(),
@@ -45,7 +45,7 @@ class TransactionController extends Controller
         $now = Carbon::now();
         $date = date('Ym', strtotime($now));
         $check = Transaction::count();
-        if($check == 0){
+        if ($check == 0) {
             $code = 10000001;
             $invoice_code = 'INV' . $date . $code;
         } else {
@@ -54,7 +54,7 @@ class TransactionController extends Controller
             $check_date = substr($query->invoice_code, 0, -8);
             $int_date = (int)substr($check_date, 3);
 
-            if($date != $int_date) {
+            if ($date != $int_date) {
                 $code = 10000001;
                 $invoice_code = 'INV' . $date . $code;
             } else {
@@ -100,7 +100,7 @@ class TransactionController extends Controller
             'status' => 'required',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'data' => [],
                 'message' => $validator->errors(),
