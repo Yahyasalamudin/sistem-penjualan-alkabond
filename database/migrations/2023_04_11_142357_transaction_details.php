@@ -19,7 +19,7 @@ class TransactionDetails extends Migration
             $table->foreignId('product_id')->constrained('products');
             $table->integer('quantity');
             $table->integer('price');
-            $table->integer('sub_total');
+            $table->integer('subtotal');
             $table->timestamps();
 
             $table->foreign('invoice_code')->references('invoice_code')->on('transactions')->onDelete('cascade');
