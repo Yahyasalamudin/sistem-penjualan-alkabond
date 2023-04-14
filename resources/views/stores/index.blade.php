@@ -116,20 +116,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($store as $s)
+                        @foreach ($stores as $store)
                             <tr>
-                                <td>{{ $s->store_name }}</td>
-                                <td>{{ $s->address }}</td>
-                                <td>{{ $s->store_number }}</td>
+                                <td>{{ $store->store_name }}</td>
+                                <td>{{ $store->address }}</td>
+                                <td>{{ $store->store_number }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('store.edit', $s->id) }}"
+                                        <a href="{{ route('store.edit', Crypt::encrypt($store->id)) }}"
                                             class="btn btn-sm btn-warning btn-icon-split">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-pencil-alt"></i>
                                             </span>
                                         </a>
-                                        <form action="{{ route('store.destroy', $s->id) }}" method="post">
+
+                                        <form action="{{ route('store.destroy', $store->id) }}" method="post">
                                             @csrf
                                             @method('delete')
                                             <button type="submit" class="btn btn-sm btn-danger btn-icon-split ml-3">

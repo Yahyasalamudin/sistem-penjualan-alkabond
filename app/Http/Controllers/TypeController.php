@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Type;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class TypeController extends Controller
 {
@@ -13,7 +14,7 @@ class TypeController extends Controller
 
         $title = 'Jenis Produk';
 
-        return view('type.index', compact('type', 'title'));
+        return view('types.index', compact('type', 'title'));
     }
 
     public function store(Request $request)
@@ -29,27 +30,31 @@ class TypeController extends Controller
         return back()->with('success', 'Data Type berhasil dibuat');
     }
 
-    public function edit(Type $type)
+    public function edit($id)
     {
-        return view('type.edit', compact('type'));
+        $id = Crypt::decrypt($id);
+
+        $type = Type::find($id);
+
+        return view('types.edit', compact('type'));
     }
 
-    public function update(Request $request, Type $type)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'type' => 'required'
         ]);
 
-        $type->update([
+        Type::find($id)->update([
             'type' => $request->type
         ]);
 
-        return redirect('type')->with('success', 'Data type berhasil di edit');
+        return redirect('types')->with('success', 'Data type berhasil di edit');
     }
 
-    public function destroy(Type $type)
+    public function destroy($id)
     {
-        $type->delete();
+        Type::find($id)->delete();
 
         return back()->with('success', 'Data Type berhasil dihapus');
     }

@@ -20,7 +20,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('cities.store') }}" method="post">
+                    <form action="{{ route('city.store') }}" method="post">
                         @csrf
                         <div class="modal-body">
                             <label for="city">Nama Kota</label>
@@ -66,14 +66,14 @@
                                 <td class="col-lg-7">{{ $c->city }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('cities.edit', $c->id) }}"
+                                        <a href="{{ route('city.edit', Crypt::encrypt($c->id)) }}"
                                             class="btn btn-sm btn-warning btn-icon-split">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-pencil-alt"></i>
                                             </span>
                                             <span class="text">Edit Kota</span>
                                         </a>
-                                        <form action="{{ route('cities.destroy', $c->id) }}" method="post">
+                                        <form action="{{ route('city.destroy', $c->id) }}" method="post">
                                             @csrf
                                             @method('delete')
                                             <button type="submit" class="btn btn-sm btn-danger btn-icon-split ml-5">

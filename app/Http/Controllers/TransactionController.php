@@ -10,8 +10,9 @@ class TransactionController extends Controller
 {
     public function index()
     {
-        $transaction = Transaction::latest()->get();
-        return view('transaction.index', compact('transaction'));
+        $transactions = Transaction::latest()->get();
+
+        return view('transactions.index', compact('transactions'));
     }
 
     public function create()

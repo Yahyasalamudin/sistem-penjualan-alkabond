@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class CityController extends Controller
 {
@@ -29,16 +30,15 @@ class CityController extends Controller
         return back()->with('success', 'Kota berhasil ditambahkan');
     }
 
-    public function edit(City $city)
+    public function edit($id)
     {
-        dd($city);
-        Crypt::decrypt($city);
-        $city = City::find($city);
+        $id = Crypt::decrypt($id);
+        $city = City::find($id);
 
         return view('cities.edit', compact('city'));
     }
 
-    public function update(Request $request, City $city)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'city' => 'required|regex:/^[a-zA-Z\s]*$/|unique:cities'
@@ -46,7 +46,7 @@ class CityController extends Controller
             'city.regex' => 'Nama Kota tidak boleh berupa angka'
         ]);
 
-        $city->update([
+        City::find($id)->update([
             'city' => $request->city
         ], [
             'city' => 'Nama Kota tidak boleh berupa angka'
@@ -55,9 +55,9 @@ class CityController extends Controller
         return redirect('cities')->with('success', 'Kota berhasil diubah');
     }
 
-    public function destroy(City $city)
+    public function destroy($id)
     {
-        $city->delete();
+        City::find($id)->delete();
 
         return back()->with('success', 'Kota berhasil dihapus');
     }

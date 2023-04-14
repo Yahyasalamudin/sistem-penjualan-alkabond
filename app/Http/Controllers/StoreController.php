@@ -5,17 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\City;
 use App\Models\Sales;
 use App\Models\Store;
+use App\Models\TransactionDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class StoreController extends Controller
 {
     public function index()
     {
-        $store = Store::latest()->get();
+        $stores = Store::latest()->get();
         $sales = Sales::get();
         $city = City::get();
 
-        return view('store.index', compact('store', 'city', 'sales'));
+        return view('stores.index', compact('stores', 'city', 'sales'));
     }
 
     public function store(Request $request)
@@ -39,20 +41,25 @@ class StoreController extends Controller
         return back()->with('success', 'Toko Berhasil ditambahkan');
     }
 
-    public function show(Store $store)
+    public function show($id)
     {
-        return view('store.detail', compact('store'));
+        $store = Store::find($id);
+
+        return view('stores.detail', compact('store'));
     }
 
-    public function edit(Store $store)
+    public function edit($id)
     {
+        $id = Crypt::decrypt($id);
+        $store = Store::find($id);
+
         $sales = Sales::get();
         $city = City::get();
 
-        return view('store.edit', compact('store', 'city', 'sales'));
+        return view('stores.edit', compact('store', 'city', 'sales'));
     }
 
-    public function update(Request $request, Store $store)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'store_name' => 'required|max:255',
@@ -61,19 +68,19 @@ class StoreController extends Controller
             'sales_id' => 'required'
         ]);
 
-        $store->update([
+        Store::find($id)->update([
             'store_name' => $request->store_name,
             'address' => $request->address,
             'store_number' => $request->store_number,
             'sales_id' => $request->sales_id,
         ]);
 
-        return redirect('store')->with('success', 'Data Toko berhasil diubah');
+        return redirect('stores')->with('success', 'Data Toko berhasil diubah');
     }
 
-    public function destroy(Store $store)
+    public function destroy($id)
     {
-        $store->delete();
+        Store::find($id)->delete();
 
         return back()->with('success', 'Data Toko telah dihapus');
     }

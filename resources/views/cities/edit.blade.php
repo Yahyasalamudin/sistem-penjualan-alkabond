@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-center">
         <div class="card shadow mb-4 col-5">
             <div class="card-body">
-                <form action="{{ route('cities.update', $city->id) }}" method="post">
+                <form action="{{ route('city.update', $city->id) }}" method="post">
                     @csrf
                     @method('put')
                     <div class="form-group">

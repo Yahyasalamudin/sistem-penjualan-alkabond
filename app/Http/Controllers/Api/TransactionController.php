@@ -44,9 +44,9 @@ class TransactionController extends Controller
         $validator = Validator::make($request->all(), [
             'store_id' => 'required',
             'status' => 'required',
-            'product_id' => 'required',
-            'quantity' => 'required',
-            'price' => 'required',
+            'details.*.product_id' => 'required',
+            'details.*.quantity' => 'required',
+            'details.*.price' => 'required',
         ]);
 
         if ($validator->fails()) {

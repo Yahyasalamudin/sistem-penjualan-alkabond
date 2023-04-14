@@ -54,14 +54,15 @@ class ProductController extends Controller
         return back()->with('success', 'Data Produk telah berhasil ditambahkan!');
     }
 
-    public function edit(Product $product)
+    public function edit($id)
     {
+        $products = Product::find($id);
         $type = Type::get();
 
-        return view('products.edit', compact('product', 'type', 'unit'));
+        return view('products.edit', compact('products', 'type', 'unit'));
     }
 
-    // public function update(Request $request, Product $product)
+    // public function update(Request $request, $id)
     // {
     //     $request->validate([
     //         'product_name' => 'required',
@@ -78,9 +79,9 @@ class ProductController extends Controller
     //     return redirect('product')->with('success', 'Data Produk berhasil diubah');
     // }
 
-    public function destroy(Product $product)
+    public function destroy($id)
     {
-        $product->delete();
+        Product::find($id)->delete();
 
         return back()->with('success', 'Data Produk berhasil dihapus');
     }

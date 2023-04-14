@@ -35,7 +35,7 @@
          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
              <div class="bg-white py-2 collapse-inner rounded">
                  <h6 class="collapse-header">Master Data :</h6>
-                 <a class="collapse-item" href="{{ route('cities.index') }}">Kota</a>
+                 <a class="collapse-item" href="{{ route('city.index') }}">Kota</a>
                  <a class="collapse-item" href="{{ route('type.index') }}">Jenis Produk</a>
              </div>
          </div>
