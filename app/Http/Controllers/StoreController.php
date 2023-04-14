@@ -23,7 +23,7 @@ class StoreController extends Controller
         $request->validate([
             'store_name' => 'required|max:255',
             'address' => 'required|max:255',
-            'phone_number' => 'required|numeric|digits_between:10,14',
+            'store_number' => 'required|numeric|digits_between:10,14',
             'sales_id' => 'required',
             'city_branch' => 'required'
         ]);
@@ -31,7 +31,7 @@ class StoreController extends Controller
         Store::create([
             'store_name' => $request->store_name,
             'address' => $request->address,
-            'phone_number' => $request->phone_number,
+            'store_number' => $request->store_number,
             'sales_id' => $request->sales_id,
             'city_branch' => $request->city_branch
         ]);
@@ -57,14 +57,14 @@ class StoreController extends Controller
         $request->validate([
             'store_name' => 'required|max:255',
             'address' => 'required|max:255',
-            'phone_number' => 'required|numeric|digits_between:10,14',
+            'store_number' => 'required|numeric|digits_between:10,14',
             'sales_id' => 'required'
         ]);
 
         $store->update([
             'store_name' => $request->store_name,
             'address' => $request->address,
-            'phone_number' => $request->phone_number,
+            'store_number' => $request->store_number,
             'sales_id' => $request->sales_id,
         ]);
 

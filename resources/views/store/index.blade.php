@@ -31,8 +31,8 @@
                             <input class="form-control mb-3" type="text" name="address" id="address"
                                 placeholder="Masukkan Alamat Toko">
 
-                            <label for="phone_number">Nomer Hp</label>
-                            <input class="form-control mb-3" type="text" name="phone_number" id="phone_number"
+                            <label for="store_number">Nomer Hp</label>
+                            <input class="form-control mb-3" type="text" name="store_number" id="store_number"
                                 placeholder="Masukkan Nomer Hp">
 
                             <label for="sales_id">Sales Pengelola Toko</label>
@@ -84,7 +84,7 @@
                         </div>
                     </div>
                 @enderror
-                @error('phone_number')
+                @error('store_number')
                     <div class="d-flex justify-content-center">
                         <div class="alert alert-danger text-center col-sm-4 text-dark">
                             {{ $message }}
@@ -120,7 +120,7 @@
                             <tr>
                                 <td>{{ $s->store_name }}</td>
                                 <td>{{ $s->address }}</td>
-                                <td>{{ $s->phone_number }}</td>
+                                <td>{{ $s->store_number }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
                                         <a href="{{ route('store.edit', $s->id) }}"

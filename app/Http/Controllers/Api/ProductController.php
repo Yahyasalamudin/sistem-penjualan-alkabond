@@ -43,7 +43,7 @@ class ProductController extends Controller
         foreach ($words as $word) {
             $output .= substr($word, 0, 1);
         }
-        dd($output);
+        // dd($output);
 
         $now = Carbon::now();
         $date = date('Ym', strtotime($now));

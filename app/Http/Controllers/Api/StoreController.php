@@ -27,11 +27,11 @@ class StoreController extends Controller
         $validator = Validator::make($request->all(), [
             'store_name' => 'required',
             'address' => 'required',
-            'phone_number' => 'required|numeric|digits_between:10,14',
+            'store_number' => 'required|numeric|digits_between:10,14',
             'sales_id' => 'required',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'data' => [],
                 'message' => $validator->errors(),
@@ -42,7 +42,7 @@ class StoreController extends Controller
         $store = Store::create([
             'store_name' => $request->store_name,
             'address' => $request->address,
-            'phone_number' => $request->phone_number,
+            'store_number' => $request->store_number,
             'sales_id' => $request->sales_id,
         ]);
 
@@ -73,11 +73,11 @@ class StoreController extends Controller
         $validator = Validator::make($request->all(), [
             'store_name' => 'required',
             'address' => 'required',
-            'phone_number' => 'required|numeric|digits_between:10,14',
+            'store_number' => 'required|numeric|digits_between:10,14',
             'sales_id' => 'required',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'data' => [],
                 'message' => $validator->errors(),
@@ -88,7 +88,7 @@ class StoreController extends Controller
         $store->update([
             'store_name' => $request->store_name,
             'address' => $request->address,
-            'phone_number' => $request->phone_number,
+            'store_number' => $request->store_number,
             'sales_id' => $request->sales_id,
         ]);
 

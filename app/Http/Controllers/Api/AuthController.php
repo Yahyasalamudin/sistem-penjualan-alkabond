@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SalesResource;
 use App\Models\Sales;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -19,8 +20,10 @@ class AuthController extends Controller
 
             $token = $user->createToken('auth_token')->plainTextToken;
 
-            return response()
-                ->json(['message' => 'Hi ' . $user->sales_name . ', welcome to home', 'access_token' => $token, 'token_type' => 'Bearer',]);
+            return response()->json([
+                'data' => new SalesResource($user),
+                'message' => 'Hi ' . $user->sales_name . ', welcome to home', 'access_token' => $token, 'token_type' => 'Bearer',
+            ]);
         } else {
             return response()
                 ->json(['message' => 'Unauthorized'], 401);

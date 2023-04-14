@@ -3,21 +3,37 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PaymentResource;
+use App\Http\Resources\TransactionDetailResource;
 use App\Http\Resources\TransactionResource;
+use App\Models\Payment;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class TransactionController extends Controller
 {
     public function index()
     {
-        $transaction = Transaction::latest()->get();
+        $transactions = DB::table('transactions')
+            ->join('stores', 'transactions.store_id', 'stores.id')
+            ->join('sales', 'transactions.sales_id', 'sales.id')
+            ->select('transactions.*', 'stores.*', 'sales.sales_name', 'sales.username', 'sales.email', 'sales.phone_number')
+            ->orderByDesc('transactions.created_at')
+            ->get();
+
+        // dd($transactions);
+        // 'sales.city_branch'
+        // foreach ($transactions as $transaction) {
+        //     $transactionDetail = TransactionDetail::where('invoice_code', $transaction->invoice_code)->get();
+        // }
+        // 'subdata' => new TransactionDetail($transactionDetail),
 
         return response()->json([
-            'data' => TransactionResource::collection($transaction),
+            'data' => TransactionResource::collection($transactions),
             'message' => 'Fetch all Transaction',
             'success' => true
         ]);
@@ -25,29 +41,21 @@ class TransactionController extends Controller
 
     public function store(Request $request)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'product_id' => 'required',
-        //     'quantity' => 'required',
-        //     'price' => 'required',
-        //     'grand_total' => 'required',
-        //     'store_id' => 'required',
-        //     'payment_method' => 'required',
-        //     'status' => 'required',
-        // ]);
+        $validator = Validator::make($request->all(), [
+            'store_id' => 'required',
+            'status' => 'required',
+            'product_id' => 'required',
+            'quantity' => 'required',
+            'price' => 'required',
+        ]);
 
-        // // dd($request->detail);
-        // // foreach ($request->detail as $detail) {
-        // //     var_dump($detail);
-        // // }
-        // // die;
-
-        // if ($validator->fails()) {
-        //     return response()->json([
-        //         'data' => [],
-        //         'message' => $validator->errors(),
-        //         'success' => false
-        //     ]);
-        // }
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => [],
+                'message' => $validator->errors(),
+                'success' => false
+            ]);
+        }
 
         $now = Carbon::now();
         $date = date('Ym', strtotime($now));
@@ -73,7 +81,7 @@ class TransactionController extends Controller
         // $requests = $request->only('name');
         $check = Transaction::where('store_id', $request->store_id)
             ->where('sales_id', auth()->user()->id)
-            ->where('status_delivery', 'unsent')
+            ->where('delivery_status', 'unsent')
             ->first();
         if (empty($check)) {
             $transaction = Transaction::create([
@@ -87,11 +95,11 @@ class TransactionController extends Controller
 
         $invoice_last = Transaction::where('store_id', $request->store_id)
             ->where('sales_id', auth()->user()->id)
-            ->where('status_delivery', 'unsent')
+            ->where('delivery_status', 'unsent')
             ->first();
 
         foreach ($request->detail as $detail) {
-            var_dump($invoice_code);
+            // var_dump($invoice_code);
             $transaction = TransactionDetail::create([
                 'invoice_code' => $invoice_last['invoice_code'],
                 'product_id' => $detail['product_id'],
@@ -108,56 +116,43 @@ class TransactionController extends Controller
         ]);
     }
 
-    public function show(Transaction $transaction)
+    public function show($invoice_code)
     {
+        $transaction = Transaction::where('invoice_code', $invoice_code)->first();
+
+        $transactionDetail = TransactionDetail::where('invoice_code', $transaction->invoice_code)->get();
+
         return response()->json([
             'data' => new TransactionResource($transaction),
+            'subdata' => TransactionDetailResource::collection($transactionDetail),
             'message' => 'Data Transaction found',
             'success' => true
         ]);
     }
 
-    public function update(Request $request, Transaction $transaction)
+    public function payment(Request $request, $invoice_code)
     {
-        $validator = Validator::make($request->all(), [
-            'quantity' => 'required',
-            'price' => 'required',
-            'grand_total' => 'required',
-            'payment_method' => 'required',
-            'status' => 'required',
+        $payment = Payment::create([
+            'total_pay' => $request->total_pay,
+            'invoice_code' => $invoice_code
         ]);
 
+        $transaction = Transaction::where('invoice_code', $invoice_code)->first();
+        $sum_check = Payment::where('invoice_code', $transaction->invoice_code)->sum('total_pay');
 
-        if ($validator->fails()) {
-            return response()->json([
-                'data' => [],
-                'message' => $validator->errors(),
-                'success' => false
+        if ((int)$sum_check < $transaction->grand_total) {
+            Transaction::where('invoice_code', $invoice_code)->update([
+                'status' => 'partial'
+            ]);
+        } else if ((int)$sum_check == $transaction->grand_total) {
+            Transaction::where('invoice_code', $invoice_code)->update([
+                'status' => 'paid'
             ]);
         }
 
-        $transaction->update([
-            'quantity' => $request->quantity,
-            'price' => $request->price,
-            'total' => $request->total,
-            'payment_method' => $request->payment_method,
-            'status' => $request->status,
-        ]);
-
         return response()->json([
-            'data' => new TransactionResource($transaction),
-            'message' => 'Transaction Updated successfully',
-            'success' => true
-        ]);
-    }
-
-    public function destroy(Transaction $transaction)
-    {
-        $transaction->delete();
-
-        return response()->json([
-            'data' => new TransactionResource($transaction),
-            'message' => 'Transaction Deleted successfully',
+            'data' => new PaymentResource($payment),
+            'message' => 'Payment Transaction Successfully',
             'success' => true
         ]);
     }

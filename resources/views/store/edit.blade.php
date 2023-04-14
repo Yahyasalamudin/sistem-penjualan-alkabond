@@ -31,12 +31,12 @@
                             </span>
                         @enderror
 
-                        <label for="phone_number">Nomer Toko</label>
-                        <input type="text" class="form-control @error('phone_number') is-invalid @enderror"
-                            name="phone_number" id="phone_number"
-                            value="{{ old('phone_number', $store->phone_number ?? '') }}">
+                        <label for="store_number">Nomer Toko</label>
+                        <input type="text" class="form-control @error('store_number') is-invalid @enderror"
+                            name="store_number" id="store_number"
+                            value="{{ old('store_number', $store->store_number ?? '') }}">
 
-                        @error('phone_number')
+                        @error('store_number')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>

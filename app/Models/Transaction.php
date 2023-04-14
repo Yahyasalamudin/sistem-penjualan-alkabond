@@ -9,7 +9,7 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $primary = ['invoice_code'];
+    protected $primary = 'invoice_code';
     protected $guarded = [];
 
     public function sales()
@@ -25,5 +25,10 @@ class Transaction extends Model
     public function tansaction_details()
     {
         return $this->hashMany(TransactionDetail::class, 'invoice_code', 'invoice_code');
+    }
+
+    public function payments()
+    {
+        return $this->hashMany(Payment::class, 'invoice_code', 'invoice_code');
     }
 }
