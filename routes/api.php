@@ -21,6 +21,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/transaction', [TransactionController::class, 'store']);
     Route::get('/transaction/{invoice_code}', [TransactionController::class, 'show']);
     Route::post('/transaction/{invoice_code}', [TransactionController::class, 'payment']);
+
     // Route::get('/profile', function (Request $request) {
     //     return auth()->user();
     // });

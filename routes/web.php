@@ -53,7 +53,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/store/{id}/update', [StoreController::class, 'update'])->name('store.update');
     Route::delete('/store/{id}/delete', [StoreController::class, 'destroy'])->name('store.destroy');
 
-    // Route::resource('/product', ProductController::class);
     // CRUD Data Product
     Route::get('/products', [ProductController::class, 'index'])->name('product.index');
     Route::post('/products', [ProductController::class, 'store'])->name('product.store');
@@ -61,10 +60,9 @@ Route::middleware('auth')->group(function () {
     // Route::put('/product/{id}/update', [ProductController::class, 'update'])->name('product.update');
     Route::delete('/product/{id}/delete', [ProductController::class, 'destroy'])->name('product.destroy');
 
-    // Route::resource('/transaction', TransactionController::class);
+    // Transaction
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
-
-
+    Route::get('/transactions/detail-transaction/{invoice_code}', [TransactionController::class, 'show'])->name('transaction.show');
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });

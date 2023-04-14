@@ -118,9 +118,19 @@ class TransactionController extends Controller
 
     public function show($invoice_code)
     {
-        $transaction = Transaction::where('invoice_code', $invoice_code)->first();
+        $transaction = DB::table('transactions')
+            ->where('invoice_code', $invoice_code)
+            ->join('stores', 'transactions.store_id', 'stores.id')
+            ->join('sales', 'transactions.sales_id', 'sales.id')
+            ->select('transactions.*', 'stores.*', 'sales.sales_name', 'sales.username', 'sales.email', 'sales.phone_number')
+            ->orderByDesc('transactions.created_at')
+            ->first();
 
-        $transactionDetail = TransactionDetail::where('invoice_code', $transaction->invoice_code)->get();
+        $transactionDetail = DB::table('transaction_details')
+            ->where('invoice_code', $transaction->invoice_code)
+            ->join('products', 'transaction_details.product_id', 'products.id')
+            ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight')
+            ->get();
 
         return response()->json([
             'data' => new TransactionResource($transaction),
@@ -132,6 +142,15 @@ class TransactionController extends Controller
 
     public function payment(Request $request, $invoice_code)
     {
+        $check = Transaction::where('invoice_code', $invoice_code)->first();
+
+        if ($check->status == 'paid') {
+            return response()->json([
+                'message' => 'Transaction has been paid',
+                'success' => false
+            ]);
+        }
+
         $payment = Payment::create([
             'total_pay' => $request->total_pay,
             'invoice_code' => $invoice_code

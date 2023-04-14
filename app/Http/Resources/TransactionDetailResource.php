@@ -21,6 +21,10 @@ class TransactionDetailResource extends JsonResource
             'quantity' => $this->quantity,
             'price' => $this->price,
             'subtotal' => $this->subtotal,
+            'product_code' => $this->product_code,
+            'product_name' => $this->product_name,
+            'product_brand' => $this->product_brand,
+            'unit_weight' => $this->unit_weight,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
