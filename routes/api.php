@@ -20,6 +20,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/transaction/{invoice_code}', [TransactionController::class, 'show']);
     Route::post('/transaction/{invoice_code}', [TransactionController::class, 'payment']);
 
+    Route::post('/transaction-detail/{id}/return', [TransactionController::class, 'storeReturn']);
+    Route::delete('/transaction-detail/{id}/destroy', [TransactionController::class, 'destroyReturn']);
+
     // Route::get('/profile', function (Request $request) {
     //     return auth()->user();
     // });

@@ -25,6 +25,7 @@ class TransactionDetailResource extends JsonResource
             'product_name' => $this->product_name,
             'product_brand' => $this->product_brand,
             'unit_weight' => $this->unit_weight,
+            'return' => $this->return,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

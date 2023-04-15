@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PaymentResource;
+use App\Http\Resources\ProductReturnResource;
 use App\Http\Resources\TransactionDetailResource;
 use App\Http\Resources\TransactionResource;
 use App\Models\Payment;
+use App\Models\ProductReturn;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use Carbon\Carbon;
@@ -36,7 +38,6 @@ class TransactionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'store_id' => 'required',
-            'grand_total' => 'required',
             'details' => 'requiered|array',
             'details.*.product_id' => 'required',
             'details.*.quantity' => 'required',
@@ -80,7 +81,7 @@ class TransactionController extends Controller
         if (empty($check)) {
             $transaction = Transaction::create([
                 'invoice_code' => $invoice_code,
-                'grand_total' => $request->grand_total,
+                'grand_total' => 0,
                 'store_id' => $request->store_id,
                 'sales_id' => auth()->user()->id
             ]);
@@ -100,6 +101,12 @@ class TransactionController extends Controller
                 'subtotal' => $detail['quantity'] * $detail['price'],
             ]);
         }
+
+        $grand_total = TransactionDetail::where('invoice_code', $invoice_last->invoice_code)->sum('subtotal');
+        Transaction::where('invoice_code', $invoice_last->invoice_code)->update([
+            'grand_total' => $grand_total
+        ]);
+
 
         return response()->json([
             'data' => new TransactionResource($transaction),
@@ -134,6 +141,18 @@ class TransactionController extends Controller
 
     public function payment(Request $request, $invoice_code)
     {
+        $validator = Validator::make($request->all(), [
+            'total_pay' => 'required|numeric'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => [],
+                'message' => $validator->errors(),
+                'status_code' => 403
+            ]);
+        }
+
         $check = Transaction::where('invoice_code', $invoice_code)->first();
 
         if ($check->status == 'paid') {
@@ -185,8 +204,86 @@ class TransactionController extends Controller
         ]);
     }
 
-    public function return($id)
+    public function storeReturn(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'return' => 'required|numeric',
+            'description_return' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => [],
+                'message' => $validator->errors(),
+                'status_code' => 403
+            ]);
+        }
+
+        $transactionDetail = TransactionDetail::find($id);
+
+        if ($transactionDetail->quantity < $request->return) {
+            return response()->json([
+                'message' => 'Product return cannot exceed the purchase limit',
+                'status_code' => 401
+            ]);
+        }
+
+        $productReturn = ProductReturn::create([
+            'detail_id' => $transactionDetail->id,
+            'return' => $request->return,
+            'description_return' => $request->description_return
+        ]);
+
+        $return = ProductReturn::where('detail_id', $id)->first();
+
+        $quantity = $transactionDetail->quantity - $return->return;
+        $return_price = $return->return * $transactionDetail->price;
+        $subtotal = $transactionDetail->subtotal - $return_price;
+
+        $transaction = Transaction::where('invoice_code', $transactionDetail->invoice_code)->first();
+
+        Transaction::where('invoice_code', $transactionDetail->invoice_code)->update([
+            'grand_total' => $transaction->grand_total - $return_price,
+        ]);
+
+        $transactionDetail->update([
+            'quantity' => $quantity,
+            'subtotal' => $subtotal,
+        ]);
+
+        return response()->json([
+            'data' => new ProductReturnResource($productReturn),
+            'message' => 'Data Return has been created successfully ',
+            'status_code' => 200
+        ]);
+    }
+
+    public function destroyReturn($id)
+    {
+        $transactionDetail = TransactionDetail::find($id);
+        $return = ProductReturn::where('detail_id', $id)->first();
+
+        $sum_quantity = $transactionDetail->quantity + $return->return;
+        $return_price = $transactionDetail->price * $return->return;
+        $subtotal = $transactionDetail->subtotal + $return_price;
+
+        $transaction = Transaction::where('invoice_code', $transactionDetail->invoice_code)->first();
+
+        Transaction::where('invoice_code', $transactionDetail->invoice_code)->update([
+            'grand_total' => $transaction->grand_total + $return_price,
+        ]);
+
+        $transactionDetail->update([
+            'quantity' => $sum_quantity,
+            'subtotal' => $subtotal,
+        ]);
+
+        $return->delete();
+
+        return response()->json([
+            'data' => [],
+            'message' => 'Data Return has been deleted successfully ',
+            'status_code' => 200
+        ]);
     }
 }
