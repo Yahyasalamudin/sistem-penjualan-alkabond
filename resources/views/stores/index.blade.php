@@ -42,14 +42,6 @@
                                     <option value="{{ $s->id }}">{{ $s->sales_name }}</option>
                                 @endforeach
                             </select>
-
-                            <label for="city_branch">Kota Toko</label>
-                            <select class="form-control mb-3" name="city_branch" id="city_branch">
-                                <option value=""> - Pilih Kota - </option>
-                                @foreach ($city as $t)
-                                    <option value="{{ $t->city }}">{{ $t->city }}</option>
-                                @endforeach
-                            </select>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -98,13 +90,6 @@
                         </div>
                     </div>
                 @enderror
-                @error('city_branch')
-                    <div class="d-flex justify-content-center">
-                        <div class="alert alert-danger text-center col-sm-4 text-dark">
-                            {{ $message }}
-                        </div>
-                    </div>
-                @enderror
 
                 <table class="table table-bordered text-center text-center" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -112,6 +97,7 @@
                             <th>Toko</th>
                             <th>Alamat</th>
                             <th>Nomer Hp</th>
+                            <th>Toko Kota</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -121,6 +107,7 @@
                                 <td>{{ $store->store_name }}</td>
                                 <td>{{ $store->address }}</td>
                                 <td>{{ $store->store_number }}</td>
+                                <td>{{ $store->city_branch }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
                                         <a href="{{ route('store.edit', Crypt::encrypt($store->id)) }}"

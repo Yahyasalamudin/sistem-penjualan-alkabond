@@ -21,21 +21,14 @@ class TransactionController extends Controller
         $transactions = DB::table('transactions')
             ->join('stores', 'transactions.store_id', 'stores.id')
             ->join('sales', 'transactions.sales_id', 'sales.id')
-            ->select('transactions.*', 'stores.*', 'sales.sales_name', 'sales.username', 'sales.email', 'sales.phone_number')
+            ->select('transactions.*', 'stores.*', 'sales.sales_name', 'sales.username', 'sales.email', 'sales.phone_number', 'sales.city')
             ->orderByDesc('transactions.created_at')
             ->get();
-
-        // dd($transactions);
-        // 'sales.city_branch'
-        // foreach ($transactions as $transaction) {
-        //     $transactionDetail = TransactionDetail::where('invoice_code', $transaction->invoice_code)->get();
-        // }
-        // 'subdata' => new TransactionDetail($transactionDetail),
 
         return response()->json([
             'data' => TransactionResource::collection($transactions),
             'message' => 'Fetch all Transaction',
-            'success' => true
+            'status_code' => 200
         ]);
     }
 
@@ -43,7 +36,8 @@ class TransactionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'store_id' => 'required',
-            'status' => 'required',
+            'grand_total' => 'required',
+            'details' => 'requiered|array',
             'details.*.product_id' => 'required',
             'details.*.quantity' => 'required',
             'details.*.price' => 'required',
@@ -53,7 +47,7 @@ class TransactionController extends Controller
             return response()->json([
                 'data' => [],
                 'message' => $validator->errors(),
-                'success' => false
+                'status_code' => 403
             ]);
         }
 
@@ -78,18 +72,17 @@ class TransactionController extends Controller
             }
         }
 
-        // $requests = $request->only('name');
         $check = Transaction::where('store_id', $request->store_id)
             ->where('sales_id', auth()->user()->id)
             ->where('delivery_status', 'unsent')
             ->first();
+
         if (empty($check)) {
             $transaction = Transaction::create([
                 'invoice_code' => $invoice_code,
                 'grand_total' => $request->grand_total,
                 'store_id' => $request->store_id,
-                'sales_id' => auth()->user()->id,
-                'status' => $request->status,
+                'sales_id' => auth()->user()->id
             ]);
         }
 
@@ -99,7 +92,6 @@ class TransactionController extends Controller
             ->first();
 
         foreach ($request->detail as $detail) {
-            // var_dump($invoice_code);
             $transaction = TransactionDetail::create([
                 'invoice_code' => $invoice_last['invoice_code'],
                 'product_id' => $detail['product_id'],
@@ -112,7 +104,7 @@ class TransactionController extends Controller
         return response()->json([
             'data' => new TransactionResource($transaction),
             'message' => 'Transaction Created successfully',
-            'success' => true
+            'status_code' => 200
         ]);
     }
 
@@ -122,7 +114,7 @@ class TransactionController extends Controller
             ->where('invoice_code', $invoice_code)
             ->join('stores', 'transactions.store_id', 'stores.id')
             ->join('sales', 'transactions.sales_id', 'sales.id')
-            ->select('transactions.*', 'stores.*', 'sales.sales_name', 'sales.username', 'sales.email', 'sales.phone_number')
+            ->select('transactions.*', 'stores.*', 'sales.sales_name', 'sales.username', 'sales.email', 'sales.phone_number', 'sales.city')
             ->orderByDesc('transactions.created_at')
             ->first();
 
@@ -136,7 +128,7 @@ class TransactionController extends Controller
             'data' => new TransactionResource($transaction),
             'subdata' => TransactionDetailResource::collection($transactionDetail),
             'message' => 'Data Transaction found',
-            'success' => true
+            'status_code' => 200
         ]);
     }
 
@@ -147,7 +139,19 @@ class TransactionController extends Controller
         if ($check->status == 'paid') {
             return response()->json([
                 'message' => 'Transaction has been paid',
-                'success' => false
+                'status_code' => 401
+            ]);
+        }
+
+        $transaction = Transaction::where('invoice_code', $invoice_code)->first();
+        $sum_totalpay = Payment::where('invoice_code', $transaction->invoice_code)->sum('total_pay');
+
+        $check_pay = $sum_totalpay + $request->total_pay;
+
+        if ((int)$check_pay > $transaction->grand_total) {
+            return response()->json([
+                'message' => 'Transaction may not exceed the grand total',
+                'status_code' => 401
             ]);
         }
 
@@ -156,23 +160,33 @@ class TransactionController extends Controller
             'invoice_code' => $invoice_code
         ]);
 
-        $transaction = Transaction::where('invoice_code', $invoice_code)->first();
-        $sum_check = Payment::where('invoice_code', $transaction->invoice_code)->sum('total_pay');
-
-        if ((int)$sum_check < $transaction->grand_total) {
+        if ((int)$check_pay < $transaction->grand_total) {
             Transaction::where('invoice_code', $invoice_code)->update([
                 'status' => 'partial'
             ]);
-        } else if ((int)$sum_check == $transaction->grand_total) {
+
+            Transaction::where('invoice_code', $invoice_code)->where('payment_method', null)->update([
+                'payment_method' => 'tempo'
+            ]);
+        } else if ((int)$check_pay == $transaction->grand_total) {
             Transaction::where('invoice_code', $invoice_code)->update([
                 'status' => 'paid'
+            ]);
+
+            Transaction::where('invoice_code', $invoice_code)->where('payment_method', null)->update([
+                'payment_method' => 'cash'
             ]);
         }
 
         return response()->json([
             'data' => new PaymentResource($payment),
             'message' => 'Payment Transaction Successfully',
-            'success' => true
+            'status_code' => 200
         ]);
+    }
+
+    public function return($id)
+    {
+        //
     }
 }

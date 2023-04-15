@@ -44,7 +44,7 @@
 
                         <label for="sales_id">Sales Pengelola Toko</label>
                         <select class="form-control mb-3" name="sales_id" id="sales_id">
-                            <option value="{{ $store->sales_id }}">{{ $store->sales_id }}</option>
+                            <option value="{{ $store->sales_id }}">{{ $store->sales_name }}</option>
                             @foreach ($sales as $s)
                                 <option value="{{ $s->id }}">{{ $s->sales_name }}</option>
                             @endforeach
@@ -60,12 +60,6 @@
                         <select class="form-control mb-3" name="city_branch" id="city_branch" disabled>
                             <option>{{ $store->city_branch }}</option>
                         </select>
-
-                        @error('city_branch')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
                     </div>
                     <button type="submit" class="btn btn-primary">Edit</button>
                 </form>

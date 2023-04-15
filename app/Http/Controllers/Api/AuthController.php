@@ -5,38 +5,56 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SalesResource;
 use App\Models\Sales;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        if (Auth::guard('sales')->attempt($request->only('email', 'password'))) {
-            $user = Sales::where('email', $request['email'])->firstOrFail();
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|min:5',
+            'password' => 'required|min:6'
+        ]);
 
-            $token = $user->createToken('auth_token')->plainTextToken;
-
+        if ($validator->fails()) {
             return response()->json([
-                'data' => new SalesResource($user),
-                'message' => 'Hi ' . $user->sales_name . ', welcome to home', 'access_token' => $token, 'token_type' => 'Bearer',
+                'data' => [],
+                'message' => $validator->errors(),
+                'status_code' => 403
             ]);
-        } else {
-            return response()
-                ->json(['message' => 'Unauthorized'], 401);
         }
+
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::guard('sales')->attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
+            $user = Sales::where('email', $request['email'])->firstOrFail();
+        } else if (Auth::guard('sales')->attempt(['username' => $credentials['email'], 'password' => $credentials['password']])) {
+            $user = Sales::where('username', $request['email'])->firstOrFail();
+        } else {
+            return response()->json([
+                'message' => 'Unauthorized',
+                'status_code' => 401
+            ]);
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'data' => new SalesResource($user),
+            'access_token' => $token, 'token_type' => 'Bearer',
+            'status_code' => 200
+        ]);
     }
 
-    // method for user logout and delete token
     public function logout()
     {
         auth()->user()->tokens()->delete();
 
         return [
-            'message' => 'You have successfully logged out and the token was successfully deleted'
+            'message' => 'You have successfully logged out and the token was successfully deleted',
+            'status_code' => 200
         ];
     }
 }

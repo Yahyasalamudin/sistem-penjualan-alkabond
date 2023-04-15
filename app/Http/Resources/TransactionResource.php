@@ -19,6 +19,7 @@ class TransactionResource extends JsonResource
             'grand_total' => $this->grand_total,
             'store_id' => $this->store_id,
             'sales_id' => $this->sales_id,
+            'payment_method' => $this->payment_method,
             'status' => $this->status,
             'delivery_status' => $this->delivery_status,
             'store_name' => $this->store_name,
@@ -29,6 +30,7 @@ class TransactionResource extends JsonResource
             'username' => $this->username,
             'email' => $this->email,
             'phone_number' => $this->phone_number,
+            'city' => $this->city,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

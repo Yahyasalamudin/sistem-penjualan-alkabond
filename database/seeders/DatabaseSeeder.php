@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '081233247969',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             // password
-            'city_branch' => 'Semboro',
+            'city' => 'Semboro',
             'role' => 'owner'
         ]);
 
@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '081233247969',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             // password
-            'city_branch' => 'GadingRejo',
+            'city' => 'GadingRejo',
             'role' => 'admin'
         ]);
 
@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '081233247969',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             // password
-            'city_branch' => 'Semboro',
+            'city' => 'Semboro',
             'role' => 'admin'
         ]);
 
@@ -61,7 +61,7 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '081234567890',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             // password
-            'city_branch' => 'Semboro',
+            'city' => 'Semboro',
         ]);
     }
 }

@@ -18,7 +18,7 @@ class TransactionController extends Controller
 
         if (auth()->user()->role == 'admin') {
             $transactions = DB::table('transactions')
-                ->where('stores.city_branch', auth()->user()->city_branch)
+                ->where('stores.city_branch', auth()->user()->city)
                 ->join('stores', 'transactions.store_id', 'stores.id')
                 ->select('transactions.*', 'stores.store_name', 'stores.address', 'stores.store_number', 'stores.city_branch')
                 ->orderByDesc('transactions.created_at')
@@ -34,7 +34,7 @@ class TransactionController extends Controller
             ->where('invoice_code', $invoice_code)
             ->join('stores', 'transactions.store_id', 'stores.id')
             ->join('sales', 'transactions.sales_id', 'sales.id')
-            ->select('transactions.*', 'stores.store_name', 'stores.address', 'stores.store_number', 'stores.city_branch', 'sales.sales_name', 'sales.username', 'sales.phone_number')
+            ->select('transactions.*', 'stores.store_name', 'stores.address', 'stores.store_number', 'stores.city_branch', 'sales.sales_name', 'sales.username', 'sales.phone_number', 'sales.city')
             ->orderByDesc('transactions.created_at')
             ->first();
 

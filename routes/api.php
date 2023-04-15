@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\StoreController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TransactionController;
 
@@ -10,13 +11,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // Route::resource('/product', ProductController::class);
 
-    // Route::get('/logi', function () {
-    //     dd(auth()->user());
-    // });
-
     // Route::resource('/store', StoreController::class);
+    Route::get('/stores', [StoreController::class, 'index'])->name('store.index');
+    Route::post('/stores', [StoreController::class, 'store'])->name('store.store');
 
-    // Route::resource('/transaction', TransactionController::class);
     Route::get('/transaction', [TransactionController::class, 'index']);
     Route::post('/transaction', [TransactionController::class, 'store']);
     Route::get('/transaction/{invoice_code}', [TransactionController::class, 'show']);

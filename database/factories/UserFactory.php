@@ -26,7 +26,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'phone_number' => '08' . $this->faker->numberBetween(9, 12) . $this->faker->randomNumber(9),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'city_branch' => $this->faker->city(),
+            'city' => $this->faker->city(),
             'role' => $this->faker->randomElement(['owner', 'admin']),
             'remember_token' => Str::random(10),
         ];
