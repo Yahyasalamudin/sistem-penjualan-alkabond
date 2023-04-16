@@ -15,7 +15,6 @@ class CreateProductReturnsTable extends Migration
     {
         Schema::create('product_returns', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('detail_id')->constrained('transaction_details');
             $table->integer('return');
             $table->text('description_return');
             $table->timestamps();

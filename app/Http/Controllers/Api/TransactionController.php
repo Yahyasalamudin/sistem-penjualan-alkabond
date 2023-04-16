@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PaymentResource;
-use App\Http\Resources\ProductReturnResource;
 use App\Http\Resources\TransactionDetailResource;
 use App\Http\Resources\TransactionResource;
 use App\Models\Payment;
@@ -128,7 +127,8 @@ class TransactionController extends Controller
         $transactionDetail = DB::table('transaction_details')
             ->where('invoice_code', $transaction->invoice_code)
             ->join('products', 'transaction_details.product_id', 'products.id')
-            ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight')
+            ->leftJoin('product_returns', 'transaction_details.return_id', 'product_returns.id')
+            ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight', 'product_returns.return', 'product_returns.description_return')
             ->get();
 
         return response()->json([
@@ -229,12 +229,15 @@ class TransactionController extends Controller
         }
 
         $productReturn = ProductReturn::create([
-            'detail_id' => $transactionDetail->id,
             'return' => $request->return,
             'description_return' => $request->description_return
         ]);
 
-        $return = ProductReturn::where('detail_id', $id)->first();
+        $transactionDetail->update([
+            'return_id' => $productReturn->id
+        ]);
+
+        $return = ProductReturn::where('id', $transactionDetail->return_id)->first();
 
         $quantity = $transactionDetail->quantity - $return->return;
         $return_price = $return->return * $transactionDetail->price;
@@ -251,8 +254,15 @@ class TransactionController extends Controller
             'subtotal' => $subtotal,
         ]);
 
+        $transaction_detail = DB::table('transaction_details')
+            ->where('transaction_details.id', $id)
+            ->join('products', 'transaction_details.product_id', 'products.id')
+            ->join('product_returns', 'transaction_details.return_id', 'product_returns.id')
+            ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight', 'product_returns.return', 'product_returns.description_return')
+            ->first();
+
         return response()->json([
-            'data' => new ProductReturnResource($productReturn),
+            'data' => new TransactionDetailResource($transaction_detail),
             'message' => 'Data Return has been created successfully ',
             'status_code' => 200
         ]);
@@ -261,7 +271,7 @@ class TransactionController extends Controller
     public function destroyReturn($id)
     {
         $transactionDetail = TransactionDetail::find($id);
-        $return = ProductReturn::where('detail_id', $id)->first();
+        $return = ProductReturn::where('id', $transactionDetail->return_id)->first();
 
         $sum_quantity = $transactionDetail->quantity + $return->return;
         $return_price = $transactionDetail->price * $return->return;

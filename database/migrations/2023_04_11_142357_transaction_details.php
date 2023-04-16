@@ -20,8 +20,10 @@ class TransactionDetails extends Migration
             $table->integer('quantity');
             $table->integer('price');
             $table->integer('subtotal');
+            $table->unsignedBigInteger('return_id')->nullable();
             $table->timestamps();
 
+            $table->foreign('return_id')->references('id')->on('product_returns')->onDelete('set null');
             $table->foreign('invoice_code')->references('invoice_code')->on('transactions')->onDelete('cascade');
         });
     }

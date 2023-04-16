@@ -72,12 +72,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\Product::factory()->create([
-            'product_name' => 'Perekata Bata Ringan',
+            'product_code' => 'PBR202304100001',
+            'product_name' => 'Perekat Bata Ringan',
             'product_brand' => 'Alkabon / MORBON',
             'unit_weight' => 'sak @ 30kg',
         ]);
 
         \App\Models\Product::factory()->create([
+            'product_code' => 'AC2023100002',
             'product_name' => 'Acian Putih',
             'product_brand' => 'Alkabon 100 - MUI',
             'unit_weight' => 'sak @ 40kg',
