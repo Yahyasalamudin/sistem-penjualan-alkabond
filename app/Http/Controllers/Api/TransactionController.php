@@ -167,7 +167,7 @@ class TransactionController extends Controller
 
         $check_pay = $sum_totalpay + $request->total_pay;
 
-        if ((int)$check_pay > $transaction->grand_total) {
+        if ((int) $check_pay > $transaction->grand_total) {
             return response()->json([
                 'message' => 'Transaction may not exceed the grand total',
                 'status_code' => 401
@@ -179,7 +179,7 @@ class TransactionController extends Controller
             'invoice_code' => $invoice_code
         ]);
 
-        if ((int)$check_pay < $transaction->grand_total) {
+        if ((int) $check_pay < $transaction->grand_total) {
             Transaction::where('invoice_code', $invoice_code)->update([
                 'status' => 'partial'
             ]);
@@ -187,7 +187,7 @@ class TransactionController extends Controller
             Transaction::where('invoice_code', $invoice_code)->where('payment_method', null)->update([
                 'payment_method' => 'tempo'
             ]);
-        } else if ((int)$check_pay == $transaction->grand_total) {
+        } else if ((int) $check_pay == $transaction->grand_total) {
             Transaction::where('invoice_code', $invoice_code)->update([
                 'status' => 'paid'
             ]);

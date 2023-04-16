@@ -40,7 +40,7 @@ class ProductController extends Controller
             $product_code = $output . $date . $code;
         } else {
             $query = Product::all()->last();
-            $code = (int)substr($query->product_code, -6) + 1;
+            $code = (int) substr($query->product_code, -6) + 1;
             $product_code = $output . $date . $code;
         }
 

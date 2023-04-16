@@ -63,5 +63,24 @@ class DatabaseSeeder extends Seeder
             // password
             'city' => 'Semboro',
         ]);
+
+        \App\Models\Store::factory()->create([
+            'store_name' => 'Toko Jaya Abadi',
+            'address' => 'Semboro',
+            'store_number' => '082123123123',
+            'sales_id' => '1',
+        ]);
+
+        \App\Models\Product::factory()->create([
+            'product_name' => 'Perekata Bata Ringan',
+            'product_brand' => 'Alkabon / MORBON',
+            'unit_weight' => 'sak @ 30kg',
+        ]);
+
+        \App\Models\Product::factory()->create([
+            'product_name' => 'Acian Putih',
+            'product_brand' => 'Alkabon 100 - MUI',
+            'unit_weight' => 'sak @ 40kg',
+        ]);
     }
 }
