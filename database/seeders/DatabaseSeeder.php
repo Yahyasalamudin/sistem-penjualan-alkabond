@@ -68,6 +68,7 @@ class DatabaseSeeder extends Seeder
             'store_name' => 'Toko Jaya Abadi',
             'address' => 'Semboro',
             'store_number' => '082123123123',
+            'city_branch' => 'Semboro',
             'sales_id' => '1',
         ]);
 

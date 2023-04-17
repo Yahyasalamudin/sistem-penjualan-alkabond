@@ -4,10 +4,12 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SalesController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\UnitController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,6 +65,24 @@ Route::middleware('auth')->group(function () {
     // Transaction
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
     Route::get('/transactions/detail-transaction/{invoice_code}', [TransactionController::class, 'show'])->name('transaction.show');
+
+    // User
+    Route::get('/users', [UserController::class, 'index'])->name('user.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/users/create', [UserController::class, 'store'])->name('user.store');
+    Route::get('/user/show/{id}', [UserController::class, 'show'])->name('user.show');
+    Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+    Route::put('/user/update/{id}', [UserController::class, 'update'])->name('user.update');
+    Route::delete('/user/delete/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+
+    // Sales
+    Route::get('/sales', [SalesController::class, 'index'])->name('sales.index');
+    Route::get('/sales/create', [SalesController::class, 'create'])->name('sales.create');
+    Route::post('/sales/create', [SalesController::class, 'store'])->name('sales.store');
+    Route::get('/sales/show/{id}', [SalesController::class, 'show'])->name('sales.show');
+    Route::get('/sales/edit/{id}', [SalesController::class, 'edit'])->name('sales.edit');
+    Route::put('/sales/update/{id}', [SalesController::class, 'update'])->name('sales.update');
+    Route::delete('/sales/delete/{id}', [SalesController::class, 'destroy'])->name('sales.destroy');
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });

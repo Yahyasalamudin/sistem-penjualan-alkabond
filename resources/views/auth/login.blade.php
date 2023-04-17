@@ -32,7 +32,6 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
-
                             </div>
 
                             <div class="baris">
