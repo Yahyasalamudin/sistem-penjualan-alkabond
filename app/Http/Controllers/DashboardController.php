@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use App\Models\Store;
+use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -13,7 +17,20 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+        $transaction = Transaction::count();
+        $carbon = Carbon::now()->format('Y-m-d');
+        $transaction_now = Transaction::where('transaction_date', $carbon)->count();
+        $store = Store::count();
+        $product = Product::count();
+
+
+        return view('dashboard', [
+            'title' => 'Dashboard',
+            'transaction' => $transaction,
+            'transaction_now' => $transaction_now,
+            'store' => $store,
+            'product' => $product,
+        ]);
     }
 
     /**

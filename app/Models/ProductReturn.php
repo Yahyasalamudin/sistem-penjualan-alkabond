@@ -9,5 +9,5 @@ class ProductReturn extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['detail_id', 'return', 'description_return'];
+    protected $fillable = ['return', 'description_return'];
 }

@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,6 +22,7 @@ class CreateTransactionsTable extends Migration
             $table->enum('payment_method', ['cash', 'tempo'])->nullable();
             $table->enum('status', ['paid', 'unpaid', 'partial'])->default('unpaid');
             $table->enum('delivery_status', ['unsent', 'sent', 'proccess'])->default('unsent');
+            $table->date('transaction_date')->default(Carbon::now());
             $table->timestamps();
         });
     }
