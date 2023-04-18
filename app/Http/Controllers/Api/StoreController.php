@@ -13,7 +13,8 @@ class StoreController extends Controller
 {
     public function index()
     {
-        $store = Store::where('sales_id', auth()->user()->id)->latest()->get();
+        $store = Store::latest()->get();
+        // $store = Store::where('sales_id', auth()->user()->id)->latest()->get();
 
         return response()->json([
             'data' => StoreResource::collection($store),

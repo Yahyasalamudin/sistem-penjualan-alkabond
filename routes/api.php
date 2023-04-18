@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\StoreController;
+use App\Http\Controllers\Api\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TransactionController;
 
@@ -9,7 +10,9 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
-    // Route::resource('/product', ProductController::class);
+    Route::get('/product', [ProductController::class, 'index']);
+    Route::get('/product?type={type}', [ProductController::class, 'index']);
+    Route::get('/product-type', [ProductController::class, 'getProductTypes']);
 
     // Route::resource('/store', StoreController::class);
     Route::get('/stores', [StoreController::class, 'index'])->name('store.index');
