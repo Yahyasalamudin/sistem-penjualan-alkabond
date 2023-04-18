@@ -9,7 +9,7 @@ class City extends Model
 {
     use HasFactory;
 
-    protected $guarded =[];
-    
-    protected $fillable =['city'];
+    protected $guarded = ['id'];
+
+    protected $fillable = ['city'];
 }

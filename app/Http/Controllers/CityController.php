@@ -4,14 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class CityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $city = City::get();
@@ -21,12 +17,6 @@ class CityController extends Controller
         return view('cities.index', compact('city', 'title'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -37,28 +27,18 @@ class CityController extends Controller
             'city' => $request->city
         ]);
 
-        return redirect()->back()->with('success', 'Kota berhasil ditambahkan');
+        return back()->with('success', 'Kota berhasil ditambahkan');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(City $city)
+    public function edit($id)
     {
+        $id = Crypt::decrypt($id);
+        $city = City::find($id);
+
         return view('cities.edit', compact('city'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, City $city)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'city' => 'required|regex:/^[a-zA-Z\s]*$/|unique:cities'
@@ -66,7 +46,7 @@ class CityController extends Controller
             'city.regex' => 'Nama Kota tidak boleh berupa angka'
         ]);
 
-        $city->update([
+        City::find($id)->update([
             'city' => $request->city
         ], [
             'city' => 'Nama Kota tidak boleh berupa angka'
@@ -75,16 +55,10 @@ class CityController extends Controller
         return redirect('cities')->with('success', 'Kota berhasil diubah');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(City $city)
+    public function destroy($id)
     {
-        $city->delete();
+        City::find($id)->delete();
 
-        return redirect()->back()->with('success', 'Kota berhasil dihapus');
+        return back()->with('success', 'Kota berhasil dihapus');
     }
 }

@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+class CreateProductReturnsTable extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -12,10 +13,10 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('units', function (Blueprint $table) {
+        Schema::create('product_returns', function (Blueprint $table) {
             $table->id();
-            $table->string('unit_name');
-            $table->string('amount');
+            $table->integer('return');
+            $table->text('description_return');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('units');
+        Schema::dropIfExists('product_returns');
     }
-};
+}

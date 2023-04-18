@@ -21,7 +21,7 @@ class TypeSeeder extends Seeder
             ['type' => 'Acian Putih'],
             ['type' => 'Acian Putih Kecil'],
             ['type' => 'Acian Abu-Abu'],
-            ['type' => 'Mortar Multi FUngsi'],
+            ['type' => 'Mortar Multi Fungsi'],
             ['type' => 'Peningkat Daya Rekat Semen'],
             ['type' => 'Gypsum Additive'],
             ['type' => 'Additive Anti Air'],

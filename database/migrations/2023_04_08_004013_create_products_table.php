@@ -18,7 +18,7 @@ class CreateProductsTable extends Migration
             $table->string('product_code');
             $table->string('product_name')->comment("jenis barang");
             $table->string('product_brand');
-            $table->foreignId('unit_id')->constrained('units');
+            $table->string('unit_weight');
             $table->timestamps();
         });
     }

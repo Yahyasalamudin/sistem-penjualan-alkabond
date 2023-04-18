@@ -17,7 +17,8 @@ class CreateStoresTable extends Migration
             $table->id();
             $table->string('store_name');
             $table->text('address');
-            $table->char('phone_number', 14);
+            $table->char('store_number', 14);
+            $table->string('city_branch')->nullable();
             $table->foreignId('sales_id')->constrained('sales');
             $table->timestamps();
         });

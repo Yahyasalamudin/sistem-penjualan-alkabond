@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->char('phone_number', 14);
             $table->string('password');
-            $table->string('city_branch')->nullable();
+            $table->string('city')->nullable();
             $table->enum('role', ['owner', 'admin']);
             $table->rememberToken();
             $table->timestamps();

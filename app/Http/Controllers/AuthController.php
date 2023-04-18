@@ -58,16 +58,23 @@ class AuthController extends Controller
     public function actionLogin(Request $request)
     {
         $request->validate([
-            'email' => 'required',
+            'email_username' => 'required|min:5',
             'password' => 'required|min:6'
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'))) {
+        $credentials = $request->only('email_username', 'password');
+
+        if (Auth::attempt(['email' => $credentials['email_username'], 'password' => $credentials['password']]) || Auth::attempt(['username' => $credentials['email_username'], 'password' => $credentials['password']])) {
             return redirect('dashboard');
+        } else {
+            $email = User::where('email', $credentials['email_username'])->first();
+            $username = User::where('username', $credentials['email_username'])->first();
+            if ($email || $username) {
+                return back()->with('error', 'Password yang anda masukkan salah!!');
+            } else {
+                return back()->with('error', 'Email atau Username tidak ditemukan!!');
+            }
         }
-
-        return redirect()->back()->with('error', 'Email atau Password Salah');
-
     }
 
     public function logout()

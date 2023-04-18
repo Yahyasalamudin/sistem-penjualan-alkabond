@@ -20,7 +20,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('cities.store') }}" method="post">
+                    <form action="{{ route('city.store') }}" method="post">
                         @csrf
                         <div class="modal-body">
                             <label for="city">Nama Kota</label>
@@ -53,7 +53,7 @@
                         </div>
                     </div>
                 @enderror
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Kota</th>
@@ -66,16 +66,17 @@
                                 <td class="col-lg-7">{{ $c->city }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('cities.edit', $c->id) }}" class="btn btn-warning btn-icon-split">
+                                        <a href="{{ route('city.edit', Crypt::encrypt($c->id)) }}"
+                                            class="btn btn-sm btn-warning btn-icon-split">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-pencil-alt"></i>
                                             </span>
                                             <span class="text">Edit Kota</span>
                                         </a>
-                                        <form action="{{ route('cities.destroy', $c->id) }}" method="post">
+                                        <form action="{{ route('city.destroy', $c->id) }}" method="post">
                                             @csrf
                                             @method('delete')
-                                            <button type="submit" class="btn btn-danger btn-icon-split ml-5">
+                                            <button type="submit" class="btn btn-sm btn-danger btn-icon-split ml-5">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-trash"></i>
                                                 </span>

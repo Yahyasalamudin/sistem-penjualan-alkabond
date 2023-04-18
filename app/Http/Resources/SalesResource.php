@@ -18,9 +18,10 @@ class SalesResource extends JsonResource
             'id' => $this->id,
             'sales_name' => $this->sales_name,
             'username' => $this->username,
+            'email' => $this->email,
             'phone_number' => $this->phone_number,
-            'password' => $this->password,
-            'city_branch' => $this->city_branch,
+            // 'password' => $this->password,
+            'city' => $this->city,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

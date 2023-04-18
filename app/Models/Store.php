@@ -9,5 +9,10 @@ class Store extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['store_name', 'address', 'phone_number', 'sales_id'];
+    protected $fillable = ['store_name', 'address', 'store_number', 'sales_id', 'city_branch'];
+
+    public function transactions()
+    {
+        return $this->hashMany(Transaction::class, 'store_id', 'id');
+    }
 }

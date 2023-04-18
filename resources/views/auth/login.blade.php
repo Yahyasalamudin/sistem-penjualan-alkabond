@@ -23,16 +23,15 @@
                         <form class="form-group formu" action="{{ Route('actionLogin') }}" method="post">
                             @csrf
                             <div class="baris">
-                                <input type="email" class="form__input @error('email') is-invalid @enderror"
-                                    name="email" id="email" aria-describedby="emailHelp"
-                                    placeholder="Masukkan Email..." autocomplete="off" value="{{ old('email') }}">
+                                <input type="text" class="form__input @error('email_username') is-invalid @enderror"
+                                    name="email_username" id="email_username" placeholder="Masukkan Email atau Username..."
+                                    autocomplete="off" value="{{ old('email_username') }}">
 
-                                @error('email')
+                                @error('email_username')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
-
                             </div>
 
                             <div class="baris">

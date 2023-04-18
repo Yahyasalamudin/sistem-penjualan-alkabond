@@ -263,6 +263,8 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'city' => 'Kota'
+    ],
 
 ];

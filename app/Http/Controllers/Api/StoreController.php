@@ -13,12 +13,12 @@ class StoreController extends Controller
 {
     public function index()
     {
-        $store = Store::latest()->get();
+        $store = Store::where('sales_id', auth()->user()->id)->latest()->get();
 
         return response()->json([
             'data' => StoreResource::collection($store),
             'message' => 'Fetch all Store',
-            'success' => true
+            'status_code' => 200
         ]);
     }
 
@@ -27,92 +27,29 @@ class StoreController extends Controller
         $validator = Validator::make($request->all(), [
             'store_name' => 'required',
             'address' => 'required',
-            'phone_number' => 'required|numeric|digits_between:10,14',
-            'sales_id' => 'required',
+            'store_number' => 'required|numeric|digits_between:10,14'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'data' => [],
                 'message' => $validator->errors(),
-                'success' => false
+                'status_code' => 403
             ]);
         }
 
         $store = Store::create([
             'store_name' => $request->store_name,
             'address' => $request->address,
-            'phone_number' => $request->phone_number,
-            'sales_id' => $request->sales_id,
+            'store_number' => $request->store_number,
+            'city_branch' => auth()->user()->city,
+            'sales_id' => auth()->user()->id
         ]);
 
         return response()->json([
             'data' => new StoreResource($store),
             'message' => 'Store Created successfully',
-            'success' => true
-        ]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Store $store)
-    {
-        return response()->json([
-            'data' => new StoreResource($store),
-            'message' => 'Data Store found',
-            'success' => true
-        ]);
-    }
-
-    public function update(Request $request, Store $store)
-    {
-        $validator = Validator::make($request->all(), [
-            'store_name' => 'required',
-            'address' => 'required',
-            'phone_number' => 'required|numeric|digits_between:10,14',
-            'sales_id' => 'required',
-        ]);
-
-        if($validator->fails()) {
-            return response()->json([
-                'data' => [],
-                'message' => $validator->errors(),
-                'success' => false
-            ]);
-        }
-
-        $store->update([
-            'store_name' => $request->store_name,
-            'address' => $request->address,
-            'phone_number' => $request->phone_number,
-            'sales_id' => $request->sales_id,
-        ]);
-
-        return response()->json([
-            'data' => new StoreResource($store),
-            'message' => 'Store Updated successfully',
-            'success' => true
-        ]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Store $store)
-    {
-        $store->delete();
-
-        return response()->json([
-            'data' => new StoreResource($store),
-            'message' => 'Store Deleted successfully',
-            'success' => true
+            'status_code' => 200
         ]);
     }
 }
