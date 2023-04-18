@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('app')
-    <div class="container-fluid">
+    <div class="container-fluid ">
         <div class="baris main-content bg-success text-center">
             <div class="col-md-5 text-center company__info">
 
