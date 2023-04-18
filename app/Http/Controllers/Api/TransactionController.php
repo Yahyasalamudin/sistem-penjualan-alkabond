@@ -92,23 +92,50 @@ class TransactionController extends Controller
             ->first();
 
         foreach ($request->detail as $detail) {
-            $transaction = TransactionDetail::create([
-                'invoice_code' => $invoice_last['invoice_code'],
-                'product_id' => $detail['product_id'],
-                'quantity' => $detail['quantity'],
-                'price' => $detail['price'],
-                'subtotal' => $detail['quantity'] * $detail['price'],
-            ]);
+            $check_detail = TransactionDetail::where('invoice_code', $invoice_last['invoice_code'])->where('product_id', $detail['product_id'])->first();
+            if (empty($check_detail)) {
+                $transaction = TransactionDetail::create([
+                    'invoice_code' => $invoice_last['invoice_code'],
+                    'product_id' => $detail['product_id'],
+                    'quantity' => $detail['quantity'],
+                    'price' => $detail['price'],
+                    'subtotal' => $detail['quantity'] * $detail['price'],
+                ]);
+            } else {
+                $quantity_new = $detail['quantity'] + $check_detail['quantity'];
+                $transaction = $check_detail->update([
+                    'quantity' => $quantity_new,
+                    'subtotal' => $quantity_new * $check_detail['price']
+                ]);
+            }
         }
 
         $grand_total = TransactionDetail::where('invoice_code', $invoice_last->invoice_code)->sum('subtotal');
+
         Transaction::where('invoice_code', $invoice_last->invoice_code)->update([
             'grand_total' => $grand_total
         ]);
 
+        $transaction = DB::table('transactions')
+            ->where('store_id', $request->store_id)
+            ->where('transactions.sales_id', auth()->user()->id)
+            ->where('delivery_status', 'unsent')
+            ->join('stores', 'transactions.store_id', 'stores.id')
+            ->join('sales', 'transactions.sales_id', 'sales.id')
+            ->select('transactions.*', 'stores.*', 'sales.sales_name', 'sales.username', 'sales.email', 'sales.phone_number', 'sales.city')
+            ->orderByDesc('transactions.created_at')
+            ->first();
+
+        $transactionDetail = DB::table('transaction_details')
+            ->where('invoice_code', $transaction->invoice_code)
+            ->join('products', 'transaction_details.product_id', 'products.id')
+            ->leftJoin('product_returns', 'transaction_details.return_id', 'product_returns.id')
+            ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight', 'product_returns.return', 'product_returns.description_return')
+            ->get();
 
         return response()->json([
             'data' => new TransactionResource($transaction),
+            'subdata' => TransactionDetailResource::collection($transactionDetail),
             'message' => 'Transaction Created successfully',
             'status_code' => 200
         ]);
