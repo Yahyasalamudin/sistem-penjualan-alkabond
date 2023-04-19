@@ -9,10 +9,10 @@ class Payment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['total_pay', 'invoice_code'];
+    protected $fillable = ['total_pay', 'transaction_id'];
 
-    public function transaction()
+    public function transactions()
     {
-        return $this->belongsTo(Transaction::class, 'invoice_code', 'invoice_code');
+        return $this->belongsTo(Transaction::class, 'transaction_id', 'id');
     }
 }

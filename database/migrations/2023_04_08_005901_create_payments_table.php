@@ -16,10 +16,11 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->integer('total_pay');
-            $table->char('invoice_code', 15);
+            $table->foreignId('transaction_id')->constrained('transactions');
+            // $table->char('invoice_code', 15);
             $table->timestamps();
 
-            $table->foreign('invoice_code')->references('invoice_code')->on('transactions')->onDelete('cascade');
+            // $table->foreign('invoice_code')->references('invoice_code')->on('transactions')->onDelete('cascade');
         });
     }
 

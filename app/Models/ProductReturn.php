@@ -10,4 +10,9 @@ class ProductReturn extends Model
     use HasFactory;
 
     protected $fillable = ['return', 'description_return'];
+
+    public function transaction_detail()
+    {
+        return $this->hasOne(TransactionDetail::class, 'return_id', 'id');
+    }
 }

@@ -11,13 +11,18 @@ class TransactionDetail extends Model
 
     protected $guarded = ['id'];
 
-    public function transactions()
+    public function transaction()
     {
-        return $this->belongsTo(App\Models\Transaction::class, 'invoice_code');
+        return $this->belongsTo(Transaction::class, 'transaction_id', 'id');
     }
 
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+
+    public function product_return()
+    {
+        return $this->belongsTo(ProductReturn::class, 'return_id', 'id');
     }
 }

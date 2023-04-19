@@ -19,7 +19,7 @@ class TransactionController extends Controller
 {
     public function index($filter)
     {
-        $transaction = Transaction::with('transactionDetail')->get();
+        $transaction = Transaction::with('transaction_details')->get();
         dd($transaction);
 
         $transactions = DB::table('transactions')
@@ -70,7 +70,7 @@ class TransactionController extends Controller
             'store_id' => 'required',
             'details' => 'requiered|array',
             'details.*.product_id' => 'required',
-            'details.*.quantity' => 'required',
+            // 'details.*.quantity' => 'required',
             'details.*.price' => 'required',
         ]);
 
@@ -117,16 +117,16 @@ class TransactionController extends Controller
             ]);
         }
 
-        $invoice_last = Transaction::where('store_id', $request->store_id)
+        $check_transactions = Transaction::where('store_id', $request->store_id)
             ->where('sales_id', auth()->user()->id)
             ->where('delivery_status', 'unsent')
             ->first();
 
         foreach ($request->detail as $detail) {
-            $check_detail = TransactionDetail::where('invoice_code', $invoice_last['invoice_code'])->where('product_id', $detail['product_id'])->first();
+            $check_detail = TransactionDetail::where('transaction_id', $check_transactions['id'])->where('product_id', $detail['product_id'])->first();
             if (empty($check_detail)) {
                 $transaction = TransactionDetail::create([
-                    'invoice_code' => $invoice_last['invoice_code'],
+                    'transaction_id' => $check_transactions['id'],
                     'product_id' => $detail['product_id'],
                     'quantity' => $detail['quantity'],
                     'price' => $detail['price'],
@@ -141,9 +141,9 @@ class TransactionController extends Controller
             }
         }
 
-        $grand_total = TransactionDetail::where('invoice_code', $invoice_last->invoice_code)->sum('subtotal');
+        $grand_total = TransactionDetail::where('transaction_id', $check_transactions->id)->sum('subtotal');
 
-        Transaction::where('invoice_code', $invoice_last->invoice_code)->update([
+        Transaction::where('id', $check_transactions->id)->update([
             'grand_total' => $grand_total
         ]);
 
@@ -158,7 +158,7 @@ class TransactionController extends Controller
             ->first();
 
         $transactionDetail = DB::table('transaction_details')
-            ->where('invoice_code', $transaction->invoice_code)
+            ->where('transaction_id', $transaction->id)
             ->join('products', 'transaction_details.product_id', 'products.id')
             ->leftJoin('product_returns', 'transaction_details.return_id', 'product_returns.id')
             ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight', 'product_returns.return', 'product_returns.description_return')
@@ -172,7 +172,7 @@ class TransactionController extends Controller
         ]);
     }
 
-    public function show($invoice_code)
+    public function show($id)
     {
         // $transaction = DB::table('transactions')
         //     ->where('invoice_code', $invoice_code)
@@ -189,8 +189,8 @@ class TransactionController extends Controller
         //     ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight', 'product_returns.return', 'product_returns.description_return')
         //     ->get();
 
-        $transaction = Transaction::with('transaction_details')->get();
-        dd($transaction);
+        $transaction = Transaction::with('transaction_details')->with('payments')->find($id);
+        // dd($transaction);
 
         return response()->json([
             'data' => new TransactionResource($transaction),
@@ -224,7 +224,7 @@ class TransactionController extends Controller
         }
 
         $transaction = Transaction::where('invoice_code', $invoice_code)->first();
-        $sum_totalpay = Payment::where('invoice_code', $transaction->invoice_code)->sum('total_pay');
+        $sum_totalpay = Payment::where('transaction_id', $transaction->id)->sum('total_pay');
 
         $check_pay = $sum_totalpay + $request->total_pay;
 
@@ -237,7 +237,7 @@ class TransactionController extends Controller
 
         $payment = Payment::create([
             'total_pay' => $request->total_pay,
-            'invoice_code' => $invoice_code
+            'transaction_id' => $transaction->id
         ]);
 
         if ((int) $check_pay < $transaction->grand_total) {
@@ -304,9 +304,9 @@ class TransactionController extends Controller
         $return_price = $return->return * $transactionDetail->price;
         $subtotal = $transactionDetail->subtotal - $return_price;
 
-        $transaction = Transaction::where('invoice_code', $transactionDetail->invoice_code)->first();
+        $transaction = Transaction::where('id', $transactionDetail->transaction_id)->first();
 
-        Transaction::where('invoice_code', $transactionDetail->invoice_code)->update([
+        Transaction::where('id', $transactionDetail->transaction_id)->update([
             'grand_total' => $transaction->grand_total - $return_price,
         ]);
 
