@@ -22,7 +22,7 @@ class Transaction extends Model
         return $this->belongsTo(Store::class, 'store_id', 'id');
     }
 
-    public function tansaction_details()
+    public function transactionDetail()
     {
         return $this->hashMany(TransactionDetail::class, 'invoice_code', 'invoice_code');
     }

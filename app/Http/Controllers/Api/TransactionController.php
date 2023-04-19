@@ -19,6 +19,9 @@ class TransactionController extends Controller
 {
     public function index()
     {
+        $transaction = Transaction::with('transactionDetail')->get();
+        dd($transaction);
+
         $transactions = DB::table('transactions')
             ->join('stores', 'transactions.store_id', 'stores.id')
             ->join('sales', 'transactions.sales_id', 'sales.id')
@@ -143,24 +146,27 @@ class TransactionController extends Controller
 
     public function show($invoice_code)
     {
-        $transaction = DB::table('transactions')
-            ->where('invoice_code', $invoice_code)
-            ->join('stores', 'transactions.store_id', 'stores.id')
-            ->join('sales', 'transactions.sales_id', 'sales.id')
-            ->select('transactions.*', 'stores.*', 'sales.sales_name', 'sales.username', 'sales.email', 'sales.phone_number', 'sales.city')
-            ->orderByDesc('transactions.created_at')
-            ->first();
+        // $transaction = DB::table('transactions')
+        //     ->where('invoice_code', $invoice_code)
+        //     ->join('stores', 'transactions.store_id', 'stores.id')
+        //     ->join('sales', 'transactions.sales_id', 'sales.id')
+        //     ->select('transactions.*', 'stores.*', 'sales.sales_name', 'sales.username', 'sales.email', 'sales.phone_number', 'sales.city')
+        //     ->orderByDesc('transactions.created_at')
+        //     ->first();
 
-        $transactionDetail = DB::table('transaction_details')
-            ->where('invoice_code', $transaction->invoice_code)
-            ->join('products', 'transaction_details.product_id', 'products.id')
-            ->leftJoin('product_returns', 'transaction_details.return_id', 'product_returns.id')
-            ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight', 'product_returns.return', 'product_returns.description_return')
-            ->get();
+        // $transactionDetail = DB::table('transaction_details')
+        //     ->where('invoice_code', $transaction->invoice_code)
+        //     ->join('products', 'transaction_details.product_id', 'products.id')
+        //     ->leftJoin('product_returns', 'transaction_details.return_id', 'product_returns.id')
+        //     ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight', 'product_returns.return', 'product_returns.description_return')
+        //     ->get();
+
+        $transaction = Transaction::with('transaction_details')->get();
+        dd($transaction);
 
         return response()->json([
             'data' => new TransactionResource($transaction),
-            'subdata' => TransactionDetailResource::collection($transactionDetail),
+            // 'subdata' => TransactionDetailResource::collection($transactionDetail),
             'message' => 'Data Transaction found',
             'status_code' => 200
         ]);
