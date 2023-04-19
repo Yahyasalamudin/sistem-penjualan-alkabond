@@ -107,6 +107,6 @@ class SalesController extends Controller
     {
         Sales::find($id)->delete();
 
-        return back()->with('error', 'Sales berhasil dihapus');
+        return back()->with('success', 'Sales berhasil dihapus');
     }
 }
