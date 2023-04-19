@@ -1,4 +1,4 @@
- <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+ <ul class="navbar-nav bg-gradient-color sidebar sidebar-dark accordion" id="accordionSidebar">
      <!-- Sidebar - Brand -->
      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
          <div class="sidebar-brand-icon ">
@@ -14,8 +14,8 @@
      <!-- Nav Item - Dashboard -->
      <li class="nav-item active">
          <a class="nav-link" href="{{ route('dashboard') }}">
-             <i class="fas fa-fw fa-tachometer-alt"></i>
-             <span>Dashboard</span></a>
+            <i class="fas fa-fw fa-solid fa-home"></i>
+                         <span>Dashboard</span></a>
      </li>
 
      <!-- Divider -->
@@ -27,6 +27,10 @@
      </div>
 
      <!-- Nav Item - Pages Collapse Menu -->
+
+
+
+
      <li class="nav-item">
          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
              aria-expanded="true" aria-controls="collapseTwo">
@@ -38,12 +42,14 @@
                  <h6 class="collapse-header">Master Data :</h6>
                  <a class="collapse-item" href="{{ route('city.index') }}">Kota</a>
                  <a class="collapse-item" href="{{ route('type.index') }}">Jenis Produk</a>
+                 <a class="collapse-item" href="{{ route('store.index') }}">Toko</a>
+                 <a class="collapse-item" href="{{ route('product.index') }}">Produk</a>
              </div>
          </div>
      </li>
 
      <!-- Nav Item - Utilities Collapse Menu -->
-     <li class="nav-item">
+     {{-- <li class="nav-item">
          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
              aria-expanded="true" aria-controls="collapseUtilities">
              <i class="fas fa-fw fa-wrench"></i>
@@ -53,12 +59,17 @@
          <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
              data-parent="#accordionSidebar">
              <div class="bg-white py-2 collapse-inner rounded">
-                 <a class="collapse-item" href="{{ route('store.index') }}">Toko</a>
-                 <a class="collapse-item" href="{{ route('product.index') }}">Produk</a>
-                 <a class="collapse-item" href="{{ route('transaction.index') }}">Transaksi</a>
+
+                 <a class="collapse-item" href="">Transaksi</a>
              </div>
          </div>
-     </li>
+     </li> --}}
+
+     <li class="nav-item">
+        <a class="nav-link" href="{{ route('transaction.index') }}">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Transaksi</span></a>
+    </li>
 
      <!-- Divider -->
      <hr class="sidebar-divider">

@@ -2,9 +2,9 @@
 
 @section('content')
     <div class="d-flex justify-content-center">
-        <div class="card shadow mb-3 col-5">
-            <div class="card-header mb-0">
-                <h6>Edit Toko</h6>
+        <div class="card shadow mb-3 crd-edit col-5">
+            <div class="card-header btcolor text-white mb-0">
+                <h4 class="text-center">Edit Toko</h4>
             </div>
             <div class="card-body">
                 <form action="{{ route('store.update', $store->id) }}" method="post">

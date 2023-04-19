@@ -18,7 +18,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/stores', [StoreController::class, 'index'])->name('store.index');
     Route::post('/stores', [StoreController::class, 'store'])->name('store.store');
 
-    Route::get('/transaction', [TransactionController::class, 'index']);
+    Route::get('/transaction/filter/{filter}', [TransactionController::class, 'index']);
     Route::post('/transaction', [TransactionController::class, 'store']);
     Route::get('/transaction/{invoice_code}', [TransactionController::class, 'show']);
     Route::post('/transaction/{invoice_code}', [TransactionController::class, 'payment']);

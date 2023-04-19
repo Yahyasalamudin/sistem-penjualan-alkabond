@@ -1,12 +1,62 @@
 @extends('layouts.app')
 
 @section('content')
+<h1 class="h3 mb-3 text-gray-800"> Data Toko</h1>
+
+
+
+@if (session('success'))
+    <div class="alert alert-success alert-dismissible" id="flash_data" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ session('success') }}
+    </div>
+
+@endif
+
+@error('store_name')
+<div class="alert alert-danger alert-dismissible" id="flash_data" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ $message }}
+</div>
+
+@enderror
+@error('address')
+<div class="alert alert-danger alert-dismissible" id="flash_data1" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ $message }}
+</div>
+
+@enderror
+@error('store_number')
+<div class="alert alert-danger alert-dismissible" id="flash_data2" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ $message }}
+</div>
+
+@enderror
+@error('sales_id')
+<div class="alert alert-danger alert-dismissible" id="flash_data3" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ $message }}
+</div>
+@enderror
+
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Table Toko</h6>
 
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            <button type="button" class="btn btcolor text-white" data-toggle="modal" data-target="#exampleModal">
                 Tambah Toko
             </button>
         </div>
@@ -15,7 +65,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Toko</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -32,7 +82,7 @@
                                 placeholder="Masukkan Alamat Toko">
 
                             <label for="store_number">Nomer Hp</label>
-                            <input class="form-control mb-3" type="text" name="store_number" id="store_number"
+                            <input class="form-control mb-3" type="number" name="store_number" id="store_number"
                                 placeholder="Masukkan Nomer Hp">
 
                             <label for="sales_id">Sales Pengelola Toko</label>
@@ -54,56 +104,26 @@
 
         <div class="card-body">
             <div class="table-responsive">
-                @if (session('success'))
-                    <div class="d-flex justify-content-center">
-                        <div class="alert alert-success text-center col-sm-4 text-dark">
-                            {{ session('success') }}
-                        </div>
-                    </div>
-                @endif
 
-                @error('store_name')
-                    <div class="d-flex justify-content-center">
-                        <div class="alert alert-danger text-center col-sm-4 text-dark">
-                            {{ $message }}
-                        </div>
-                    </div>
-                @enderror
-                @error('address')
-                    <div class="d-flex justify-content-center">
-                        <div class="alert alert-danger text-center col-sm-4 text-dark">
-                            {{ $message }}
-                        </div>
-                    </div>
-                @enderror
-                @error('store_number')
-                    <div class="d-flex justify-content-center">
-                        <div class="alert alert-danger text-center col-sm-4 text-dark">
-                            {{ $message }}
-                        </div>
-                    </div>
-                @enderror
-                @error('sales_id')
-                    <div class="d-flex justify-content-center">
-                        <div class="alert alert-danger text-center col-sm-4 text-dark">
-                            {{ $message }}
-                        </div>
-                    </div>
-                @enderror
 
                 <table class="table table-bordered text-center text-center" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
+                            <th>No.</th>
                             <th>Toko</th>
                             <th>Alamat</th>
                             <th>Nomer Hp</th>
                             <th>Toko Kota</th>
-                            <th>Action</th>
+                            <th>Opsi</th>
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                        $i = 1;
+                    @endphp
                         @foreach ($stores as $store)
                             <tr>
+                                <th scope="row">{{ $i++ }} </th>
                                 <td>{{ $store->store_name }}</td>
                                 <td>{{ $store->address }}</td>
                                 <td>{{ $store->store_number }}</td>
@@ -111,19 +131,15 @@
                                 <td>
                                     <div class="d-flex justify-content-center">
                                         <a href="{{ route('store.edit', Crypt::encrypt($store->id)) }}"
-                                            class="btn btn-sm btn-warning btn-icon-split">
-                                            <span class="icon text-white-50">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </span>
+                                            class="btn btn-sm btn-success ">
+                                            Edit
                                         </a>
 
                                         <form action="{{ route('store.destroy', $store->id) }}" method="post">
                                             @csrf
                                             @method('delete')
-                                            <button type="submit" class="btn btn-sm btn-danger btn-icon-split ml-3">
-                                                <span class="icon text-white-50">
-                                                    <i class="fas fa-trash"></i>
-                                                </span>
+                                            <button type="submit" class="btn btn-sm btn-danger  ml-3">
+                                               Hapus
                                             </button>
                                         </form>
                                     </div>

@@ -17,23 +17,51 @@ use Illuminate\Support\Facades\Validator;
 
 class TransactionController extends Controller
 {
-    public function index()
+    public function index($filter)
     {
         $transaction = Transaction::with('transactionDetail')->get();
         dd($transaction);
 
         $transactions = DB::table('transactions')
             ->join('stores', 'transactions.store_id', 'stores.id')
-            ->join('sales', 'transactions.sales_id', 'sales.id')
-            ->select('transactions.*', 'stores.*', 'sales.sales_name', 'sales.username', 'sales.email', 'sales.phone_number', 'sales.city')
+            ->join('sales', 'transactions.sales_id', 'sales.id');
+
+        // filter
+        switch ($filter) {
+            case 'process':
+                $transactions = $transactions->where('delivery_status', 'unsent');
+                break;
+            case 'onsent':
+                $transactions = $transactions->where('delivery_status', 'sent');
+                break;
+            case 'tempo':
+                $transactions = $transactions->where('status', 'tempo');
+                break;
+            case 'done':
+                $transactions = $transactions->where('status', 'done');
+                break;
+            default:
+                $transactions = $transactions->where('delivery_status', 'unsent');
+                break;
+        }
+
+        $transactions = $transactions->select('transactions.*', 'stores.*', 'sales.sales_name', 'sales.username', 'sales.email', 'sales.phone_number', 'sales.city')
             ->orderByDesc('transactions.created_at')
             ->get();
 
-        return response()->json([
-            'data' => TransactionResource::collection($transactions),
-            'message' => 'Fetch all Transaction',
-            'status_code' => 200
-        ]);
+
+        if ($transactions) {
+            return response()->json([
+                'data' => TransactionResource::collection($transactions),
+                'message' => 'Fetch all Transaction',
+                'status_code' => 200
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Transaction Not Found',
+                'status_code' => 404
+            ]);
+        }
     }
 
     public function store(Request $request)

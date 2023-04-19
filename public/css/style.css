@@ -6,7 +6,7 @@ body {
     width: 50%;
     border-radius: 20px;
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.4);
-    margin: 15% auto;
+    margin: 12% auto;
     display: flex;
 }
 .company__info {
@@ -75,6 +75,7 @@ body {
 .tombol {
     transition: all 0.5s ease;
     width: 60%;
+    height: 33.777778px;
     border-radius: 30px;
     color: #008080;
     font-weight: 600;
@@ -87,4 +88,22 @@ body {
 .tombol:focus {
     background-color: #008080;
     color: #fff;
+}
+
+/* sidebar */
+
+.bg-gradient-color {
+    background-image: linear-gradient(195deg, #008080, #008080);
+}
+
+/* untuk button */
+
+.btcolor {
+    background-image: linear-gradient(195deg, #008080, #008080);
+}
+
+/* header edit toko */
+.crd-edit {
+    padding-left: 0px;
+    padding-right: 0px;
 }

@@ -1,12 +1,57 @@
 @extends('layouts.app')
 
 @section('content')
+
+<h1 class="h3 mb-3 text-gray-800">Data Produk</h1>
+
+@if (session('success'))
+<div class="alert alert-success alert-dismissible" id="flash_data" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ session('success') }}
+</div>
+@endif
+
+@error('product_name')
+<div class="alert alert-danger alert-dismissible" id="flash_data" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ $message }}
+</div>
+@enderror
+@error('product_brand')
+<div class="alert alert-danger alert-dismissible" id="flash_data1" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ $message }}
+</div>
+@enderror
+@error('unit_id')
+<div class="alert alert-danger alert-dismissible" id="flash_data2" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ $message }}
+</div>
+@enderror
+@error('unit_weight')
+<div class="alert alert-danger alert-dismissible" id="flash_data3" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ $message }}
+</div>
+@enderror
+
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">Table Product</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Table Produk</h6>
 
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            <button type="button" class="btn btcolor text-white" data-toggle="modal" data-target="#exampleModal">
                 Tambah Product
             </button>
         </div>
@@ -15,7 +60,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Produk</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -50,55 +95,25 @@
 
         <div class="card-body">
             <div class="table-responsive">
-                @if (session('success'))
-                    <div class="d-flex justify-content-center">
-                        <div class="alert alert-success text-center col-sm-4 text-dark">
-                            {{ session('success') }}
-                        </div>
-                    </div>
-                @endif
 
-                @error('product_name')
-                    <div class="d-flex justify-content-center">
-                        <div class="alert alert-danger text-center col-sm-4 text-dark">
-                            {{ $message }}
-                        </div>
-                    </div>
-                @enderror
-                @error('product_brand')
-                    <div class="d-flex justify-content-center">
-                        <div class="alert alert-danger text-center col-sm-4 text-dark">
-                            {{ $message }}
-                        </div>
-                    </div>
-                @enderror
-                @error('unit_id')
-                    <div class="d-flex justify-content-center">
-                        <div class="alert alert-danger text-center col-sm-4 text-dark">
-                            {{ $message }}
-                        </div>
-                    </div>
-                @enderror
-                @error('unit_weight')
-                    <div class="d-flex justify-content-center">
-                        <div class="alert alert-danger text-center col-sm-4 text-dark">
-                            {{ $message }}
-                        </div>
-                    </div>
-                @enderror
                 <table class="table table-bordered text-center text-center" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
+                            <th>No.</th>
                             <th>Kode Produk</th>
                             <th>Nama Produk</th>
                             <th>Merk Produk</th>
                             <th>Satuan Berat</th>
-                            <th>Action</th>
+                            <th>Opsi</th>
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                        $i = 1;
+                    @endphp
                         @foreach ($products as $p)
                             <tr>
+                                <th scope="row">{{ $i++ }} </th>
                                 <td>{{ $p->product_code }}</td>
                                 <td>{{ $p->product_name }}</td>
                                 <td>{{ $p->product_brand }}</td>
@@ -114,11 +129,8 @@
                                     <form action="{{ route('product.destroy', $p->id) }}" method="post">
                                         @csrf
                                         @method('delete')
-                                        <button type="submit" class="btn btn-sm btn-danger btn-icon-split">
-                                            <span class="icon text-white-50">
-                                                <i class="fas fa-trash"></i>
-                                            </span>
-                                            {{-- <span class="text">Hapus Product</span> --}}
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            Hapus
                                         </button>
                                     </form>
                                     {{-- </div> --}}

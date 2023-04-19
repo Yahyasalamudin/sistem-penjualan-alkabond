@@ -109,6 +109,6 @@ class UserController extends Controller
     {
         User::find($id)->delete();
 
-        return back()->with('error', 'User berhasil dihapus');
+        return back()->with('success', 'Pengguna berhasil dihapus');
     }
 }
