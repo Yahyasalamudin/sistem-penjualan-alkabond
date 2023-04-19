@@ -30,14 +30,6 @@ class CityController extends Controller
         return back()->with('success', 'Kota berhasil ditambahkan');
     }
 
-    public function edit($id)
-    {
-        $id = Crypt::decrypt($id);
-        $city = City::find($id);
-
-        return view('cities.edit', compact('city'));
-    }
-
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -48,9 +40,11 @@ class CityController extends Controller
 
         City::find($id)->update([
             'city' => $request->city
-        ], [
-            'city' => 'Nama Kota tidak boleh berupa angka'
         ]);
+
+        // [
+        //     'city' => 'Nama Kota tidak boleh berupa angka'
+        // ]
 
         return redirect('cities')->with('success', 'Kota berhasil diubah');
     }
