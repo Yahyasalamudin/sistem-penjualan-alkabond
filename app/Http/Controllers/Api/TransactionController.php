@@ -174,9 +174,8 @@ class TransactionController extends Controller
         $transaction = DB::table('transactions')
             ->where('invoice_code', $invoice_code)
             ->join('stores', 'transactions.store_id', 'stores.id')
-            ->join('sales', 'transactions.sales_id', 'sales.id');
-
-        $transaction = $transaction->select('transactions.*', 'stores.*', 'sales.sales_name', 'sales.username', 'sales.email', 'sales.phone_number', 'sales.city')
+            ->join('sales', 'transactions.sales_id', 'sales.id')
+            ->select('transactions.*', 'stores.*', 'sales.sales_name', 'sales.username', 'sales.email', 'sales.phone_number', 'sales.city')
             ->orderByDesc('transactions.created_at')
             ->first();
 
