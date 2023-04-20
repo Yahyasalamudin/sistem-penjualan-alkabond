@@ -57,6 +57,7 @@ class TransactionResource extends JsonResource
                     'unit_weight' => $detail->product->unit_weight,
                     'created_at' => $detail->created_at,
                     'updated_at' => $detail->updated_at,
+                    'returns' => $detail->product_return,
                 ];
             }),
         ];

@@ -150,7 +150,20 @@ class TransactionController extends Controller
 
     public function show($id)
     {
-        $transaction = Transaction::with('transaction_details')->with('payments')->find($id);
+        $transaction = Transaction::with('transaction_details')
+            // ->leftJoin('product_returns', function ($join) {
+            //     $join->on('transaction_details.return_id', '=', 'product_returns.id');
+            // })
+            // $transaction = Transaction::with([
+            //     'transaction_details' => function ($query) {
+            //         $query->leftJoin('product_returns', 'transaction_details.return_id', '=', 'product_returns.id');
+            //     }
+            // ])
+            // ->whereNull('product_returns.id')
+            ->with('transaction_details.product_return')
+            ->with('payments')->find($id);
+
+        // dd($transaction);
 
         return response()->json([
             'data' => new TransactionResource($transaction),
