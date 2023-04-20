@@ -191,6 +191,7 @@ class TransactionController extends Controller
         if ($check->status == 'paid') {
             return response()->json([
                 'message' => 'Transaction has been paid',
+                'status' => 'paid',
                 'status_code' => 401
             ]);
         }
@@ -203,6 +204,7 @@ class TransactionController extends Controller
         if ((int) $check_pay > $transaction->grand_total) {
             return response()->json([
                 'message' => 'Transaction may not exceed the grand total',
+                'status' => 'invalid',
                 'status_code' => 401
             ]);
         }
