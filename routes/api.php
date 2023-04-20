@@ -22,6 +22,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/transaction', [TransactionController::class, 'store']);
     Route::get('/transaction/{id}', [TransactionController::class, 'show']);
     Route::post('/transaction/{id}', [TransactionController::class, 'payment']);
+    Route::post('/transaction/{id}/confirm', [TransactionController::class, 'confirmDeliverySuccess']);
 
     Route::post('/transaction-detail/{id}/return', [TransactionController::class, 'storeReturn']);
     Route::delete('/transaction-detail/{id}/destroy', [TransactionController::class, 'destroyReturn']);

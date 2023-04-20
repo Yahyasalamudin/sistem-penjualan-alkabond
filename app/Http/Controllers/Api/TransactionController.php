@@ -24,10 +24,12 @@ class TransactionController extends Controller
         // filter
         switch ($filter) {
             case 'process':
-                $transactions = $transactions->where('delivery_status', 'proccess');
+                $transactions = $transactions->where('delivery_status', ['unsent', 'process']);
                 break;
             case 'onsent':
-                $transactions = $transactions->where('delivery_status', 'sent');
+                $transactions = $transactions
+                    ->where('status', 'unpaid')
+                    ->where('delivery_status', 'sent');
                 break;
             case 'tempo':
                 $transactions = $transactions->where('payment_method', 'tempo');
@@ -52,6 +54,18 @@ class TransactionController extends Controller
                 'status_code' => 404
             ]);
         }
+    }
+
+    public function confirmDeliverySuccess($id)
+    {
+        Transaction::find($id)->update([
+            'delivery_status' => 'sent'
+        ]);
+
+        return response()->json([
+            'message' => 'Status updated',
+            'status_code' => 200
+        ]);
     }
 
     public function store(Request $request)
