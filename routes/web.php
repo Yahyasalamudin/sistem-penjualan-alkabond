@@ -37,14 +37,12 @@ Route::middleware('auth')->group(function () {
     // CRUD Data City
     Route::get('/cities', [CityController::class, 'index'])->name('city.index');
     Route::post('/cities', [CityController::class, 'store'])->name('city.store');
-    Route::get('/city/{id}/edit', [CityController::class, 'edit'])->name('city.edit');
     Route::put('/city/{id}/update', [CityController::class, 'update'])->name('city.update');
     Route::delete('/city/{id}/delete', [CityController::class, 'destroy'])->name('city.destroy');
 
     // CRUD Data Type Product
     Route::get('/types', [TypeController::class, 'index'])->name('type.index');
     Route::post('/types', [TypeController::class, 'store'])->name('type.store');
-    Route::get('/type/{id}/edit', [TypeController::class, 'edit'])->name('type.edit');
     Route::put('/type/{id}/update', [TypeController::class, 'update'])->name('type.update');
     Route::delete('/type/{id}/delete', [TypeController::class, 'destroy'])->name('type.destroy');
 

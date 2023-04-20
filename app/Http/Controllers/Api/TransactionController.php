@@ -19,7 +19,7 @@ class TransactionController extends Controller
 {
     public function index($filter)
     {
-        $transactions = Transaction::with('transaction_details')->with('payments')->get();
+        $transactions = Transaction::with('transaction_details')->with('payments')->latest()->get();
 
         // filter
         switch ($filter) {
@@ -109,13 +109,13 @@ class TransactionController extends Controller
 
         $check = Transaction::where('store_id', $request->store_id)
             ->where('sales_id', auth()->user()->id)
+            ->where('status', 'unpaid')
             ->where('delivery_status', 'unsent')
             ->first();
 
         if (empty($check)) {
             $transaction = Transaction::create([
                 'invoice_code' => $invoice_code,
-                'grand_total' => 0,
                 'store_id' => $request->store_id,
                 'sales_id' => auth()->user()->id
             ]);
@@ -123,6 +123,7 @@ class TransactionController extends Controller
 
         $check_transactions = Transaction::where('store_id', $request->store_id)
             ->where('sales_id', auth()->user()->id)
+            ->where('status', 'unpaid')
             ->where('delivery_status', 'unsent')
             ->first();
 
@@ -148,7 +149,8 @@ class TransactionController extends Controller
         $grand_total = TransactionDetail::where('transaction_id', $check_transactions->id)->sum('subtotal');
 
         Transaction::where('id', $check_transactions->id)->update([
-            'grand_total' => $grand_total
+            'grand_total' => $grand_total,
+            'remaining_pay' => $grand_total
         ]);
 
         $transaction = Transaction::with('transaction_details')
@@ -164,20 +166,7 @@ class TransactionController extends Controller
 
     public function show($id)
     {
-        $transaction = Transaction::with('transaction_details')
-            // ->leftJoin('product_returns', function ($join) {
-            //     $join->on('transaction_details.return_id', '=', 'product_returns.id');
-            // })
-            // $transaction = Transaction::with([
-            //     'transaction_details' => function ($query) {
-            //         $query->leftJoin('product_returns', 'transaction_details.return_id', '=', 'product_returns.id');
-            //     }
-            // ])
-            // ->whereNull('product_returns.id')
-            ->with('transaction_details.product_return')
-            ->with('payments')->find($id);
-
-        // dd($transaction);
+        $transaction = Transaction::with('transaction_details')->with('payments')->find($id);
 
         return response()->json([
             'data' => new TransactionResource($transaction),
@@ -228,9 +217,12 @@ class TransactionController extends Controller
             'transaction_id' => $id
         ]);
 
+        $remaining_pay = $transaction->remaining_pay - $request->total_pay;
+
         if ((int) $check_pay < $transaction->grand_total) {
             Transaction::find($id)->update([
-                'status' => 'partial'
+                'status' => 'partial',
+                'remaining_pay' => $remaining_pay
             ]);
 
             if ($transaction->payment_method == null) {
@@ -240,7 +232,8 @@ class TransactionController extends Controller
             }
         } else if ((int) $check_pay == $transaction->grand_total) {
             Transaction::find($id)->update([
-                'status' => 'paid'
+                'status' => 'paid',
+                'remaining_pay' => $remaining_pay
             ]);
 
             if ($transaction->payment_method == null) {

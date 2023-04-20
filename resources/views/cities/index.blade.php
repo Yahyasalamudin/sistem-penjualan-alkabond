@@ -57,18 +57,14 @@
                                 <td>{{ $c->city }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        {{-- <a href="{{ route('city.edit', Crypt::encrypt($c->id)) }}"
-                                            class="btn btn-sm btn-success ">
-
-                                            <span class="text">Edit </span>
-                                        </a> --}}
                                         <button class="btn btn-sm btn-success" data-toggle="modal"
-                                            data-target="#editModal{{ $c->id }}">Edit </button>
+                                            data-target="#editModal{{ $c->id }}">
+                                            Edit
+                                        </button>
                                         <form action="{{ route('city.destroy', $c->id) }}" method="post">
                                             @csrf
                                             @method('delete')
                                             <button type="submit" class="btn btn-sm btn-danger ml-3">
-
                                                 <span class="text">Hapus</span>
                                             </button>
                                         </form>
