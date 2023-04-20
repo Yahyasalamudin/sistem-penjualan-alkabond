@@ -1,19 +1,39 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="d-flex justify-content-center">
-        <div class="card shadow mb-4 col">
-            <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                <h6 class="m-0 font-weight-bold text-primary">Edit User</h6>
-            </div>
+<div class="content-header">
 
-            <div class="card-body">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1 class="h3 mb-3  text-gray-800">Edit User</h1>
+
+        </div>
+    </div><!-- /.row -->
+
+</div>
+
+<div class="row">
+    <div class="col-lg-12 mt-3 mb-5">
+        <div class="col-xl-12 col-lg-6">
+            <div class="card shadow mb-4 crd-edit">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between btcolor">
+                    <h6 class="m-0 font-weight-bold text-white ">Edit User</h6>
+                </div>
+
+                <div class="row-lg-12">
                 <form action="{{ route('user.update', $user->id) }}" method="post">
                     @csrf
                     @method('put')
-                    <div class="form-group">
-                        <label for="name">Nama</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror mb-3" name="name"
+
+                    <div class="col-md-12">
+                        <div style="margin-top: 30px;" class="col-xl-12 col-lg-6">
+
+                    <div class="form-group row mb-4">
+
+                        <label for="name" class="col-sm-2 col-form-label">Nama</label>
+
+                        <div class="col-sm-4">
+                        <input type="text" class="form-control @error('name') is-invalid @enderror " name="name"
                             id="name" value="{{ old('name', $user->name ?? '') }}"
                             placeholder="Masukkan Nama Pengguna">
 
@@ -22,23 +42,26 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
-                    </div>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" class="form-control mb-3" name="username" id="username"
+                        <label for="username" class="col-sm-2 col-form-label">Username</label>
+                        <div class="col">
+                            <input type="text" class="form-control " name="username" id="username"
                             value="{{ old('username', $user->username ?? '') }}" placeholder="Masukkan Username" disabled>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control mb-3" name="email" id="email"
+                    <div class="form-group row mb-4">
+
+                        <label for="email" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-4">
+                        <input type="email" class="form-control " name="email" id="email"
                             value="{{ $user->email }}" placeholder="Masukkan Email. Contoh : user@gmail.com" disabled>
-                    </div>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="phone_number">Nomor Hp</label>
-                        <input type="text" class="form-control @error('phone_number') is-invalid @enderror mb-3"
+                        <label for="phone_number" class="col-sm-2 col-form-label">Nomor Hp</label>
+                        <div class="col">
+                            <input type="text" class="form-control @error('phone_number') is-invalid @enderror "
                             name="phone_number" id="phone_number"
                             value="{{ old('phone_number', $user->phone_number ?? '') }}" placeholder="Masukkan Nomer Hp">
 
@@ -47,11 +70,13 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="city">Pilih Kota</label>
-                        <select class="form-control mb-3 @error('city') is-invalid @enderror" name="city" id="city">
+                    <div class="form-group row mb-4">
+                        <label for="city" class="col-sm-2 col-form-label" >Pilih Kota</label>
+                        <div class="col-sm-4">
+                        <select class="form-control  @error('city') is-invalid @enderror" name="city" id="city">
                             <option value="{{ $user->city }}">{{ $user->city }}</option>
                             @foreach ($cities as $city)
                                 <option value="{{ $city->city }}">{{ $city->city }}</option>
@@ -63,11 +88,10 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="role">Pilih Role</label>
-                        <select class="form-control mb-3 @error('role') is-invalid @enderror" name="role" id="role"
+                        </div>
+                        <label for="role" class="col-sm-2 col-form-label">Pilih Role</label>
+                    <div class="col">
+                        <select class="form-control  @error('role') is-invalid @enderror" name="role" id="role"
                             disabled>
                             <option value="">{{ $user->role }}</option>
                         </select>
@@ -78,10 +102,14 @@
                             </span>
                         @enderror
                     </div>
+                    </div>
 
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control @error('password') is-invalid @enderror mb-3"
+
+
+                    <div class="form-group row mb-4">
+                        <label for="password" class="col-sm-2 col-form-label">Password</label>
+                        <div class="col-sm-4">
+                        <input type="password" class="form-control @error('password') is-invalid @enderror "
                             name="password" id="password" value="{{ old('password') }}" placeholder="Masukkan Password">
                         <span class="font-italic">NB : Kosongkan password jika tidak ingin diganti</span>
 
@@ -91,11 +119,10 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="current_password">Konfirmasi Password</label>
-                        <input type="password" class="form-control @error('current_password') is-invalid @enderror mb-3"
+                        </div>
+                        <label for="current_password" class="col-sm-2 col-form-label">Konfirmasi Password</label>
+                        <div class="col">
+                            <input type="password" class="form-control @error('current_password') is-invalid @enderror "
                             name="current_password" id="current_password" value="{{ old('current_password') }}"
                             placeholder="Masukkan kembali password!! NB:Harus sama dengan password diatas!!">
 
@@ -104,10 +131,21 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Edit User</button>
+
+                    <div class="form-group" style="text-align:right;">
+                        <a href="{{ route('user.index') }}"
+                            class="btn btn-secondary ">Batal</a>
+                            <button type="submit" class="btn btcolor ml-2 text-white">Edit User</button>
+
+                    </div>
                 </form>
             </div>
         </div>
+    </div>
+    </div>
+    </div>
+    </div>
     </div>
 @endsection

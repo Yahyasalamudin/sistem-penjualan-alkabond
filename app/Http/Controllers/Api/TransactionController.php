@@ -45,6 +45,7 @@ class TransactionController extends Controller
                 break;
         }
 
+
         if ($transactions) {
             return response()->json([
                 'data' => TransactionResource::collection($transactions),
@@ -169,7 +170,15 @@ class TransactionController extends Controller
 
     public function show($id)
     {
-        $transaction = Transaction::with('transaction_details')->with('payments')->find($id);
+        $transaction = Transaction::with('transaction_details')
+            ->with('transaction_details.product_return')
+            ->with([
+                'payments' => function ($query) {
+                    $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
+                }
+            ])->find($id);
+
+        // dd($transaction);
 
         if ($transaction) {
             return response()->json([
