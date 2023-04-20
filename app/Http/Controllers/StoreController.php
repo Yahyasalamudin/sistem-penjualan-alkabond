@@ -25,6 +25,7 @@ class StoreController extends Controller
 
     public function store(Request $request)
     {
+
         $request->validate([
             'store_name' => 'required|max:255',
             'address' => 'required|max:255',

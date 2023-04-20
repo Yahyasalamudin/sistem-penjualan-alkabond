@@ -64,18 +64,14 @@
                                 <td>
                                     <div class="d-flex justify-content-center">
                                         <a href="{{ route('sales.edit', $s->id) }}"
-                                            class="btn btn-sm btn-warning btn-icon-split">
-                                            <span class="icon text-white-50">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </span>
+                                            class="btn btn-sm btn-success">
+                                           Edit
                                         </a>
                                         <form action="{{ route('sales.destroy', $s->id) }}" method="post">
                                             @csrf
                                             @method('delete')
-                                            <button type="submit" class="btn btn-sm btn-danger btn-icon-split ml-2">
-                                                <span class="icon text-white-50">
-                                                    <i class="fas fa-trash"></i>
-                                                </span>
+                                            <button type="submit" class="btn btn-sm btn-danger ml-2">
+                                                Hapus
                                             </button>
                                         </form>
                                     </div>

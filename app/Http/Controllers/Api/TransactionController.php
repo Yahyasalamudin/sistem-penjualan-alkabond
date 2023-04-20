@@ -19,12 +19,7 @@ class TransactionController extends Controller
 {
     public function index($filter)
     {
-        $transactions = Transaction::with('transaction_details')->orderBy('id', 'desc')->get();
-        // ->with([
-        //     'payments' => function ($query) {
-        //         $query->orderBy('id', 'desc');
-        //     }
-        // ])
+        $transactions = Transaction::with('transaction_details')->with('payments')->latest()->get();
 
         // filter
         switch ($filter) {
@@ -115,13 +110,13 @@ class TransactionController extends Controller
 
         $check = Transaction::where('store_id', $request->store_id)
             ->where('sales_id', auth()->user()->id)
+            ->where('status', 'unpaid')
             ->where('delivery_status', 'unsent')
             ->first();
 
         if (empty($check)) {
             $transaction = Transaction::create([
                 'invoice_code' => $invoice_code,
-                'grand_total' => 0,
                 'store_id' => $request->store_id,
                 'sales_id' => auth()->user()->id
             ]);
@@ -129,6 +124,7 @@ class TransactionController extends Controller
 
         $check_transactions = Transaction::where('store_id', $request->store_id)
             ->where('sales_id', auth()->user()->id)
+            ->where('status', 'unpaid')
             ->where('delivery_status', 'unsent')
             ->first();
 
@@ -154,7 +150,8 @@ class TransactionController extends Controller
         $grand_total = TransactionDetail::where('transaction_id', $check_transactions->id)->sum('subtotal');
 
         Transaction::where('id', $check_transactions->id)->update([
-            'grand_total' => $grand_total
+            'grand_total' => $grand_total,
+            'remaining_pay' => $grand_total
         ]);
 
         $transaction = Transaction::with('transaction_details')
@@ -229,9 +226,12 @@ class TransactionController extends Controller
             'transaction_id' => $id
         ]);
 
+        $remaining_pay = $transaction->remaining_pay - $request->total_pay;
+
         if ((int) $check_pay < $transaction->grand_total) {
             Transaction::find($id)->update([
-                'status' => 'partial'
+                'status' => 'partial',
+                'remaining_pay' => $remaining_pay
             ]);
 
             if ($transaction->payment_method == null) {
@@ -241,7 +241,8 @@ class TransactionController extends Controller
             }
         } else if ((int) $check_pay == $transaction->grand_total) {
             Transaction::find($id)->update([
-                'status' => 'paid'
+                'status' => 'paid',
+                'remaining_pay' => $remaining_pay
             ]);
 
             if ($transaction->payment_method == null) {
