@@ -138,7 +138,7 @@
                                         <form action="{{ route('store.destroy', $store->id) }}" method="post">
                                             @csrf
                                             @method('delete')
-                                            <button type="submit" class="btn btn-sm btn-danger  ml-3">
+                                            <button type="submit" class="btn btn-sm btn-danger  ml-2">
                                                Hapus
                                             </button>
                                         </form>

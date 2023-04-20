@@ -52,7 +52,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Table Produk</h6>
 
             <button type="button" class="btn btcolor text-white" data-toggle="modal" data-target="#exampleModal">
-                Tambah Product
+                Tambah Produk
             </button>
         </div>
 
