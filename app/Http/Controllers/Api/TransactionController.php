@@ -19,7 +19,12 @@ class TransactionController extends Controller
 {
     public function index($filter)
     {
-        $transactions = Transaction::with('transaction_details')->with('payments')->get();
+        $transactions = Transaction::with('transaction_details')->orderBy('id', 'desc')->get();
+        // ->with([
+        //     'payments' => function ($query) {
+        //         $query->orderBy('id', 'desc');
+        //     }
+        // ])
 
         // filter
         switch ($filter) {
@@ -41,6 +46,7 @@ class TransactionController extends Controller
                 $transactions = $transactions->where('delivery_status', 'unsent');
                 break;
         }
+
 
         if ($transactions) {
             return response()->json([
@@ -165,17 +171,12 @@ class TransactionController extends Controller
     public function show($id)
     {
         $transaction = Transaction::with('transaction_details')
-            // ->leftJoin('product_returns', function ($join) {
-            //     $join->on('transaction_details.return_id', '=', 'product_returns.id');
-            // })
-            // $transaction = Transaction::with([
-            //     'transaction_details' => function ($query) {
-            //         $query->leftJoin('product_returns', 'transaction_details.return_id', '=', 'product_returns.id');
-            //     }
-            // ])
-            // ->whereNull('product_returns.id')
             ->with('transaction_details.product_return')
-            ->with('payments')->find($id);
+            ->with([
+                'payments' => function ($query) {
+                    $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
+                }
+            ])->find($id);
 
         // dd($transaction);
 
