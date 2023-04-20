@@ -15,8 +15,10 @@ class CreateTransactionsTable extends Migration
     public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->char('invoice_code', 15)->primary();
-            $table->integer('grand_total');
+            $table->id();
+            $table->char('invoice_code', 15);
+            $table->integer('grand_total')->nullable();
+            $table->integer('remaining_pay')->nullable();
             $table->foreignId('store_id')->constrained('stores');
             $table->foreignId('sales_id')->constrained('sales');
             $table->enum('payment_method', ['cash', 'tempo'])->nullable();

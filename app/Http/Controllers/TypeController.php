@@ -30,15 +30,6 @@ class TypeController extends Controller
         return back()->with('success', 'Data Type berhasil dibuat');
     }
 
-    public function edit($id)
-    {
-        $id = Crypt::decrypt($id);
-
-        $type = Type::find($id);
-
-        return view('types.edit', compact('type'));
-    }
-
     public function update(Request $request, $id)
     {
         $request->validate([

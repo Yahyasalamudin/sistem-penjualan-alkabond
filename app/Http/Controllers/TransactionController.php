@@ -39,7 +39,7 @@ class TransactionController extends Controller
             ->first();
 
         $transactionDetail = DB::table('transaction_details')
-            ->where('invoice_code', $transaction->invoice_code)
+            ->where('transaction_id', $transaction->id)
             ->join('products', 'transaction_details.product_id', 'products.id')
             ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight')
             ->get();

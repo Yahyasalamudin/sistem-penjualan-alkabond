@@ -19,33 +19,28 @@ class TransactionController extends Controller
 {
     public function index($filter)
     {
-        $transactions = DB::table('transactions')
-            ->join('stores', 'transactions.store_id', 'stores.id')
-            ->join('sales', 'transactions.sales_id', 'sales.id');
+        $transactions = Transaction::with('transaction_details')->with('payments')->latest()->get();
 
         // filter
         switch ($filter) {
             case 'process':
-                $transactions = $transactions->where('delivery_status', 'unsent');
+                $transactions = $transactions->where('delivery_status', ['unsent', 'process']);
                 break;
             case 'onsent':
-                $transactions = $transactions->where('delivery_status', 'sent');
+                $transactions = $transactions
+                    ->where('status', 'unpaid')
+                    ->where('delivery_status', 'sent');
                 break;
             case 'tempo':
-                $transactions = $transactions->where('status', 'tempo');
+                $transactions = $transactions->where('payment_method', 'tempo');
                 break;
             case 'done':
-                $transactions = $transactions->where('status', 'done');
+                $transactions = $transactions->where('status', 'paid');
                 break;
             default:
                 $transactions = $transactions->where('delivery_status', 'unsent');
                 break;
         }
-
-        $transactions = $transactions->select('transactions.*', 'stores.*', 'sales.sales_name', 'sales.username', 'sales.email', 'sales.phone_number', 'sales.city')
-            ->orderByDesc('transactions.created_at')
-            ->get();
-
 
         if ($transactions) {
             return response()->json([
@@ -61,13 +56,25 @@ class TransactionController extends Controller
         }
     }
 
+    public function confirmDeliverySuccess($id)
+    {
+        Transaction::find($id)->update([
+            'delivery_status' => 'sent'
+        ]);
+
+        return response()->json([
+            'message' => 'Status updated',
+            'status_code' => 200
+        ]);
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'store_id' => 'required',
             'details' => 'requiered|array',
             'details.*.product_id' => 'required',
-            'details.*.quantity' => 'required',
+            // 'details.*.quantity' => 'required',
             'details.*.price' => 'required',
         ]);
 
@@ -102,28 +109,29 @@ class TransactionController extends Controller
 
         $check = Transaction::where('store_id', $request->store_id)
             ->where('sales_id', auth()->user()->id)
+            ->where('status', 'unpaid')
             ->where('delivery_status', 'unsent')
             ->first();
 
         if (empty($check)) {
             $transaction = Transaction::create([
                 'invoice_code' => $invoice_code,
-                'grand_total' => 0,
                 'store_id' => $request->store_id,
                 'sales_id' => auth()->user()->id
             ]);
         }
 
-        $invoice_last = Transaction::where('store_id', $request->store_id)
+        $check_transactions = Transaction::where('store_id', $request->store_id)
             ->where('sales_id', auth()->user()->id)
+            ->where('status', 'unpaid')
             ->where('delivery_status', 'unsent')
             ->first();
 
         foreach ($request->detail as $detail) {
-            $check_detail = TransactionDetail::where('invoice_code', $invoice_last['invoice_code'])->where('product_id', $detail['product_id'])->first();
+            $check_detail = TransactionDetail::where('transaction_id', $check_transactions['id'])->where('product_id', $detail['product_id'])->first();
             if (empty($check_detail)) {
                 $transaction = TransactionDetail::create([
-                    'invoice_code' => $invoice_last['invoice_code'],
+                    'transaction_id' => $check_transactions['id'],
                     'product_id' => $detail['product_id'],
                     'quantity' => $detail['quantity'],
                     'price' => $detail['price'],
@@ -138,63 +146,36 @@ class TransactionController extends Controller
             }
         }
 
-        $grand_total = TransactionDetail::where('invoice_code', $invoice_last->invoice_code)->sum('subtotal');
+        $grand_total = TransactionDetail::where('transaction_id', $check_transactions->id)->sum('subtotal');
 
-        Transaction::where('invoice_code', $invoice_last->invoice_code)->update([
-            'grand_total' => $grand_total
+        Transaction::where('id', $check_transactions->id)->update([
+            'grand_total' => $grand_total,
+            'remaining_pay' => $grand_total
         ]);
 
-        $transaction = DB::table('transactions')
-            ->where('store_id', $request->store_id)
-            ->where('transactions.sales_id', auth()->user()->id)
-            ->where('delivery_status', 'unsent')
-            ->join('stores', 'transactions.store_id', 'stores.id')
-            ->join('sales', 'transactions.sales_id', 'sales.id')
-            ->select('transactions.*', 'stores.*', 'sales.sales_name', 'sales.username', 'sales.email', 'sales.phone_number', 'sales.city')
-            ->orderByDesc('transactions.created_at')
-            ->first();
-
-        $transactionDetail = DB::table('transaction_details')
-            ->where('invoice_code', $transaction->invoice_code)
-            ->join('products', 'transaction_details.product_id', 'products.id')
-            ->leftJoin('product_returns', 'transaction_details.return_id', 'product_returns.id')
-            ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight', 'product_returns.return', 'product_returns.description_return')
-            ->get();
+        $transaction = Transaction::with('transaction_details')
+            ->with('payments')
+            ->find($check_transactions->id);
 
         return response()->json([
             'data' => new TransactionResource($transaction),
-            'subdata' => TransactionDetailResource::collection($transactionDetail),
             'message' => 'Transaction Created successfully',
             'status_code' => 200
         ]);
     }
 
-    public function show($invoice_code)
+    public function show($id)
     {
-        $transaction = DB::table('transactions')
-            ->where('invoice_code', $invoice_code)
-            ->join('stores', 'transactions.store_id', 'stores.id')
-            ->join('sales', 'transactions.sales_id', 'sales.id')
-            ->select('transactions.*', 'stores.*', 'sales.sales_name', 'sales.username', 'sales.email', 'sales.phone_number', 'sales.city')
-            ->orderByDesc('transactions.created_at')
-            ->first();
-
-        $transactionDetail = DB::table('transaction_details')
-            ->where('invoice_code', $transaction->invoice_code)
-            ->join('products', 'transaction_details.product_id', 'products.id')
-            ->leftJoin('product_returns', 'transaction_details.return_id', 'product_returns.id')
-            ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight', 'product_returns.return', 'product_returns.description_return')
-            ->get();
+        $transaction = Transaction::with('transaction_details')->with('payments')->find($id);
 
         return response()->json([
             'data' => new TransactionResource($transaction),
-            'subdata' => TransactionDetailResource::collection($transactionDetail),
             'message' => 'Data Transaction found',
             'status_code' => 200
         ]);
     }
 
-    public function payment(Request $request, $invoice_code)
+    public function payment(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'total_pay' => 'required|numeric'
@@ -208,48 +189,58 @@ class TransactionController extends Controller
             ]);
         }
 
-        $check = Transaction::where('invoice_code', $invoice_code)->first();
+        $check = Transaction::find($id);
 
         if ($check->status == 'paid') {
             return response()->json([
                 'message' => 'Transaction has been paid',
+                'status' => 'paid',
                 'status_code' => 401
             ]);
         }
 
-        $transaction = Transaction::where('invoice_code', $invoice_code)->first();
-        $sum_totalpay = Payment::where('invoice_code', $transaction->invoice_code)->sum('total_pay');
+        $transaction = Transaction::find($id);
+        $sum_totalpay = Payment::where('transaction_id', $id)->sum('total_pay');
 
         $check_pay = $sum_totalpay + $request->total_pay;
 
         if ((int) $check_pay > $transaction->grand_total) {
             return response()->json([
                 'message' => 'Transaction may not exceed the grand total',
+                'status' => 'invalid',
                 'status_code' => 401
             ]);
         }
 
         $payment = Payment::create([
             'total_pay' => $request->total_pay,
-            'invoice_code' => $invoice_code
+            'transaction_id' => $id
         ]);
 
+        $remaining_pay = $transaction->remaining_pay - $request->total_pay;
+
         if ((int) $check_pay < $transaction->grand_total) {
-            Transaction::where('invoice_code', $invoice_code)->update([
-                'status' => 'partial'
+            Transaction::find($id)->update([
+                'status' => 'partial',
+                'remaining_pay' => $remaining_pay
             ]);
 
-            Transaction::where('invoice_code', $invoice_code)->where('payment_method', null)->update([
-                'payment_method' => 'tempo'
-            ]);
+            if ($transaction->payment_method == null) {
+                Transaction::find($id)->update([
+                    'payment_method' => 'tempo'
+                ]);
+            }
         } else if ((int) $check_pay == $transaction->grand_total) {
-            Transaction::where('invoice_code', $invoice_code)->update([
-                'status' => 'paid'
+            Transaction::find($id)->update([
+                'status' => 'paid',
+                'remaining_pay' => $remaining_pay
             ]);
 
-            Transaction::where('invoice_code', $invoice_code)->where('payment_method', null)->update([
-                'payment_method' => 'cash'
-            ]);
+            if ($transaction->payment_method == null) {
+                Transaction::find($id)->update([
+                    'payment_method' => 'cash'
+                ]);
+            }
         }
 
         return response()->json([
@@ -298,9 +289,9 @@ class TransactionController extends Controller
         $return_price = $return->return * $transactionDetail->price;
         $subtotal = $transactionDetail->subtotal - $return_price;
 
-        $transaction = Transaction::where('invoice_code', $transactionDetail->invoice_code)->first();
+        $transaction = Transaction::where('id', $transactionDetail->transaction_id)->first();
 
-        Transaction::where('invoice_code', $transactionDetail->invoice_code)->update([
+        Transaction::where('id', $transactionDetail->transaction_id)->update([
             'grand_total' => $transaction->grand_total - $return_price,
         ]);
 

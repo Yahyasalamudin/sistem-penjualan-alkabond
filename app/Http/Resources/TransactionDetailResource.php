@@ -17,7 +17,7 @@ class TransactionDetailResource extends JsonResource
         // return parent::toArray($request);
         return [
             'id' => $this->id,
-            'invoice_code' => $this->invoice_code,
+            'transaction_id' => $this->transaction_id,
             'product_id' => $this->product_id,
             'quantity' => $this->quantity,
             'price' => $this->price,

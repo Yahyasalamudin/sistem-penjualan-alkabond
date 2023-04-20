@@ -9,8 +9,7 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $primary = 'invoice_code';
-    protected $guarded = [];
+    protected $guarded = ['id'];
 
     public function sales()
     {
@@ -22,13 +21,13 @@ class Transaction extends Model
         return $this->belongsTo(Store::class, 'store_id', 'id');
     }
 
-    public function tansaction_details()
+    public function transaction_details()
     {
-        return $this->hashMany(TransactionDetail::class, 'invoice_code', 'invoice_code');
+        return $this->hasMany(TransactionDetail::class, 'transaction_id', 'id');
     }
 
     public function payments()
     {
-        return $this->hashMany(Payment::class, 'invoice_code', 'invoice_code');
+        return $this->hasMany(Payment::class, 'transaction_id', 'id');
     }
 }

@@ -13,11 +13,16 @@ class TransactionDetail extends Model
 
     public function transaction()
     {
-        return $this->belongsTo(Transaction::class, 'invoice_code', 'invoice_code');
+        return $this->belongsTo(Transaction::class, 'transaction_id', 'id');
     }
 
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+
+    public function product_return()
+    {
+        return $this->belongsTo(ProductReturn::class, 'return_id', 'id');
     }
 }
