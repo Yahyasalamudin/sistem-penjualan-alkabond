@@ -309,13 +309,10 @@ class TransactionController extends Controller
         $subtotal = $transactionDetail->subtotal - $return_price;
 
         $transaction = Transaction::find($transactionDetail->transaction_id);
-        $payment = Payment::where('transaction_id', $transaction->id)->sum('total_pay');
-
-        $remaining_pay = $transaction->grand_total - $return_price - $payment;
 
         $transaction->update([
             'grand_total' => $transaction->grand_total - $return_price,
-            'remaining_pay' => $remaining_pay
+            'remaining_pay' => $transaction->remaining_pay - $return_price
         ]);
 
         $transactionDetail->update([
@@ -349,12 +346,10 @@ class TransactionController extends Controller
         $subtotal = $transactionDetail->subtotal + $return_price;
 
         $transaction = Transaction::find($transactionDetail->transaction_id);
-        $payment = Payment::where('transaction_id', $transaction->id)->sum('total_pay');
-        $remaining_pay = $transaction->grand_total + $return_price - $payment;
 
         $transaction->update([
             'grand_total' => $transaction->grand_total + $return_price,
-            'remaining_pay' => $remaining_pay
+            'remaining_pay' => $transaction->remaining_pay + $return_price
         ]);
 
         $transactionDetail->update([
