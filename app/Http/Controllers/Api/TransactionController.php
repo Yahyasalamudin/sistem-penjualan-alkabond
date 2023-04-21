@@ -24,22 +24,24 @@ class TransactionController extends Controller
         // filter
         switch ($filter) {
             case 'process':
-                $transactions = $transactions->where('delivery_status', ['unsent', 'process']);
+                $transactions = $transactions->whereIn('delivery_status', ['unsent', 'proccess']);
                 break;
-            case 'onsent':
+            case 'sent':
                 $transactions = $transactions
                     ->where('status', 'unpaid')
                     ->where('delivery_status', 'sent');
                 break;
             case 'tempo':
-                $transactions = $transactions->where('payment_method', 'tempo');
+                $transactions = $transactions->where('payment_method', 'tempo')->where('status', 'partial');
                 break;
             case 'done':
                 $transactions = $transactions->where('status', 'paid');
                 break;
             default:
-                $transactions = $transactions->where('delivery_status', 'unsent');
-                break;
+                return response()->json([
+                    'message' => 'Filter is invalid',
+                    'status_code' => 404
+                ]);
         }
 
 
