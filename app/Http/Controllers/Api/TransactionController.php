@@ -24,23 +24,29 @@ class TransactionController extends Controller
         // filter
         switch ($filter) {
             case 'process':
-                $transactions = $transactions->where('delivery_status', ['unsent', 'process']);
+                $transactions = $transactions->whereIn('delivery_status', ['unsent', 'proccess']);
                 break;
-            case 'onsent':
+            case 'sent':
                 $transactions = $transactions
                     ->where('status', 'unpaid')
                     ->where('delivery_status', 'sent');
                 break;
             case 'tempo':
-                $transactions = $transactions->where('payment_method', 'tempo');
+                $transactions = $transactions->where('payment_method', 'tempo')->where('status', 'partial');
+                break;
+            case 'partial':
+                $transactions = $transactions->where('status', 'partisal');
                 break;
             case 'done':
                 $transactions = $transactions->where('status', 'paid');
                 break;
             default:
-                $transactions = $transactions->where('delivery_status', 'unsent');
-                break;
+                return response()->json([
+                    'message' => 'Filter is invalid',
+                    'status_code' => 404
+                ]);
         }
+
 
         if ($transactions) {
             return response()->json([
@@ -166,13 +172,28 @@ class TransactionController extends Controller
 
     public function show($id)
     {
-        $transaction = Transaction::with('transaction_details')->with('payments')->find($id);
+        $transaction = Transaction::with('transaction_details')
+            ->with('transaction_details.product_return')
+            ->with([
+                'payments' => function ($query) {
+                    $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
+                }
+            ])->find($id);
 
-        return response()->json([
-            'data' => new TransactionResource($transaction),
-            'message' => 'Data Transaction found',
-            'status_code' => 200
-        ]);
+        // dd($transaction);
+
+        if ($transaction) {
+            return response()->json([
+                'data' => new TransactionResource($transaction),
+                'message' => 'Data Transaction found',
+                'status_code' => 200
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Transaction Not Found',
+                'status_code' => 404
+            ]);
+        }
     }
 
     public function payment(Request $request, $id)
@@ -283,16 +304,17 @@ class TransactionController extends Controller
             'return_id' => $productReturn->id
         ]);
 
-        $return = ProductReturn::where('id', $transactionDetail->return_id)->first();
+        $return = ProductReturn::find($transactionDetail->return_id);
 
         $quantity = $transactionDetail->quantity - $return->return;
         $return_price = $return->return * $transactionDetail->price;
         $subtotal = $transactionDetail->subtotal - $return_price;
 
-        $transaction = Transaction::where('id', $transactionDetail->transaction_id)->first();
+        $transaction = Transaction::find($transactionDetail->transaction_id);
 
-        Transaction::where('id', $transactionDetail->transaction_id)->update([
+        $transaction->update([
             'grand_total' => $transaction->grand_total - $return_price,
+            'remaining_pay' => $transaction->remaining_pay - $return_price
         ]);
 
         $transactionDetail->update([
@@ -300,15 +322,17 @@ class TransactionController extends Controller
             'subtotal' => $subtotal,
         ]);
 
-        $transaction_detail = DB::table('transaction_details')
-            ->where('transaction_details.id', $id)
-            ->join('products', 'transaction_details.product_id', 'products.id')
-            ->join('product_returns', 'transaction_details.return_id', 'product_returns.id')
-            ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight', 'product_returns.return', 'product_returns.description_return')
-            ->first();
+        // $transaction_detail = DB::table('transaction_details')
+        //     ->where('transaction_details.id', $id)
+        //     ->join('products', 'transaction_details.product_id', 'products.id')
+        //     ->join('product_returns', 'transaction_details.return_id', 'product_returns.id')
+        //     ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight', 'product_returns.return', 'product_returns.description_return')
+        //     ->first();
+
+        $transaction = Transaction::with('transaction_details')->with('payments')->find($transaction->id);
 
         return response()->json([
-            'data' => new TransactionDetailResource($transaction_detail),
+            'data' => new TransactionResource($transaction),
             'message' => 'Data Return has been created successfully ',
             'status_code' => 200
         ]);
@@ -323,10 +347,11 @@ class TransactionController extends Controller
         $return_price = $transactionDetail->price * $return->return;
         $subtotal = $transactionDetail->subtotal + $return_price;
 
-        $transaction = Transaction::where('invoice_code', $transactionDetail->invoice_code)->first();
+        $transaction = Transaction::find($transactionDetail->transaction_id);
 
-        Transaction::where('invoice_code', $transactionDetail->invoice_code)->update([
+        $transaction->update([
             'grand_total' => $transaction->grand_total + $return_price,
+            'remaining_pay' => $transaction->remaining_pay + $return_price
         ]);
 
         $transactionDetail->update([
