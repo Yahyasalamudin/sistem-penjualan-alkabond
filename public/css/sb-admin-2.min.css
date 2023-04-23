@@ -156,7 +156,8 @@ sup {
     top: -0.5em;
 }
 a {
-    color: #4e73df;
+    /* color: #4e73df; */
+    color: #008080;
     text-decoration: none;
     background-color: transparent;
 }
@@ -3804,7 +3805,8 @@ input[type="submit"].btn-block {
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
     color: #fff;
-    background-color: #4e73df;
+    /* background-color: #4e73df; */
+    background-image: linear-gradient(195deg, #008080, #008080);
 }
 .nav-fill .nav-item,
 .nav-fill > .nav-link {

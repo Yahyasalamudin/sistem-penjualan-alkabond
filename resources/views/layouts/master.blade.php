@@ -77,6 +77,30 @@
     }, 3000);
     </script>
 
+     <!-- Our script! :) -->
+      <!-- JavaScript and dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+  <!-- JavaScript for validations only -->
+  {{-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script> --}}
+  <script src="{{ asset('js/enchanter.js') }}"></script>
+  <script>
+    var registrationForm = $('#registration');
+    var formValidate = registrationForm.validate({
+      errorClass: 'is-invalid',
+      errorPlacement: () => false
+    });
+
+    const wizard = new Enchanter('registration', {}, {
+      onNext: () => {
+        if (!registrationForm.valid()) {
+          formValidate.focusInvalid();
+          return false;
+        }
+      }
+    });
+  </script>
+
 </body>
 
 </html>
