@@ -17,34 +17,52 @@ use Illuminate\Support\Facades\Validator;
 
 class TransactionController extends Controller
 {
-    public function index($filter)
+    public function index(Request $request)
     {
-        $transactions = Transaction::with('transaction_details')->with('payments')->latest()->get();
+        $filter = $request->get('filter');
+        $storeId = $request->get('storeId');
+        $from = $request->get('from');
+        $to = $request->get('to');
+
+        $transactions = Transaction::with('transaction_details')
+            ->with('payments')->latest()->get();
+
+        if ($storeId != null) {
+            $transactions = $transactions->where('store_id', $storeId);
+        }
+
+
+        if ($from != null && $to != null) {
+            $from = Carbon::createFromFormat('Y-m-d', $from);
+            $to = Carbon::createFromFormat('Y-m-d', $to);
+            $transactions = $transactions->whereBetween('created_at', [$from, $to]);
+        }
 
         // filter
-        switch ($filter) {
-            case 'process':
-                $transactions = $transactions->whereIn('delivery_status', ['unsent', 'proccess']);
-                break;
-            case 'sent':
-                $transactions = $transactions
-                    ->where('status', 'unpaid')
-                    ->where('delivery_status', 'sent');
-                break;
-            case 'tempo':
-                $transactions = $transactions->where('payment_method', 'tempo')->where('status', 'partial');
-                break;
-            case 'partial':
-                $transactions = $transactions->where('status', 'partisal');
-                break;
-            case 'done':
-                $transactions = $transactions->where('status', 'paid');
-                break;
-            default:
-                return response()->json([
-                    'message' => 'Filter is invalid',
-                    'status_code' => 404
-                ]);
+        if ($filter != null) {
+            switch ($filter) {
+                case 'process':
+                    $transactions = $transactions->whereIn('delivery_status', ['unsent', 'proccess']);
+                    break;
+                case 'sent':
+                    $transactions = $transactions
+                        ->where('status', 'unpaid')
+                        ->where('delivery_status', 'sent');
+                    break;
+                case 'tempo':
+                    $transactions = $transactions
+                        ->where('payment_method', 'tempo')
+                        ->where('status', 'partial');
+                    break;
+                case 'done':
+                    $transactions = $transactions->where('status', 'paid');
+                    break;
+                default:
+                    return response()->json([
+                        'message' => 'Filter param is required',
+                        'status_code' => 404
+                    ]);
+            }
         }
 
 
@@ -151,6 +169,7 @@ class TransactionController extends Controller
                 ]);
             }
         }
+
 
         $grand_total = TransactionDetail::where('transaction_id', $check_transactions->id)->sum('subtotal');
 

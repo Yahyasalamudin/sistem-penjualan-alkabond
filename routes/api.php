@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\TransactionController;
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/product', [ProductController::class, 'index']);
     Route::get('/product?type={type}', [ProductController::class, 'index']);
@@ -18,7 +19,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/stores', [StoreController::class, 'index'])->name('store.index');
     Route::post('/stores', [StoreController::class, 'store'])->name('store.store');
 
-    Route::get('/transaction/filter/{filter}', [TransactionController::class, 'index']);
+    Route::get('/transaction/all', [TransactionController::class, 'index']);
     Route::post('/transaction', [TransactionController::class, 'store']);
     Route::get('/transaction/{id}', [TransactionController::class, 'show']);
     Route::post('/transaction/{id}', [TransactionController::class, 'payment']);
