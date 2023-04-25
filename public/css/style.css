@@ -125,3 +125,19 @@ body {
 .grnd1{
      font-weight:bold; background-color: #f9f8f8;
 }
+
+.hcb{
+    height: 200px;
+}
+
+.jumlh{
+    font-size: 15px;
+    color: #474646;
+
+}
+
+.total{
+    font-weight: bolder;
+    color: #474646;
+}
+

@@ -27,13 +27,11 @@
      </div>
 
      <li class="nav-item {{ Route::is(['city*', 'type*', 'store*', 'product*']) ? 'active' : '' }}">
-         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-             aria-expanded="true" aria-controls="collapseTwo">
+         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
              <i class="fas fa-fw fa-cog"></i>
              <span>Master Data</span>
          </a>
-         <div id="collapseTwo" class="collapse {{ Route::is(['city*', 'type*', 'store*', 'product*']) ? 'show' : '' }}"
-             aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+         <div id="collapseTwo" class="collapse {{ Route::is(['city*', 'type*', 'store*', 'product*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
              <div class="bg-white py-2 collapse-inner rounded">
                  <h6 class="collapse-header">Master Data :</h6>
 
@@ -49,8 +47,7 @@
                      Toko
                  </a>
 
-                 <a class="collapse-item {{ Route::is('product*') ? 'active' : '' }}"
-                     href="{{ route('product.index') }}">
+                 <a class="collapse-item {{ Route::is('product*') ? 'active' : '' }}" href="{{ route('product.index') }}">
                      Produk
                  </a>
              </div>
@@ -76,7 +73,7 @@
 
      <li class="nav-item {{ Route::is('transaction*') ? 'active' : '' }}">
          <a class="nav-link" href="{{ route('transaction.index') }}">
-             <i class="fas fa-fw fa-table"></i>
+             <i class="fas fa-fw fa-cash-register"></i>
              <span>Transaksi</span></a>
      </li>
 
@@ -90,7 +87,7 @@
 
      <li class="nav-item {{ Route::is('user*') ? 'active' : '' }}">
          <a class="nav-link" href="{{ route('user.index') }}">
-             <i class="fas fa-fw fa-chart-area"></i>
+             <i class="fas fa-fw fa-user"></i>
              <span>Pengguna</span>
          </a>
      </li>
@@ -98,7 +95,7 @@
      <!-- Nav Item - Tables -->
      <li class="nav-item {{ Route::is('sales*') ? 'active' : '' }}">
          <a class="nav-link" href="{{ route('sales.index') }}">
-             <i class="fas fa-fw fa-chart-area"></i>
+             <i class="fas fa-fw fa-users"></i>
              <span>Sales</span>
          </a>
      </li>

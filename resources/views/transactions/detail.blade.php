@@ -3,8 +3,8 @@
 @section('content')
 <div class="row py-4">
     <div class="col">
-        <h1 class="h3 mb-3 text-gray-800"> Detail Pesanan</h1>
-        <hr>
+        <h1 class="h3 mb-2 text-gray-800"> Detail Pesanan</h1>
+        {{-- <hr> --}}
 
     </div>
 </div>
@@ -12,11 +12,15 @@
     <div class="col-md-8 col-lg-12">
         <form action="" method="post" id="registration">
             <nav>
-                <div class="nav nav-pills nav-fill mb-4" id="nav-tab" role="tablist">
+                <hr>
+                <div class="nav nav-pills nav-fill mb-4 " id="nav-tab" role="tablist">
                     <a class="nav-link active" id="step1-tab" data-bs-toggle="tab" href="#step1">Detail Pesanan</a>
-                    <a class="nav-link" id="step2-tab" data-bs-toggle="tab" href="#step2">Pembayaran</a>
+
+                    <a class="nav-link  " id="step2-tab" data-bs-toggle="tab" href="#step2">Pembayaran</a>
+
                     <a class="nav-link" id="step3-tab" data-bs-toggle="tab" href="#step3">Return Pesanan</a>
                 </div>
+                <hr>
             </nav>
             <div class="tab-content py-4">
                 <div class="tab-pane fade show active" id="step1">
@@ -57,7 +61,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card  mb-4 crddet col">
+                            <div class="card shadow  mb-4 crddet col">
                                 <div class="card-header btcolor py-3 ">
                                     <h6 class="m-0 font-weight-bold text-white">Detail Toko</h6>
                                 </div>
@@ -91,7 +95,7 @@
                             </div>
                         </div>
 
-                        <div class="card  mb-4 crddet col">
+                        <div class="card shadow mb-4 crddet col">
                             <div class="card-header btcolor py-3 ">
                                 <h6 class="m-0 font-weight-bold text-white"> Detail Pesanan</h6>
                             </div>
@@ -144,33 +148,123 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="step2">
-                    <h4>Contact information</h4>
-                    <div class="mb-3">
-                        <label for="field4">Required field 1</label>
-                        <input type="text" name="field4" class="form-control" id="field4" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="field5">Optional field</label>
-                        <input type="text" name="field5" class="form-control" id="field5">
-                    </div>
-                    <div class="mb-3">
-                        <label for="textarea1">Required field 2</label>
-                        <textarea name="textarea1" rows="5" class="form-control" id="textarea1" required></textarea>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="card shadow-tabl mb-4 crddet mx-2 col-md-6">
+                                <div class="card-header btcolor py-3 d-flex flex-row justify-content-between">
+                                    <h6 class="mt-0 font-weight-bold text-white"> Pembayaran</h6>
+                                    <h6 class=" mt-0 font-weight-bold text-white">INV202304100003</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>No.</th>
+                                                    <th>Tanggal Bayar</th>
+                                                    <th>Pembayaran</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                <tr>
+                                                    <th scope="row">1</th>
+                                                    <td>25 April 2023</td>
+                                                    <td>-Rp 50.000</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">2</th>
+                                                    <td>23 April 2023</td>
+                                                    <td>-Rp 50.000</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">3</th>
+                                                    <td>20 April 2023</td>
+                                                    <td>-Rp 100.000</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td scope="row" colspan="2" class="grnd">Total
+                                                    </td>
+                                                    <td class="grnd1">
+                                                        -Rp 200.000
+                                                    </td>
+
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-5 mb-4 hcb">
+                                <div class="card border-success shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs text-center font-weight-bold mb-5">
+                                                    <p class="jumlh">
+                                                        Jumlah Yang Harus Dibayar
+                                                    </p>
+                                                    <h2 class="total ">
+                                                        Rp 300.000
+                                                    </h2>
+
+                                                </div>
+
+                                                <h6 class="mb-0 text-center font-weight-bold text-gray-800">Total Pembayaran : Rp 500.000</h6>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
+
                 <div class="tab-pane fade" id="step3">
-                    <h4>Review your information</h4>
-                    <div class="mb-3">
-                        <label for="first_name">Required field 1</label>
-                        <input type="text" class="form-control-plaintext" value="Lorem ipsum dolor sit amet">
-                    </div>
-                    <div class="mb-3">
-                        <label for="first_name">Optional field</label>
-                        <input type="text" class="form-control-plaintext" value="Lorem ipsum dolor sit amet">
-                    </div>
-                    <div class="mb-3">
-                        <label for="first_name">Required field 2</label>
-                        <input type="text" class="form-control-plaintext" value="Lorem ipsum dolor sit amet">
+                    <div class="row justify-content-center">
+
+
+                        <div class="card shadow-tabl mb-4 crddet mx-2 col-md-10">
+                            <div class="card-header btcolor py-3 ">
+                                <h6 class="m-0 font-weight-bold text-white">Return Pesanan</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" width="100%" cellspacing="0">
+
+                                        <tbody>
+                                            <tr>
+                                                <td>Kode Trasaksi</td>
+                                                <td>INV202304100003</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Nama Pesanan</td>
+                                                <td>Acian Putih - Alkabon 100 - MUI</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Quantity Return</td>
+                                                <td>3</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Quantity Produk</td>
+                                                <td>17</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Keterangan</td>
+                                                <td>Barang Robek</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
