@@ -7,43 +7,51 @@ use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
-    public function index()
+    public function index($status)
     {
-        $transactions = DB::table('transactions')
-            ->join('stores', 'transactions.store_id', 'stores.id')
-            ->join('sales', 'transactions.sales_id', 'sales.id')
-            ->select('transactions.*', 'stores.store_name', 'stores.address', 'stores.store_number', 'stores.city_branch')
-            ->orderByDesc('transactions.created_at')
-            ->get();
+        $transactions = Transaction::with('transaction_details')->with('payments')->latest()->get();;
 
-        if (auth()->user()->role == 'admin') {
-            $transactions = DB::table('transactions')
-                ->where('stores.city_branch', auth()->user()->city)
-                ->join('stores', 'transactions.store_id', 'stores.id')
-                ->select('transactions.*', 'stores.store_name', 'stores.address', 'stores.store_number', 'stores.city_branch')
-                ->orderByDesc('transactions.created_at')
-                ->get();
+        switch ($status) {
+            case 'unsent':
+                $transactions = $transactions
+                    ->where('status', 'unpaid')
+                    ->where('delivery_status', 'unsent');
+                break;
+            case 'proccess':
+                $transactions = $transactions
+                    ->where('status', 'unpaid')
+                    ->where('delivery_status', 'proccess');
+                break;
+            case 'sent':
+                $transactions = $transactions
+                    ->where('status', 'unpaid')
+                    ->where('delivery_status', 'sent');
+                break;
+            case 'partial':
+                $transactions = $transactions
+                    ->where('payment_method', 'tempo')
+                    ->where('status', 'partial');
+                break;
+            case 'paid':
+                $transactions = $transactions
+                    ->where('status', 'paid')
+                    ->where('delivery_status', 'sent');
+                break;
         }
 
         return view('transactions.index', compact('transactions'));
     }
 
-    public function show($invoice_code)
+    public function show($status, $id)
     {
-        $transaction = DB::table('transactions')
-            ->where('invoice_code', $invoice_code)
-            ->join('stores', 'transactions.store_id', 'stores.id')
-            ->join('sales', 'transactions.sales_id', 'sales.id')
-            ->select('transactions.*', 'stores.store_name', 'stores.address', 'stores.store_number', 'stores.city_branch', 'sales.sales_name', 'sales.username', 'sales.phone_number', 'sales.city')
-            ->orderByDesc('transactions.created_at')
-            ->first();
+        $transaction = Transaction::with('transaction_details')
+            ->with('transaction_details.product_return')
+            ->with([
+                'payments' => function ($query) {
+                    $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
+                }
+            ])->find($id);
 
-        $transactionDetail = DB::table('transaction_details')
-            ->where('transaction_id', $transaction->id)
-            ->join('products', 'transaction_details.product_id', 'products.id')
-            ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight')
-            ->get();
-
-        return view('transactions.detail', compact('transaction', 'transactionDetail'));
+        return view('transactions.detail', compact('transaction'));
     }
 }
