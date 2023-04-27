@@ -53,11 +53,6 @@
                                 <td>{{ $t->type }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        {{-- <a href="{{ route('type.edit', Crypt::encrypt($t->id)) }}"
-                                            class="btn btn-sm btn-success ">
-
-                                            <span class="text">Edit </span>
-                                        </a> --}}
                                         <button class="btn btn-sm btn-success" data-toggle="modal"
                                             data-target="#editModal{{ $t->id }}">Edit </button>
                                         <form action="{{ route('type.destroy', $t->id) }}" method="post">

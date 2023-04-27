@@ -61,8 +61,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/product/{id}/delete', [ProductController::class, 'destroy'])->name('product.destroy');
 
     // Transaction
-    Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
-    Route::get('/transactions/detail-transaction/{invoice_code}', [TransactionController::class, 'show'])->name('transaction.show');
+    Route::get('/transactions/{status}', [TransactionController::class, 'index'])->name('transaction.index');
+    Route::get('/transactions/{status}/detail-transaction/{id}', [TransactionController::class, 'show'])->name('transaction.show');
 
     // User
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
