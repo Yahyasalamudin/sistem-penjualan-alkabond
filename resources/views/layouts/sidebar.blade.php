@@ -23,17 +23,15 @@
 
      <!-- Heading -->
      <div class="sidebar-heading">
-         Interface
+         Data
      </div>
 
      <li class="nav-item {{ Route::is(['city*', 'type*', 'store*', 'product*']) ? 'active' : '' }}">
-         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne"
-             aria-expanded="true" aria-controls="collapseOne">
+         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
              <i class="fas fa-fw fa-cog"></i>
              <span>Master Data</span>
          </a>
-         <div id="collapseOne" class="collapse {{ Route::is(['city*', 'type*', 'store*', 'product*']) ? 'show' : '' }}"
-             aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+         <div id="collapseOne" class="collapse {{ Route::is(['city*', 'type*', 'store*', 'product*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
              <div class="bg-white py-2 collapse-inner rounded">
                  <h6 class="collapse-header">Master Data :</h6>
 
@@ -49,8 +47,7 @@
                      Toko
                  </a>
 
-                 <a class="collapse-item {{ Route::is('product*') ? 'active' : '' }}"
-                     href="{{ route('product.index') }}">
+                 <a class="collapse-item {{ Route::is('product*') ? 'active' : '' }}" href="{{ route('product.index') }}">
                      Produk
                  </a>
              </div>
@@ -75,56 +72,48 @@
      </li> --}}
 
      {{-- <li class="nav-item {{ Route::is('transaction*') ? 'active' : '' }}">
-         <a class="nav-link" href="{{ route('transaction.index') }}">
-             <i class="fas fa-fw fa-cash-register"></i>
-             <span>Transaksi</span></a>
+     <a class="nav-link" href="{{ route('transaction.index') }}">
+         <i class="fas fa-fw fa-cash-register"></i>
+         <span>Transaksi</span></a>
      </li> --}}
 
      <li class="nav-item {{ Route::is('transaction*') ? 'active' : '' }}">
-         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-             aria-expanded="true" aria-controls="collapseTwo">
+         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
              <i class="fas fa-fw fa-cash-register"></i>
              <span>Transaksi</span>
          </a>
-         <div id="collapseTwo" class="collapse {{ Route::is('transaction*') ? 'show' : '' }}"
-             aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+         <div id="collapseTwo" class="collapse {{ Route::is('transaction*') ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
              <div class="bg-white py-2 collapse-inner rounded">
                  <h6 class="collapse-header">Transaksi :</h6>
 
-                 <a class="collapse-item {{ Request::is('transactions/unsent*') ? 'active' : '' }}"
-                     href="{{ route('transaction.index', 'unsent') }}">
+                 <a class="collapse-item {{ Request::is('transactions/unsent*') ? 'active' : '' }}" href="{{ route('transaction.index', 'unsent') }}">
                      Belum dikirim
                  </a>
 
-                 <a class="collapse-item {{ Request::is('transactions/proccess*') ? 'active' : '' }}"
-                     href="{{ route('transaction.index', 'proccess') }}">
+                 <a class="collapse-item {{ Request::is('transactions/proccess*') ? 'active' : '' }}" href="{{ route('transaction.index', 'proccess') }}">
                      Proses
                  </a>
 
-                 <a class="collapse-item {{ Request::is('transactions/sent*') ? 'active' : '' }}"
-                     href="{{ route('transaction.index', 'sent') }}">
+                 <a class="collapse-item {{ Request::is('transactions/sent*') ? 'active' : '' }}" href="{{ route('transaction.index', 'sent') }}">
                      Dikirim
                  </a>
 
-                 <a class="collapse-item {{ Request::is('transactions/partial*') ? 'active' : '' }}"
-                     href="{{ route('transaction.index', 'partial') }}">
+                 <a class="collapse-item {{ Request::is('transactions/partial*') ? 'active' : '' }}" href="{{ route('transaction.index', 'partial') }}">
                      Dicicil
                  </a>
 
-                 <a class="collapse-item {{ Request::is('transactions/paid*') ? 'active' : '' }}"
-                     href="{{ route('transaction.index', 'paid') }}">
+                 <a class="collapse-item {{ Request::is('transactions/paid*') ? 'active' : '' }}" href="{{ route('transaction.index', 'paid') }}">
                      Selesai
                  </a>
              </div>
          </div>
      </li>
 
-     <!-- Divider -->
      <hr class="sidebar-divider">
 
      <!-- Heading -->
      <div class="sidebar-heading">
-         Addons
+         User
      </div>
 
      <li class="nav-item {{ Route::is('user*') ? 'active' : '' }}">
@@ -143,10 +132,32 @@
      </li>
 
      <!-- Divider -->
+     <hr class="sidebar-divider">
+
+     <!-- Heading -->
+     <div class="sidebar-heading">
+         Laporan
+     </div>
+
+     <li class="nav-item ">
+         <a class="nav-link" href="{{ route('user.index') }}">
+             <i class="fas fa-fw fa-solid fa-file-pdf"></i>
+             <span>Laporan Transaksi</span>
+         </a>
+     </li>
+     <li class="nav-item ">
+         <a class="nav-link" href="{{ route('user.index') }}">
+             <i class="fas fa-fw fa-solid fa-file-pdf"></i>
+             <span>Laporan Pendapatan</span>
+         </a>
+     </li>
+
+
+     <!-- Divider -->
      <hr class="sidebar-divider d-none d-md-block">
 
      <div class="sidebar-heading">
-         Addons
+         Keluar
      </div>
 
      <li class="nav-item">
