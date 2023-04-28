@@ -362,6 +362,14 @@ class TransactionController extends Controller
         $transactionDetail = TransactionDetail::find($id);
         $return = ProductReturn::where('id', $transactionDetail->return_id)->first();
 
+        if ($return == null) {
+            return response()->json([
+                'data' => [],
+                'message' => 'Detail transaction not found',
+                'status_code' => 404
+            ]);
+        }
+
         $sum_quantity = $transactionDetail->quantity + $return->return;
         $return_price = $transactionDetail->price * $return->return;
         $subtotal = $transactionDetail->subtotal + $return_price;

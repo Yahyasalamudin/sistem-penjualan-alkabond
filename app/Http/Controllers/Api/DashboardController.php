@@ -13,15 +13,17 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $now = Carbon::now();
+
         $transaction = Transaction::count();
         $thisMonthTransaction = Transaction::
-            where('date')
+            whereMonth('created_at', $now->month)
             ->count();
-
 
         return response()->json([
             'data' => [
                 'transaction' => $transaction,
+                'this_month_transaction' => $thisMonthTransaction,
             ],
             'message' => 'Fetch dashboard',
             'status_code' => 200
