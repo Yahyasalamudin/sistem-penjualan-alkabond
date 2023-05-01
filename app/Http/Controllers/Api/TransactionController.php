@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PaymentResource;
-use App\Http\Resources\TransactionDetailResource;
 use App\Http\Resources\TransactionResource;
 use App\Models\Payment;
 use App\Models\ProductReturn;
@@ -12,7 +11,6 @@ use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class TransactionController extends Controller
@@ -25,12 +23,12 @@ class TransactionController extends Controller
         $to = $request->get('to');
 
         $transactions = Transaction::with('transaction_details')
+            ->where('sales_id', auth()->user()->id)
             ->with('payments')->latest()->get();
 
         if ($storeId != null) {
             $transactions = $transactions->where('store_id', $storeId);
         }
-
 
         if ($from != null && $to != null) {
             $from = Carbon::createFromFormat('Y-m-d', $from);
@@ -64,7 +62,6 @@ class TransactionController extends Controller
                     ]);
             }
         }
-
 
         if ($transactions) {
             return response()->json([
@@ -314,46 +311,53 @@ class TransactionController extends Controller
             ]);
         }
 
-        $productReturn = ProductReturn::create([
-            'return' => $request->return,
-            'description_return' => $request->description_return
-        ]);
+        if (empty($transactionDetail->return_id)) {
+            $productReturn = ProductReturn::create([
+                'return' => $request->return,
+                'description_return' => $request->description_return
+            ]);
 
-        $transactionDetail->update([
-            'return_id' => $productReturn->id
-        ]);
+            $transactionDetail->update([
+                'return_id' => $productReturn->id
+            ]);
 
-        $return = ProductReturn::find($transactionDetail->return_id);
+            $return = ProductReturn::find($transactionDetail->return_id);
 
-        $quantity = $transactionDetail->quantity - $return->return;
-        $return_price = $return->return * $transactionDetail->price;
-        $subtotal = $transactionDetail->subtotal - $return_price;
+            $quantity = $transactionDetail->quantity - $return->return;
+            $return_price = $return->return * $transactionDetail->price;
+            $subtotal = $transactionDetail->subtotal - $return_price;
 
-        $transaction = Transaction::find($transactionDetail->transaction_id);
+            $transaction = Transaction::find($transactionDetail->transaction_id);
 
-        $transaction->update([
-            'grand_total' => $transaction->grand_total - $return_price,
-            'remaining_pay' => $transaction->remaining_pay - $return_price
-        ]);
+            $transaction->update([
+                'grand_total' => $transaction->grand_total - $return_price,
+                'remaining_pay' => $transaction->remaining_pay - $return_price
+            ]);
 
-        $transactionDetail->update([
-            'quantity' => $quantity,
-            'subtotal' => $subtotal,
-        ]);
+            $transactionDetail->update([
+                'quantity' => $quantity,
+                'subtotal' => $subtotal,
+            ]);
 
-        // $transaction_detail = DB::table('transaction_details')
-        //     ->where('transaction_details.id', $id)
-        //     ->join('products', 'transaction_details.product_id', 'products.id')
-        //     ->join('product_returns', 'transaction_details.return_id', 'product_returns.id')
-        //     ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight', 'product_returns.return', 'product_returns.description_return')
-        //     ->first();
+            // $transaction_detail = DB::table('transaction_details')
+            //     ->where('transaction_details.id', $id)
+            //     ->join('products', 'transaction_details.product_id', 'products.id')
+            //     ->join('product_returns', 'transaction_details.return_id', 'product_returns.id')
+            //     ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight', 'product_returns.return', 'product_returns.description_return')
+            //     ->first();
 
-        $transaction = Transaction::with('transaction_details')->with('payments')->find($transaction->id);
+            $transaction = Transaction::with('transaction_details')->with('payments')->find($transaction->id);
+
+            return response()->json([
+                'data' => new TransactionResource($transaction),
+                'message' => 'Data Return has been created successfully ',
+                'status_code' => 200
+            ]);
+        }
 
         return response()->json([
-            'data' => new TransactionResource($transaction),
-            'message' => 'Data Return has been created successfully ',
-            'status_code' => 200
+            'message' => 'Product return already exist!!',
+            'status_code' => 400
         ]);
     }
 

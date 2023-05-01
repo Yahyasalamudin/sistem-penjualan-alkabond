@@ -33,11 +33,11 @@
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                Transaksi Hari Ini
+                                Transaksi Bulan Ini
                             </div>
                         </div>
                         <div class="col-auto">
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $transaction_now }}</div>
+                            <div class="h5 mb-0 font-weigh<p></p>t-bold text-gray-800">{{ $transaction_now }}</div>
                         </div>
                     </div>
                 </div>
@@ -73,6 +73,41 @@
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                 Produk</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $product }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Pendapatan Bulan Ini</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp {{ number_format($payment) }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Pendapatan Seharusnya</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp {{ number_format($grand_total_month) }}
+                            </div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-comments fa-2x text-gray-300"></i>

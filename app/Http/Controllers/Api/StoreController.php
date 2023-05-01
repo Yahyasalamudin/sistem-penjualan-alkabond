@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StoreResource;
 use App\Models\Store;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,7 +12,7 @@ class StoreController extends Controller
 {
     public function index()
     {
-        $store = Store::latest()->get();
+        $store = Store::where('sales_id', auth()->user()->id)->get();
         // $store = Store::where('sales_id', auth()->user()->id)->latest()->get();
 
         return response()->json([

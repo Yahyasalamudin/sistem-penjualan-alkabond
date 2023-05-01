@@ -63,6 +63,7 @@ Route::middleware('auth')->group(function () {
     // Transaction
     Route::get('/transactions/{status}', [TransactionController::class, 'index'])->name('transaction.index');
     Route::get('/transactions/{status}/detail-transaction/{id}', [TransactionController::class, 'show'])->name('transaction.show');
+    Route::put('/transactions/{delivery_status}/{id}', [TransactionController::class, 'update_delivery'])->name('transaction.update');
 
     // User
     Route::get('/users', [UserController::class, 'index'])->name('user.index');

@@ -178,7 +178,7 @@
                             <div class="row">
                                 <div class="card shadow-tabl mb-4 crddet mx-2 col-md-6">
                                     <div class="card-header btcolor py-3 d-flex flex-row justify-content-between">
-                                        <h6 class="mt-0 font-weight-bold text-white"> Pembayaran</h6>
+                                        <h6 class="mt-0 font-weight-bold text-white"> Riwayat Pembayaran</h6>
                                         <h6 class=" mt-0 font-weight-bold text-white">{{ $transaction->invoice_code }}</h6>
                                     </div>
 

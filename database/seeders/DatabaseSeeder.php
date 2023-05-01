@@ -69,7 +69,7 @@ class DatabaseSeeder extends Seeder
             'address' => 'Semboro',
             'store_number' => '082123123123',
             'city_branch' => 'Semboro',
-            'sales_id' => '1',
+            'sales_id' => '11',
         ]);
 
         \App\Models\Product::factory()->create([

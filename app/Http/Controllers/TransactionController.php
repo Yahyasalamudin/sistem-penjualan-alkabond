@@ -54,4 +54,21 @@ class TransactionController extends Controller
 
         return view('transactions.detail', compact('transaction'));
     }
+
+    public function update_delivery($delivery_status, $id)
+    {
+        if ($delivery_status == 'proccess') {
+            Transaction::find($id)->update([
+                'delivery_status' => 'proccess'
+            ]);
+
+            return back()->with('success', 'Pesanan dalam pengiriman.');
+        } else {
+            Transaction::find($id)->update([
+                'delivery_status' => 'sent'
+            ]);
+
+            return back()->with('success', 'Pesanan telah sampai kepada penerima.');
+        }
+    }
 }
