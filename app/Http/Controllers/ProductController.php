@@ -36,12 +36,12 @@ class ProductController extends Controller
         $date = date('Ym', strtotime($now));
         $check = Product::count();
         if ($check == 0) {
-            $code = 100001;
-            $product_code = $output . $date . $code;
+            $code = 10001;
+            $product_code = $output . $code;
         } else {
             $query = Product::all()->last();
-            $code = (int) substr($query->product_code, -6) + 1;
-            $product_code = $output . $date . $code;
+            $code = (int) substr($query->product_code, -5) + 1;
+            $product_code = $output . $code;
         }
 
         Product::create([

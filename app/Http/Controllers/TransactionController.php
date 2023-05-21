@@ -9,7 +9,7 @@ class TransactionController extends Controller
 {
     public function index($status)
     {
-        $transactions = Transaction::with('transaction_details')->with('payments')->latest()->get();;
+        $transactions = Transaction::with('transaction_details')->with('payments')->latest()->get();
 
         switch ($status) {
             case 'unsent':

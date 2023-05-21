@@ -4,11 +4,11 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TypeController;
-use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -82,6 +82,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/sales/edit/{id}', [SalesController::class, 'edit'])->name('sales.edit');
     Route::put('/sales/update/{id}', [SalesController::class, 'update'])->name('sales.update');
     Route::delete('/sales/delete/{id}', [SalesController::class, 'destroy'])->name('sales.destroy');
+
+    // Laporan
+    Route::get('/Laporan/surat-jalan={invoice}', [ReportController::class, 'SuratJalan'])->name('suratjalan');
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });

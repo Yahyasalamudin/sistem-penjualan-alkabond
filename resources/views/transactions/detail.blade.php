@@ -1,18 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row py-4">
-        <div class="col">
-            <h1 class="h3 mb-2 text-gray-800">Detail Pesanan</h1>
+    @if ($transaction->delivery_status != 'proccess')
+        <div class="row py-4">
+            <div class="col">
+                <h1 class="h3 mb-2 text-gray-800">Detail Pesanan</h1>
+            </div>
         </div>
-    </div>
+    @endif
+
+    @if ($transaction->delivery_status == 'proccess')
+        <div class="row py-4 mx-1 d-flex flex-row justify-content-between">
+            <h1 class="h3 mb-2 text-gray-800">Detail Pesanan</h1>
+            {{-- <h1 class="h3 mb-2 text-gray-800">{{ $transaction->invoice_code }}</h1> --}}
+            <a href="{{ route('suratjalan', $transaction->invoice_code) }}" class="btn btn-info mb-1" target="_blank">
+                Cetak Surat Jalan
+            </a>
+        </div>
+    @endif
 
     {{-- <div class="py-3 d-flex flex-row justify-content-between">
         <h1 class="h3 mb-2 text-gray-800"> Pembayaran</h1>
         <h1 class="h3 mb-2 text-gray-800">{{ $transaction->invoice_code }}</h1>
-    <form action="{{ route('update.proccess') }}">
-        <button type="submit">Konfirmasi Barang Dalam Perjalanan</button>
-    </form>
     </div> --}}
 
     <div class="row">
@@ -42,7 +51,6 @@
                                     <div class="card-body">
                                         <div class="table-responsive">
                                             <table class="table table-striped" width="100%" cellspacing="0">
-
                                                 <tbody>
                                                     <tr>
                                                         <td>Kode Transaksi</td>
@@ -163,7 +171,6 @@
 
                                                     </td>
                                                 </tr>
-
                                             </tbody>
                                         </table>
                                     </div>

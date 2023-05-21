@@ -1,25 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
-<h1 class="h3 mb-3 text-gray-800"> Data Pengguna</h1>
-@if (session('success'))
-<div class="alert alert-success alert-dismissible" id="flash_data" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    {{ session('success') }}
-</div>
+    <h1 class="h3 mb-3 text-gray-800"> Data Pengguna</h1>
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible" id="flash_data" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ session('success') }}
+        </div>
+    @endif
 
-@endif
-
-@if (session('error'))
-<div class="alert alert-danger alert-dismissible" id="flash_data" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    {{ session('error') }}
-</div>
-@endif
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible" id="flash_data" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ session('error') }}
+        </div>
+    @endif
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
@@ -43,14 +42,14 @@
                             <th>Email</th>
                             <th>Nomer Hp</th>
                             <th>Kota</th>
-                            <th>Lvel User</th>
+                            <th>Level User</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @php
-                        $i = 1;
-                    @endphp
+                            $i = 1;
+                        @endphp
                         @foreach ($users as $user)
                             <tr>
                                 <th scope="row">{{ $i++ }} </th>
@@ -62,8 +61,7 @@
                                 <td class="col-lg-7">{{ $user->role }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('user.edit', $user->id) }}"
-                                            class="btn btn-sm btn-success">
+                                        <a href="{{ route('user.edit', $user->id) }}" class="btn btn-sm btn-success">
                                             Edit
                                         </a>
                                         <form action="{{ route('user.destroy', $user->id) }}" method="post">
