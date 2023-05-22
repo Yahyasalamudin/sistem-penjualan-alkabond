@@ -25,14 +25,15 @@
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Tabel Pengguna</h6>
 
-            <a href="{{ route('user.create') }}" class="btn btcolor text-white">
-                Registrasi Pengguna
-            </a>
+            @if (auth()->user()->role == 'owner')
+                <a href="{{ route('user.create') }}" class="btn btcolor text-white">
+                    Registrasi Pengguna
+                </a>
+            @endif
         </div>
 
         <div class="card-body">
             <div class="table-responsive">
-
                 <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
@@ -43,7 +44,9 @@
                             <th>Nomer Hp</th>
                             <th>Kota</th>
                             <th>Level User</th>
-                            <th>Opsi</th>
+                            @if (auth()->user()->role == 'owner')
+                                <th>Opsi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -59,20 +62,22 @@
                                 <td class="col-lg-7">{{ $user->phone_number }}</td>
                                 <td class="col-lg-7">{{ $user->city }}</td>
                                 <td class="col-lg-7">{{ $user->role }}</td>
-                                <td>
-                                    <div class="d-flex justify-content-center">
-                                        <a href="{{ route('user.edit', $user->id) }}" class="btn btn-sm btn-success">
-                                            Edit
-                                        </a>
-                                        <form action="{{ route('user.destroy', $user->id) }}" method="post">
-                                            @csrf
-                                            @method('delete')
-                                            <button type="submit" class="btn btn-sm btn-danger ml-2">
-                                                Hapus
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
+                                @if (auth()->user()->role == 'owner')
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <a href="{{ route('user.edit', $user->id) }}" class="btn btn-sm btn-success">
+                                                Edit
+                                            </a>
+                                            <form action="{{ route('user.destroy', $user->id) }}" method="post">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit" class="btn btn-sm btn-danger ml-2">
+                                                    Hapus
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>

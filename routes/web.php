@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('login');
 });
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -84,7 +84,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/sales/delete/{id}', [SalesController::class, 'destroy'])->name('sales.destroy');
 
     // Laporan
-    Route::get('/Laporan/surat-jalan={invoice}', [ReportController::class, 'SuratJalan'])->name('suratjalan');
+    Route::get('/Laporan/surat-jalan={invoice}', [ReportController::class, 'suratJalan'])->name('suratjalan');
+    Route::get('/Laporan/transaksi', [ReportController::class, 'transactionReport'])->name('transactionReport');
+    Route::get('/Laporan/pendapatan', [ReportController::class, 'incomeReport'])->name('incomeReport');
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });

@@ -11,7 +11,11 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::latest()->get();
+        $auth = auth()->user();
+        $users = User::latest()->whereNotIn('id', [$auth->id])->get();
+        if ($auth->role == "admin") {
+            $users = $users->where('role', 'admin');
+        }
 
         return view('users.index', [
             'title' => 'User',

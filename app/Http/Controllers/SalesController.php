@@ -11,7 +11,11 @@ class SalesController extends Controller
 {
     public function index()
     {
-        $sales = Sales::latest()->get();
+        $sales = Sales::get();
+
+        if (auth()->user()->role == 'admin') {
+            $sales = $sales->where('city', auth()->user()->city);
+        }
 
         return view('sales.index', [
             'title' => 'Sales',

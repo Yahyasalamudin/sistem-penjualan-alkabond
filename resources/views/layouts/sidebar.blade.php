@@ -150,13 +150,13 @@
      </div>
 
      <li class="nav-item ">
-         <a class="nav-link" href="{{ route('user.index') }}">
+         <a class="nav-link" href="{{ route('transactionReport') }}" target="_blank">
              <i class="fas fa-fw fa-solid fa-file-pdf"></i>
              <span>Laporan Transaksi</span>
          </a>
      </li>
      <li class="nav-item ">
-         <a class="nav-link" href="{{ route('user.index') }}">
+         <a class="nav-link" href="{{ route('incomeReport') }}" target="_blank">
              <i class="fas fa-fw fa-solid fa-file-pdf"></i>
              <span>Laporan Pendapatan</span>
          </a>
