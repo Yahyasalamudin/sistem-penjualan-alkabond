@@ -150,7 +150,7 @@
      </div>
 
      <li class="nav-item ">
-         <a class="nav-link" href="{{ route('transactionReport') }}" target="_blank">
+         <a class="nav-link" href="#" data-toggle="modal" data-target="#filter-tanggal">
              <i class="fas fa-fw fa-solid fa-file-pdf"></i>
              <span>Laporan Transaksi</span>
          </a>
@@ -178,5 +178,44 @@
 
      <div class="text-center d-none d-md-inline">
          <button class="rounded-circle border-0" id="sidebarToggle"></button>
+     </div>
+
+     {{-- Modal Filter Laporan --}}
+     <div class="modal fade" id="filter-tanggal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal-dialog">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <h5 class="modal-title" id="exampleModalLabel">Tambah Produk</h5>
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                         <span aria-hidden="true">&times;</span>
+                     </button>
+                 </div>
+                 <form action="{{ route('transactionReport') }}" target="_blank" method="post">
+                     @csrf
+                     <div class="modal-body">
+                         <label for="status">Status Transaksi</label>
+                         <select class="form-control mb-3" name="status" id="status">
+                             <option value="semua">Semua</option>
+                             <option value="unsent">Belum Dikirim</option>
+                             <option value="process">Proses</option>
+                             <option value="sent">Dikirim</option>
+                             <option value="partial">Cicilan</option>
+                             <option value="paid">Selesai / Lunas</option>
+                         </select>
+
+                         <label for="tgl_awal">Tanggal Awal Transaksi</label>
+                         <input class="form-control mb-3" type="date" name="tgl_awal" id="tgl_awal">
+
+                         <label for="tgl_akhir">Tanggal Akhir Transaksi</label>
+                         <input class="form-control mb-3" type="date" name="tgl_akhir" id="tgl_akhir"
+                             placeholder="Masukkan Nama Merk">
+                     </div>
+                     <div class="modal-footer">
+                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                         <button type="submit" class="btn btn-primary">Cetak Data</button>
+                     </div>
+                 </form>
+             </div>
+         </div>
      </div>
  </ul>

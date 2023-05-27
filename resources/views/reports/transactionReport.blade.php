@@ -50,7 +50,6 @@
             color: white;
             font-size: 13px;
         }
-
     </style>
 </head>
 
@@ -66,8 +65,8 @@
     <table width="500" border="0">
         <tr>
             <td class="tanggal">
-                Dari tanggal 24 Mei 2023 Sampai Tanggal
-                25 Mei 2023
+                Dari tanggal {{ date('d-F-Y', strtotime($tgl_awal)) }} Sampai Tanggal
+                {{ date('d-F-Y', strtotime($tgl_akhir)) }}
             </td>
         </tr>
     </table>
@@ -82,32 +81,33 @@
             <th>Status Pembayaran</th>
             <th>Status Pengiriman</th>
             <th>Tanggal Transaksi</th>
-            <th>Nominal</th>
-            <th>Jumlah Bayar</th>
-            <th>Sisa</th>
+            <th>Total Transaksi</th>
         </tr>
-        <tr>
-            <td>1</td>
-            <td>INV202304100001</td>
-            <td>Toko Jaya Abadi</td>
-            <td>Abdul</td>
-            <td>Tempo</td>
-            <td>Unpaid</td>
-            <td>Process</td>
-            <td>24 Mei 2023</td>
-            <td>Rp 70.000</td>
-            <td>Rp 20.000</td>
-            <td>Rp 50.000</td>
+        @php
+            $i = 1;
+        @endphp
+        @foreach ($transactions as $transaction)
+            <tr>
+                <td>{{ $i++ }}</td>
+                <td>{{ $transaction->invoice_code }}</td>
+                <td>{{ $transaction->stores->store_name }}</td>
+                <td>{{ $transaction->sales->sales_name }}</td>
+                <td>{{ $transaction->payment_method != null ? $transaction->payment_method : 'Belum Dibayar' }}
+                </td>
+                <td>{{ $transaction->status }}</td>
+                <td>{{ $transaction->delivery_status }}</td>
+                <td>{{ date('d F Y', strtotime($transaction->created_at)) }}</td>
+                <td>Rp {{ number_format($transaction->grand_total) }}</td>
+            </tr>
+        @endforeach
 
-        </tr>
 
         <tr>
-            <td scope="row" colspan="10" style="text-align:center ; font-weight:bold; font-size: 13px;background-color: #f9f8f8;">Grand Total
+            <td scope="row" colspan="8"
+                style="text-align:center ; font-weight:bold; font-size: 13px;background-color: #f9f8f8;">Grand Total
             </td>
             <td style="font-weight:bold; font-size: 13px;background-color: #f9f8f8;">
-                Rp 245.000
-            </td>
-
+                Rp {{ number_format($transactions->sum('grand_total')) }}
             </td>
         </tr>
     </table>
