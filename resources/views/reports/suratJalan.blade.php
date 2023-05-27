@@ -2,135 +2,235 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Surat Jalan</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+    <title> Delivery Order</title>
+
+    <!-- Favicons -->
+    <link href="{{ public_path('img/logo.png') }}" rel="icon">
+    <link href="{{ public_path('img/logo.png') }}" rel="icon">
+
+    <!-- Vendor CSS Files -->
+
+    <style type="text/css">
+        body {
+            font-family: arial;
+        }
+
+        .rangkasurat {
+            /* width: 980px; */
+            margin: 0 auto;
+            background-color: #fff;
+            height: 500px;
+            padding: 20px;
+        }
+
+        #table {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #table td,
+        #table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            font-size: 13px;
+
+        }
+
+        #table tr:hover {
+            background-color: #ddd;
+        }
+
+        #table th {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            text-align: left;
+            background-color: #538b82;
+            color: white;
+            font-size: 13px;
+        }
+
+        .tengah {
+            text-align: center;
+            line-height: 3px;
+        }
+
+        .kiri {
+            text-align: left;
+            line-height: 3px;
+        }
+
+        .kanan {
+            text-align: right;
+            line-height: 3px;
+        }
+
+        .jarak {
+            font-size: 15px;
+
+        }
+
+    </style>
 </head>
 
 <body>
-    <style>
-        @media print {
-            /* @page {
-                size: 8.267in 5.5in;
-                margin: 0;
-            } */
+    <div class="rangkasurat">
 
-            .header-pt {
-                font-size: 24px;
-                font-weight: bold;
-            }
-        }
+        <table width="100%">
 
-        .tbl-resi {
-            font-size: 16px;
-            /* font-style: bold; */
-        }
+            <table>
+                <tr class="jarak">
+                    <td>
+                        <p style="font-size:16px;font-weight:bold;">DELIVERY ORDER</p>
+                    </td>
+                    <td width="150"></td>
+                    <td>
+                        <p style="font-size:16px;font-weight:bold;">CV. SEJAHTERA BERSAMA</p>
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+            <table>
 
-        .table-wrapper {
-            margin: 24px, 0;
-            border: 1px solid gray;
-            border-top: 4px solid gray;
-            padding-top: 5px;
-        }
+                <tr class="jarak">
+                    <td>Kepada,
+                    </td>
+                    <td width="38"></td>
+                    <td width="80">Status</td>
+                    <td>: CONFIRM
+                    </td>
+                </tr>
+                <tr class="jarak">
+                    <td>Bpk. Saing / {{ $transaction->stores->store_name }}
+                    </td>
+                    <td width="38"></td>
+                    <td width="80">Invoice Code</td>
+                    <td>: INV202304100001
+                    </td>
+                </tr>
+                <tr class="jarak">
+                    <td>
+                        {{-- {{ $transaction->stores->address }} --}}
+                    </td>
+                    <td width="38"></td>
+                    <td width="40">Tanggal</td>
+                    <td>{{ ' : '. date('d M Y', strtotime(now())) }}
+                    </td>
+                </tr>
+                <tr class="jarak">
+                    <td>
+                    </td>
+                    <td></td>
+                    <td width="40">Phone</td>
+                    <td>: 08937393303
+                    </td>
+                </tr>
 
-        .border-bottom {
-            border-bottom: 1px solid gray;
-        }
+                <tr class="jarak">
+                    <td>Dikirim Ke
+                    </td>
+                    <td></td>
+                    <td width="40"></td>
+                    <td>
+                    </td>
+                </tr>
+                <tr class="jarak">
+                    <td>{{ $transaction->stores->address }}
+                    </td>
+                    <td></td>
+                    <td width="40"></td>
+                    <td>
+                    </td>
+                </tr>
 
-        .border-top {
-            border-top: 1px solid gray;
-        }
 
-        .border-left {
-            border-left: 1px solid gray;
-        }
+            </table>
 
-        .img-qrcode {
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-
-        .img-logo {
-            position: absolute;
-            top: 10px;
-            left: 20px;
-        }
-    </style>
-    <div class="content-wrapper print resi">
-        <table>
+        </table>
+        <br><br>
+        <table style="width:100%;" id="table" cellpadding='5' cellspacing='0'>
             <tr>
-                <td height='100' width='400' align="center" style="display: flex; align-items: center;">
-                    <img class="img-logo" src="{{ public_path('img/logo.png') }}" height="100" />
-                    <div height='100' style="margin-left: 120px;margin-top:24px;" valign='center'>
-                        <div class="header-pt" style="font-size: 24px">CV. SEJAHTERA BERSAMA</div>
-                        <div>Jl. Raya Puger No. 6</div>
-                        <div>Puger 16512, Indonesia</div>
-                    </div>
+                <th class="border-bottom border-top" height="10">No</th>
+                <th class="border-bottom border-top">Kode Barang</th>
+                <th class="border-bottom border-top">Nama Barang</th>
+                <th class="border-bottom border-top">QTY</th>
+                <th class="border-bottom border-top">Sat</th>
+            </tr>
+            <tbody>
+                @php
+                $i = 1;
+                @endphp
+                @foreach ($transaction->transaction_details as $detail)
+                <tr class="tbl-resi">
+                    <td align="center" height="10">{{ $i++ }}</td>
+                    <td align="center">{{ $detail->product->product_code }}</td>
+                    <td align="center">{{ $detail->product->product_name }}</td>
+                    <td align="center">{{ $detail->quantity }}</td>
+                    <td align="center">{{ $detail->product->unit_weight }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <br><br><br>
+        <table>
+            <tr class="jarak tengah">
+                <td>Dibuat
                 </td>
-                <td valign='top'>
-                    <div>
-                        Puger, {{ date('d M Y', strtotime(now())) }}
-                    </div>
+                <td width="50"></td>
+                <td width="210">Diperiksa</td>
+                <td>Penerima
                 </td>
             </tr>
-            <tr>
-                <td rowspan="2">
-                    <div class='' style="margin-top:24px;">
-                        <span style="display: block; margin: 4px 0;">KEPADA Yth. Pemilik
-                            {{ $transaction->stores->store_name }},</span>
-                        <span style="display: block; margin: 4px 0;">{{ $transaction->stores->address }},</span>
-                        <span style="display: block; margin: 4px 0;">{{ $transaction->stores->city_branch }}</span>
-                    </div>
-                    <br>
-                    <br>
-                    <div>Harap diterima dengan baik barang2 tsb. Dibawah ini</div>
+            <br><br><br><br><br>
+            <tr class="jarak tengah ">
+                <td>( Yahya Salamudin )
                 </td>
-            <tr>
-        </table>
-        <div class='table-wrapper' style="margin-bottom: 24px;">
-            <table style="width:100%;" cellpadding='5' cellspacing='0'>
-                <tr>
-                    <th class="border-bottom border-top" height="10">No</th>
-                    <th class="border-bottom border-top">Kode Barang</th>
-                    <th class="border-bottom border-top">Nama Barang</th>
-                    <th class="border-bottom border-top">QTY</th>
-                    <th class="border-bottom border-top">Sat</th>
-                </tr>
-                <tbody>
-                    @php
-                        $i = 1;
-                    @endphp
-                    @foreach ($transaction->transaction_details as $detail)
-                        <tr class="tbl-resi">
-                            <td align="center" height="10">{{ $i++ }}</td>
-                            <td align="center">{{ $detail->product->product_code }}</td>
-                            <td align="center">{{ $detail->product->product_name }}</td>
-                            <td align="center">{{ $detail->quantity }}</td>
-                            <td align="center">{{ $detail->product->unit_weight }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        <table style="width:100%">
-            <tr>
-                <td valign="top">
-                    Kode Transaksi : {{ $transaction->invoice_code }}
+                <td width="50"></td>
+                <td width="210">(.........................)</td>
+                <td>(Bpk. Saing)
                 </td>
-                <td valign='top' style="width:20%;text-align:center;">
-                    Diterima Oleh:
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    .............................
-                    <br><br>Hormat Kami
+            </tr>
+            <br>
+            <tr class="jarak tengah ">
+                <td>Admin
+                </td>
+                <td width="50"></td>
+                <td width="210">Gudang</td>
+                <td>
                 </td>
             </tr>
         </table>
     </div>
+
+
+
+    {{-- <div style="float: right;">
+        <div class="jarak">
+            <div>
+            </div>
+            <div width="220"></div>
+            <div>Penerima</div>
+            <div></div>
+        </div>
+
+
+        <div class="jarak" >
+            <div>
+            </div>
+            <div width="220"></div>
+            <div style="font-weight:bold;">
+                <div>Bpk. Purwono / {{ $transaction->stores->store_name }}</div>
+
+    </div>
+    <div></div>
+    </div>
+
+    </div> --}}
+
 </body>
 
 </html>
