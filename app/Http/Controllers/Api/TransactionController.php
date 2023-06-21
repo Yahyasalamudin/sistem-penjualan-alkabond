@@ -324,27 +324,12 @@ class TransactionController extends Controller
             $return = ProductReturn::find($transactionDetail->return_id);
 
             $quantity = $transactionDetail->quantity - $return->return;
-            $return_price = $return->return * $transactionDetail->price;
-            $subtotal = $transactionDetail->subtotal - $return_price;
 
             $transaction = Transaction::find($transactionDetail->transaction_id);
 
-            $transaction->update([
-                'grand_total' => $transaction->grand_total - $return_price,
-                'remaining_pay' => $transaction->remaining_pay - $return_price
-            ]);
-
             $transactionDetail->update([
                 'quantity' => $quantity,
-                'subtotal' => $subtotal,
             ]);
-
-            // $transaction_detail = DB::table('transaction_details')
-            //     ->where('transaction_details.id', $id)
-            //     ->join('products', 'transaction_details.product_id', 'products.id')
-            //     ->join('product_returns', 'transaction_details.return_id', 'product_returns.id')
-            //     ->select('transaction_details.*', 'products.product_code', 'products.product_code', 'products.product_name', 'products.product_brand', 'products.unit_weight', 'product_returns.return', 'product_returns.description_return')
-            //     ->first();
 
             $transaction = Transaction::with('transaction_details')->with('payments')->find($transaction->id);
 
@@ -356,7 +341,7 @@ class TransactionController extends Controller
         }
 
         return response()->json([
-            'message' => 'Product return already exist!!',
+            'message' => 'Product return already exist!',
             'status_code' => 400
         ]);
     }
@@ -364,7 +349,7 @@ class TransactionController extends Controller
     public function destroyReturn($id)
     {
         $transactionDetail = TransactionDetail::find($id);
-        $return = ProductReturn::where('id', $transactionDetail->return_id)->first();
+        $return = ProductReturn::find($transactionDetail->return_id);
 
         if ($return == null) {
             return response()->json([
@@ -375,19 +360,9 @@ class TransactionController extends Controller
         }
 
         $sum_quantity = $transactionDetail->quantity + $return->return;
-        $return_price = $transactionDetail->price * $return->return;
-        $subtotal = $transactionDetail->subtotal + $return_price;
-
-        $transaction = Transaction::find($transactionDetail->transaction_id);
-
-        $transaction->update([
-            'grand_total' => $transaction->grand_total + $return_price,
-            'remaining_pay' => $transaction->remaining_pay + $return_price
-        ]);
 
         $transactionDetail->update([
             'quantity' => $sum_quantity,
-            'subtotal' => $subtotal,
         ]);
 
         $return->delete();
