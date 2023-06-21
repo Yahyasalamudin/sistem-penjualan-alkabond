@@ -65,7 +65,7 @@
                                                 method="post">
                                                 @csrf
                                                 @method('put')
-                                                <button type="submit" class="btn btcolor ml-2 text-white">Proses</button>
+                                                <button type="submit" class="btn btcolor ml-2 text-white" onclick>Proses</button>
                                             </form>
                                         @elseif($transaction->delivery_status == 'proccess')
                                             <form

@@ -46,7 +46,6 @@
                     </thead>
 
                     <tbody>
-
                         @php
                             $i = 1;
                         @endphp
@@ -101,7 +100,6 @@
                                 </div>
                             </div>
                         @endforeach
-
                     </tbody>
                 </table>
             </div>
