@@ -1,5 +1,13 @@
 @extends('layouts.app')
 
+@push('js')
+    <script>
+        $(function() {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+@endpush
+
 @section('content')
     <h1 class="h3 mb-3 text-gray-800"> Transaksi</h1>
 
@@ -38,13 +46,25 @@
                         @endphp
                         @foreach ($transactions as $transaction)
                             <tr>
-                                <th scope="row">{{ $i++ }} </th>
+                                <th scope="row" class="position-relative">
+                                    @if ($transaction['tenggatWaktu'] <= 10 && $transaction['tenggatWaktu'] != '')
+                                        <button type="button" class="btn p-0"
+                                            style="position: absolute; top: 2px; right: 7px;" data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="Sisa Waktu Pembayaran Untuk Transaksi ini {{ $transaction['tenggatWaktu'] }} Hari">
+                                            <i class="fas fa-exclamation-circle text-warning"></i>
+                                        </button>
+                                    @endif
+                                    {{ $i++ }}
+                                </th>
                                 <td>{{ $transaction->invoice_code }}</td>
                                 <td>{{ $transaction->stores->store_name }}</td>
                                 <td>{{ $transaction->stores->address }}</td>
                                 <td>{{ $transaction->stores->store_number }}</td>
                                 <td>{{ $transaction->stores->city_branch }}</td>
-                                <td class="col-md-2">Rp {{ number_format($transaction->grand_total) }}</td>
+                                <td class="col-md-2">
+                                    Rp {{ number_format($transaction->grand_total) }}
+                                </td>
                                 <td>
                                     <div class="d-flex justify-content-center align-items-center">
                                         @if ($transaction->status == 'unpaid')
@@ -65,7 +85,8 @@
                                                 method="post">
                                                 @csrf
                                                 @method('put')
-                                                <button type="submit" class="btn btcolor ml-2 text-white" onclick>Proses</button>
+                                                <button type="submit" class="btn btcolor ml-2 text-white"
+                                                    onclick>Proses</button>
                                             </form>
                                         @elseif($transaction->delivery_status == 'proccess')
                                             <form
