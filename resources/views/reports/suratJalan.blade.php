@@ -73,7 +73,6 @@
             font-size: 15px;
 
         }
-
     </style>
 </head>
 
@@ -118,7 +117,7 @@
                     </td>
                     <td width="38"></td>
                     <td width="40">Tanggal</td>
-                    <td>{{ ' : '. date('d M Y', strtotime(now())) }}
+                    <td>{{ ' : ' . date('d M Y', strtotime(now())) }}
                     </td>
                 </tr>
                 <tr class="jarak">
@@ -162,16 +161,16 @@
             </tr>
             <tbody>
                 @php
-                $i = 1;
+                    $i = 1;
                 @endphp
                 @foreach ($transaction->transaction_details as $detail)
-                <tr class="tbl-resi">
-                    <td align="center" height="10">{{ $i++ }}</td>
-                    <td align="center">{{ $detail->product->product_code }}</td>
-                    <td align="center">{{ $detail->product->product_name }}</td>
-                    <td align="center">{{ $detail->quantity }}</td>
-                    <td align="center">{{ $detail->product->unit_weight }}</td>
-                </tr>
+                    <tr class="tbl-resi">
+                        <td align="center" height="10">{{ $i++ }}</td>
+                        <td align="center">{{ $detail->product->product_code }}</td>
+                        <td align="center">{{ $detail->product->product_name }}</td>
+                        <td align="center">{{ $detail->quantity }}</td>
+                        <td align="center">{{ $detail->product->unit_weight }}</td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
@@ -180,17 +179,17 @@
             <tr class="jarak tengah">
                 <td>Dibuat
                 </td>
-                <td width="50"></td>
-                <td width="210">Diperiksa</td>
+                <td width="120">Diperiksa</td>
+                <td width="210">Dikirim</td>
                 <td>Penerima
                 </td>
             </tr>
             <br><br><br><br><br>
-            <tr class="jarak tengah ">
+            <tr class="jarak tengah">
                 <td>( Yahya Salamudin )
                 </td>
-                <td width="50"></td>
-                <td width="210">(.........................)</td>
+                <td width="">(..................................)</td>
+                <td width="210">(..................................)</td>
                 <td>(Bpk. Saing)
                 </td>
             </tr>
@@ -198,9 +197,10 @@
             <tr class="jarak tengah ">
                 <td>Admin
                 </td>
-                <td width="50"></td>
-                <td width="210">Gudang</td>
+                <td width="">Gudang</td>
+                <td width="210">Sopir</td>
                 <td>
+
                 </td>
             </tr>
         </table>
