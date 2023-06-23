@@ -1,5 +1,61 @@
 @extends('layouts.app')
 
+@push('js')
+    <script>
+        let handleProcess = () => {
+            let processForm = document.getElementById("processForm");
+            processForm.submit();
+        }
+
+        let handleSend = () => {
+            let sendForm = document.getElementById("sendForm");
+            sendForm.submit();
+        }
+
+        let handleCancelTransaction = () => {
+            let cancelTransactionForm = document.getElementById("cancelTransactionForm");
+            cancelTransactionForm.submit();
+        }
+
+        let handleRestore = () => {
+            let restoreForm = document.getElementById("restoreForm");
+            restoreForm.submit();
+        }
+
+        let handleKill = () => {
+            let killForm = document.getElementById("killForm");
+            killForm.submit();
+        }
+
+        function showConfirmAlert(
+            text,
+            confirmBtnText,
+            successText,
+            callback,
+        ) {
+            Swal.fire({
+                title: text,
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Kembali',
+                confirmButtonText: confirmBtnText,
+                reverseButtons: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    callback();
+                    // Swal.fire(
+                    //     'Berhasil!',
+                    //     successText,
+                    //     'success'
+                    // )
+                }
+            })
+        }
+    </script>
+@endpush
+
 @section('content')
     <h1 class="h3 mb-3 text-gray-800"> Transaksi</h1>
 
@@ -46,37 +102,73 @@
                                 <td>{{ $transaction->stores->city_branch }}</td>
                                 <td class="col-md-2">Rp {{ number_format($transaction->grand_total) }}</td>
                                 <td>
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        @if ($transaction->status == 'unpaid')
-                                            <a href="{{ route('transaction.show', ['status' => $transaction->delivery_status, 'id' => $transaction->id]) }}"
-                                                class="btn btn-warning">
-                                                Detail
-                                            </a>
-                                        @else
-                                            <a href="{{ route('transaction.show', ['status' => $transaction->status, 'id' => $transaction->id]) }}"
-                                                class="btn  btn-warning">
-                                                Detail
-                                            </a>
-                                        @endif
+                                    @if (Request::is('transactions/archive*'))
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <form id="restoreForm"
+                                                action="{{ route('transaction.restore', ['id' => $transaction->id]) }}"
+                                                method="post">
+                                                @csrf
+                                                @method('put')
+                                                <button type="button" class="btn btcolor ml-2 text-white"
+                                                    onclick="showConfirmAlert('Apakah yakin ingin melanjutkan transaksi?', 'Restore', 'Transaksi dilanjutkan.', handleRestore)">Lanjutkan
+                                                    Transaksi</button>
+                                            </form>
+                                            <form id="killForm"
+                                                action="{{ route('transaction.kill', ['id' => $transaction->id]) }}"
+                                                method="post">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="button" class="btn btn-danger ml-2 text-white"
+                                                    onclick="showConfirmAlert('Apakah yakin ingin menghapus transaksi?', 'Hapus', 'Transaksi berhasil dihapus.', handleKill)">Hapus
+                                                    Transaksi</button>
+                                            </form>
+                                        </div>
+                                    @else
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            @if ($transaction->status == 'unpaid')
+                                                <a href="{{ route('transaction.show', ['status' => $transaction->delivery_status, 'id' => $transaction->id]) }}"
+                                                    class="btn btn-warning">
+                                                    Detail
+                                                </a>
+                                            @else
+                                                <a href="{{ route('transaction.show', ['status' => $transaction->status, 'id' => $transaction->id]) }}"
+                                                    class="btn  btn-warning">
+                                                    Detail
+                                                </a>
+                                            @endif
 
-                                        @if ($transaction->delivery_status == 'unsent')
-                                            <form
-                                                action="{{ route('transaction.update', ['delivery_status' => 'proccess', 'id' => $transaction->id]) }}"
-                                                method="post">
-                                                @csrf
-                                                @method('put')
-                                                <button type="submit" class="btn btcolor ml-2 text-white" onclick>Proses</button>
-                                            </form>
-                                        @elseif($transaction->delivery_status == 'proccess')
-                                            <form
-                                                action="{{ route('transaction.update', ['delivery_status' => 'sent', 'id' => $transaction->id]) }}"
-                                                method="post">
-                                                @csrf
-                                                @method('put')
-                                                <button type="submit" class="btn btcolor ml-2 text-white">Dikirim</button>
-                                            </form>
-                                        @endif
-                                    </div>
+                                            @if ($transaction->delivery_status == 'unsent')
+                                                <form id="processForm"
+                                                    action="{{ route('transaction.update', ['delivery_status' => 'proccess', 'id' => $transaction->id]) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('put')
+                                                    <button type="button" class="btn btcolor ml-2 text-white"
+                                                        onclick="showConfirmAlert('Apakah yakin ingin memproses?', 'Proses', 'Barang sedang diproses.', handleProcess)">Proses</button>
+                                                </form>
+                                            @elseif($transaction->delivery_status == 'proccess')
+                                                <form id="sendForm"
+                                                    action="{{ route('transaction.update', ['delivery_status' => 'sent', 'id' => $transaction->id]) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('put')
+                                                    <button type="button" class="btn btcolor ml-2 text-white"
+                                                        onclick="showConfirmAlert('Apakah barang telah tiba pada pelanggan?', 'Ya', 'Barang berhasil dikirim.', handleSend)">Terkirim</button>
+                                                </form>
+                                            @endif
+
+                                            @if ($transaction->status == 'unpaid')
+                                                <form id="cancelTransactionForm"
+                                                    action="{{ route('transaction.destroy', ['id' => $transaction->id]) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button type="button" class="btn btn-danger ml-2 text-white"
+                                                        onclick="showConfirmAlert('Apakah yakin ingin membatalkan transaksi?', 'Lanjutkan', 'Transaksi dibatalkan.', handleCancelTransaction)">Batalkan</button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

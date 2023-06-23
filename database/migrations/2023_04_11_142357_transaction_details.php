@@ -16,7 +16,8 @@ class TransactionDetails extends Migration
         Schema::create('transaction_details', function (Blueprint $table) {
             $table->id();
             // $table->char('invoice_code', 15);
-            $table->foreignId('transaction_id')->constrained('transactions');
+            $table->foreignId('transaction_id')->constrained('transactions')
+                ->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products');
             $table->integer('quantity');
             $table->integer('price');

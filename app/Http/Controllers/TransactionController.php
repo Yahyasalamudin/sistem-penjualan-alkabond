@@ -9,7 +9,7 @@ class TransactionController extends Controller
 {
     public function index($status)
     {
-        $transactions = Transaction::with('transaction_details')->with('payments')->latest()->get();
+        $transactions = Transaction::latest()->get();
 
         switch ($status) {
             case 'unsent':
@@ -42,6 +42,29 @@ class TransactionController extends Controller
         return view('transactions.index', compact('transactions'));
     }
 
+    public function archive()
+    {
+        $transactions = Transaction::onlyTrashed()->get();
+
+        return view('transactions.index', compact('transactions'));
+    }
+
+    public function restore($id)
+    {
+        $transactions = Transaction::onlyTrashed()->find($id);
+        $transactions->restore();
+
+        return back()->with('success', 'Berhasil melanjutkan transaksi.');
+    }
+
+    public function kill($id)
+    {
+        $transactions = Transaction::onlyTrashed()->find($id);
+        $transactions->forceDelete();
+
+        return back()->with('success', 'Berhasil menghapus transaksi.');
+    }
+
     public function show($status, $id)
     {
         $transaction = Transaction::with('transaction_details')
@@ -70,5 +93,12 @@ class TransactionController extends Controller
 
             return back()->with('success', 'Pesanan telah sampai kepada penerima.');
         }
+    }
+
+    public function destroy($id)
+    {
+        Transaction::find($id)->delete();
+
+        return back()->with('success', 'Data Transaksi berhasil dihapus');
     }
 }

@@ -25,6 +25,7 @@ class CreateTransactionsTable extends Migration
             $table->enum('status', ['paid', 'unpaid', 'partial'])->default('unpaid');
             $table->enum('delivery_status', ['unsent', 'sent', 'proccess'])->default('unsent');
             $table->date('transaction_date')->default(Carbon::now());
+            $table->timestamp('sent_at')->nullable();
             $table->timestamps();
         });
     }

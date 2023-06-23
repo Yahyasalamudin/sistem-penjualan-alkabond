@@ -104,7 +104,7 @@
                     </td>
                 </tr>
                 <tr class="jarak">
-                    <td>Bpk. Saing / {{ $transaction->stores->store_name }}
+                    <td>{{ $transaction->stores->store_name }}
                     </td>
                     <td width="38"></td>
                     <td width="80">Invoice Code</td>
@@ -117,7 +117,7 @@
                     </td>
                     <td width="38"></td>
                     <td width="40">Tanggal</td>
-                    <td>{{ ' : ' . date('d M Y', strtotime(now())) }}
+                    <td>{{ ' : ' . date('d M Y', $transaction->delivery_status == 'sent' ? strtotime($transaction->sent_at) : strtotime(now())) }}
                     </td>
                 </tr>
                 <tr class="jarak">
@@ -181,17 +181,15 @@
                 </td>
                 <td width="120">Diperiksa</td>
                 <td width="210">Dikirim</td>
-                <td>Penerima
-                </td>
+                <td>Penerima </td>
             </tr>
             <br><br><br><br><br>
             <tr class="jarak tengah">
-                <td>( Yahya Salamudin )
+                <td>( {{ auth()->user()->name }} )
                 </td>
                 <td width="">(..................................)</td>
                 <td width="210">(..................................)</td>
-                <td>(Bpk. Saing)
-                </td>
+                <td>{{ $transaction->stores->store_name }}</td>
             </tr>
             <br>
             <tr class="jarak tengah ">

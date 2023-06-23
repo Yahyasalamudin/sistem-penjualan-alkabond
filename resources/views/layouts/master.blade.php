@@ -23,6 +23,9 @@
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
+    {{-- Sweet Alert --}}
+    <script src="{{ asset('swal/dist/sweetalert2.all.min.js') }}"></script>
+
     @stack('css')
 
 </head>
@@ -52,30 +55,6 @@
     <!-- Page level custom scripts -->
     <script src="{{ asset('js/demo/chart-area-demo.js') }}"></script>
     <script src="{{ asset('js/demo/chart-pie-demo.js') }}"></script>
-
-    {{-- Sweet Alert --}}
-    <script src="{{ asset('dist/') }}"></script>
-    <script>
-        function showConfirmAlert(text, confirmBtnText, successText) {
-            Swal.fire({
-                title: text,
-                text: "Pastikan barang sudah siap.",
-                icon: 'info',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: confirmText,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire(
-                        'Berhasil!',
-                        successText,
-                        'success'
-                    )
-                }
-            })
-        }
-    </script>
 
     <!-- menghapus flasdata secara otomatis -->
     <script>
