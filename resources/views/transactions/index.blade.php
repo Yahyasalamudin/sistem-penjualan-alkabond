@@ -174,6 +174,7 @@
                                             @endif
                                         </div>
                                     @endif
+                                    >>>>>>>>> Temporary merge branch 2
                                 </td>
                             </tr>
                         @endforeach
