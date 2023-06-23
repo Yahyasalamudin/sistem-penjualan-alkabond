@@ -105,8 +105,8 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Pendapatan Seharusnya</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp {{ number_format($grand_total_month) }}
+                                Piutang</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp {{ number_format($remaining_pay) }}
                             </div>
                         </div>
                         <div class="col-auto">
@@ -116,9 +116,50 @@
                 </div>
             </div>
         </div>
-        <div class="card-body mb-5">
-            <div class="chart-area">
-                <canvas id="myAreaChart"></canvas>
+    </div>
+
+    <div class="d-flex align-items-stretch">
+        <!-- Area Chart -->
+        <div class="col-xl-7 col-lg-6">
+            <div class="card shadow mb-4 h-100">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Grafik Penjualan</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="myAreaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-5 col-lg-6">
+            <div class="card shadow mb-4 h-100">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Produk Terlaris</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Nama Produk</th>
+                                    <th>Jumlah Terjual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($top_selling as $ts)
+                                    <tr>
+                                        <td>{{ $ts->product_name . ' - ' . $ts->product_brand }}</td>
+                                        <td>{{ $ts->total_quantity }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
