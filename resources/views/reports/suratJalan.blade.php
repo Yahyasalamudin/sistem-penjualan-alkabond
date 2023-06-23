@@ -100,7 +100,7 @@
                     </td>
                     <td width="38"></td>
                     <td width="80">Status</td>
-                    <td>: CONFIRM
+                    <td>: {{ $transaction->delivery_status }}
                     </td>
                 </tr>
                 <tr class="jarak">
@@ -108,7 +108,7 @@
                     </td>
                     <td width="38"></td>
                     <td width="80">Invoice Code</td>
-                    <td>: INV202304100001
+                    <td>: {{ $transaction->invoice_code }}
                     </td>
                 </tr>
                 <tr class="jarak">

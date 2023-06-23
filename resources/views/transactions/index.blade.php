@@ -159,8 +159,8 @@
                                                     method="post">
                                                     @csrf
                                                     @method('put')
-                                                    <button type="submit" class="btn btcolor ml-2 text-white"
-                                                        onclick>Proses</button>
+                                                    <button type="button" class="btn btcolor ml-2 text-white"
+                                                        onclick="showConfirmAlert('Apakah yakin ingin memproses transaksi?', 'Lanjut', 'Transaksi berhasil diproses.', handleProcess)">Proses</button>
                                                 </form>
                                             @elseif($transaction->delivery_status == 'proccess')
                                                 <form
@@ -168,13 +168,12 @@
                                                     method="post">
                                                     @csrf
                                                     @method('put')
-                                                    <button type="submit"
-                                                        class="btn btcolor ml-2 text-white">Dikirim</button>
+                                                    <button type="button" class="btn btcolor ml-2 text-white"
+                                                        onclick="showConfirmAlert('Apakah yakin transaksi sudah terkirim?', 'Lanjut', 'Transaksi berhasil terkirim.', handleSend)">Dikirim</button>
                                                 </form>
                                             @endif
                                         </div>
                                     @endif
-                                    >>>>>>>>> Temporary merge branch 2
                                 </td>
                             </tr>
                         @endforeach

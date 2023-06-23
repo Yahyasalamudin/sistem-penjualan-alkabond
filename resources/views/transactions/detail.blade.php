@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    @if ($transaction->delivery_status != 'proccess')
+    @if ($transaction->delivery_status != 'proccess' && $transaction->delivery_status != 'sent')
         <div class="row py-4">
             <div class="col">
                 <h1 class="h3 mb-2 text-gray-800">Detail Pesanan</h1>
@@ -9,7 +9,7 @@
         </div>
     @endif
 
-    @if ($transaction->delivery_status == 'proccess')
+    @if ($transaction->delivery_status == 'proccess' || $transaction->delivery_status == 'sent')
         <div class="row py-4 mx-1 d-flex flex-row justify-content-between">
             <h1 class="h3 mb-2 text-gray-800">Detail Pesanan</h1>
             {{-- <h1 class="h3 mb-2 text-gray-800">{{ $transaction->invoice_code }}</h1> --}}

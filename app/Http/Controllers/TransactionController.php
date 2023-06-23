@@ -42,8 +42,8 @@ class TransactionController extends Controller
 
         $tenggatWaktu = "";
         foreach ($transactions as $transaction) {
-            if (($transaction->status == 'unpaid' && $transaction->delivery_status == 'sent') ||
-                ($transaction->payment_method == 'tempo' && $transaction->status == 'partial')
+            if ((($transaction->status == 'unpaid' && $transaction->delivery_status == 'sent') ||
+                    ($transaction->payment_method == 'tempo' && $transaction->status == 'partial')) && $transaction->sent_at != null
             ) {
                 $sent_at = Carbon::createFromFormat('Y-m-d H:i:s', $transaction->sent_at);
                 $tenggatWaktu = $sent_at->addDays(30)->diffInDays(Carbon::now());
