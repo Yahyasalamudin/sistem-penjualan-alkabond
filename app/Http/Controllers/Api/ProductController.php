@@ -29,7 +29,10 @@ class ProductController extends Controller
 
     public function getProductTypes()
     {
-        $types = Type::latest()->get();
+        $products = Product::all();
+        $productNames = $products->pluck('product_name')->toArray();
+
+        $types = Type::whereIn('type', $productNames)->get();
 
         return response()->json([
             'data' => TypeResource::collection($types),

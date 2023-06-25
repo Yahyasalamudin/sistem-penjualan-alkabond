@@ -155,7 +155,7 @@
                                             @endif
 
                                             @if ($transaction->delivery_status == 'unsent')
-                                                <form
+                                                <form id="processForm"
                                                     action="{{ route('transaction.update', ['delivery_status' => 'proccess', 'id' => $transaction->id]) }}"
                                                     method="post">
                                                     @csrf
@@ -164,7 +164,7 @@
                                                         onclick="showConfirmAlert('Apakah yakin ingin memproses transaksi?', 'Lanjut', 'Transaksi berhasil diproses.', handleProcess)">Proses</button>
                                                 </form>
                                             @elseif($transaction->delivery_status == 'proccess')
-                                                <form
+                                                <form id="sendForm"
                                                     action="{{ route('transaction.update', ['delivery_status' => 'sent', 'id' => $transaction->id]) }}"
                                                     method="post">
                                                     @csrf

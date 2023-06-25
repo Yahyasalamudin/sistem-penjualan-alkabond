@@ -50,7 +50,8 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="table-responsive">
-                                            <table class="table table-striped" width="100%" cellspacing="0">
+                                            <table class="table table-striped text-capitalize" width="100%"
+                                                cellspacing="0">
                                                 <tbody>
                                                     <tr>
                                                         <td>Kode Transaksi</td>
