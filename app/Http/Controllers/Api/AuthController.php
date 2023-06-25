@@ -26,6 +26,15 @@ class AuthController extends Controller
             ]);
         }
 
+        $cek_active = Sales::where('email', $request->email)->first();
+
+        if (isset($cek_active->active) && $cek_active->active == 0) {
+            return response()->json([
+                'message' => 'I have you deactivated please contact admin',
+                'status_code' => 401
+            ]);
+        }
+
         $credentials = $request->only('email', 'password');
 
         if (Auth::guard('sales')->attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {

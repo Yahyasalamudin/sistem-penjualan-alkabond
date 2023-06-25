@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('city')->nullable();
             $table->enum('role', ['owner', 'admin']);
+            $table->enum('active', [1, 0]);
             $table->rememberToken();
             $table->timestamps();
         });

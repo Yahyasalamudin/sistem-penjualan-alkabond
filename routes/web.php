@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -33,6 +34,7 @@ Route::post('/process-login', [AuthController::class, 'actionLogin'])->name('act
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/filterkota', [DashboardController::class, 'filterKota'])->name('filterKota');
 
     // CRUD Data City
     Route::get('/cities', [CityController::class, 'index'])->name('city.index');
@@ -77,6 +79,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
     Route::put('/user/update/{id}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/user/delete/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+
+    //Admin
+    Route::get('/admins', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admins/create', [AdminController::class, 'create'])->name('admin.create');
+    Route::post('/admins/create', [AdminController::class, 'store'])->name('admin.store');
+    Route::get('/admin/show/{id}', [AdminController::class, 'show'])->name('admin.show');
+    Route::get('/admin/edit/{id}', [AdminController::class, 'edit'])->name('admin.edit');
+    Route::put('/admin/update/{id}', [AdminController::class, 'update'])->name('admin.update');
+    Route::delete('/admin/delete/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
 
     // Sales
     Route::get('/sales', [SalesController::class, 'index'])->name('sales.index');

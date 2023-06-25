@@ -26,7 +26,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Tabel Pengguna</h6>
 
             @if (auth()->user()->role == 'owner')
-                <a href="{{ route('user.create') }}" class="btn btcolor text-white">
+                <a href="{{ route('admin.create') }}" class="btn btcolor text-white">
                     Registrasi Pengguna
                 </a>
             @endif
@@ -43,6 +43,7 @@
                             <th>Email</th>
                             <th>Nomer Hp</th>
                             <th>Kota</th>
+                            <th>Status</th>
                             @if (auth()->user()->role == 'owner')
                                 <th>Opsi</th>
                             @endif
@@ -60,13 +61,20 @@
                                 <td class="col-lg-7">{{ $user->email }}</td>
                                 <td class="col-lg-7">{{ $user->phone_number }}</td>
                                 <td class="col-lg-7">{{ $user->city }}</td>
+                                <td class="col-lg-7">
+                                    @if ($user->active == 1)
+                                        <span class="badge badge-primary">Aktif</span>
+                                    @else
+                                        <span class="badge badge-secondary">Nonaktif</span>
+                                    @endif
+                                </td>
                                 @if (auth()->user()->role == 'owner')
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <a href="{{ route('user.edit', $user->id) }}" class="btn btn-sm btn-success">
+                                            <a href="{{ route('admin.edit', $user->id) }}" class="btn btn-sm btn-success">
                                                 Edit
                                             </a>
-                                            <form action="{{ route('user.destroy', $user->id) }}" method="post">
+                                            <form action="{{ route('admin.destroy', $user->id) }}" method="post">
                                                 @csrf
                                                 @method('delete')
                                                 <button type="submit" class="btn btn-sm btn-danger ml-2">

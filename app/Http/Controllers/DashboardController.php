@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+
 use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Store;
@@ -17,8 +19,13 @@ class DashboardController extends Controller
         $topSellingProducts = TransactionDetail::select('product_id', DB::raw('SUM(quantity) as totalQuantity'))
             ->groupBy('product_id')
             ->orderByDesc('totalQuantity')
-            ->limit($quantity)
-            ->get();
+            ->limit($quantity);
+
+        // if (auth()->user()->role == 'owner') {
+        //     $topSellingProducts = $topSellingProducts->where('city', session('filterKota'));
+        // }
+
+        $topSellingProducts = $topSellingProducts->get();
 
         $products = [];
         foreach ($topSellingProducts as $sellingProduct) {
@@ -30,8 +37,17 @@ class DashboardController extends Controller
         return $products;
     }
 
+    public function filterKota(Request $request)
+    {
+        session(['filterKota' => $request->filterKota]);
+
+        return back();
+    }
+
     public function index()
     {
+        $user = auth()->user();
+
         $transaction = Transaction::count();
         $carbon = Carbon::now();
         $transaction_now = Transaction::whereMonth('created_at', $carbon)->count();
@@ -43,8 +59,29 @@ class DashboardController extends Controller
         $transaction_chart = Transaction::select(DB::raw('MONTH(created_at) as month'), DB::raw('SUM(grand_total) as pendapatan'))
             ->where('deleted_at', null)
             ->whereYear('created_at', $carbon->year)
-            ->groupBy('month')
-            ->get();
+            ->groupBy('month');
+
+        // if ($user->role == 'owner') {
+        //     $transaction = $transaction->where('city', session('filterKota'));
+        //     $transaction_now = $transaction_now->where('city', session('filterKota'));
+        //     $remaining_pay = $remaining_pay->where('city', session('filterKota'));
+        //     $payment = $payment->where('city', session('filterKota'));
+        //     $store = $store->where('city', session('filterKota'));
+        //     $product = $product->where('city', session('filterKota'));
+        //     $transaction_chart = $transaction_chart->where('city', session('filterKota'));
+        // }
+
+        // if (auth()->user()->role == 'admin') {
+        //     $transaction = $transaction->where('city', $user->city);
+        //     $transaction_now = $transaction_now->where('city', $user->city);
+        //     $remaining_pay = $remaining_pay->where('city', $user->city);
+        //     $payment = $payment->where('city', $user->city);
+        //     $store = $store->where('city', $user->city);
+        //     $product = $product->where('city', $user->city);
+        //     $transaction_chart = $transaction_chart->where('city', $user->city);
+        // }
+
+        $transaction_chart = $transaction_chart->get();
 
         // dd($transaction_chart);
 

@@ -7,16 +7,21 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller
+class AdminController extends Controller
 {
     public function index()
     {
         $auth = auth()->user();
-        $users = User::where('role', 'owner')->latest()->whereNotIn('id', [$auth->id])->get();
+        $kota = session('filterKota');
+        $users = User::where('role', 'admin')->latest()->whereNotIn('id', [$auth->id]);
 
-        return view('users.index', [
+        if ($auth->role == 'owner') {
+            $users = $users->where('city', $kota);
+        }
+
+        return view('admins.index', [
             'title' => 'User',
-            'users' => $users
+            'users' => $users->get()
         ]);
     }
 
@@ -24,7 +29,7 @@ class UserController extends Controller
     {
         $cities = City::all();
 
-        return view('users.create', ['title' => 'User Create', 'cities' => $cities]);
+        return view('admins.create', ['title' => 'User Create', 'cities' => $cities]);
     }
 
     public function store(Request $request)
@@ -46,17 +51,17 @@ class UserController extends Controller
             'phone_number' => $request->phone_number,
             'password' => Hash::make($request->password),
             'city' => $request->city,
-            'role' => 'owner',
+            'role' => 'admin',
         ]);
 
-        return redirect('users')->with('success', 'User berhasil ditambahkan');
+        return redirect('admins')->with('success', 'User berhasil ditambahkan');
     }
 
     public function show($id)
     {
         $user = User::find($id);
 
-        return view('users.detail', [
+        return view('admins.detail', [
             'title' => 'Detail User',
             'user' => $user,
         ]);
@@ -67,7 +72,7 @@ class UserController extends Controller
         $user = User::find($id);
         $cities = City::all();
 
-        return view('users.edit', [
+        return view('admins.edit', [
             'title' => 'Edit User',
             'user' => $user,
             'cities' => $cities,
@@ -87,6 +92,7 @@ class UserController extends Controller
                 'name' => $request->name,
                 'phone_number' => $request->phone_number,
                 'city' => $request->city,
+                'active' => $request->active,
             ]);
         } else {
             $request->validate([
@@ -98,11 +104,12 @@ class UserController extends Controller
                 'name' => $request->name,
                 'phone_number' => $request->phone_number,
                 'city' => $request->city,
+                'active' => $request->active,
                 'password' => Hash::make($request->password),
             ]);
         }
 
-        return redirect('users')->with('success', 'Informasi User berhasil diubah');
+        return redirect('admins')->with('success', 'Informasi User berhasil diubah');
     }
 
     public function destroy($id)

@@ -15,9 +15,9 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(TypeSeeder::class);
+        $this->call(CitySeeder::class);
 
         \App\Models\User::factory(10)->create();
-        \App\Models\City::factory(10)->create();
         \App\Models\Sales::factory(10)->create();
 
 
@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '081233247969',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             // password
-            'city' => 'Semboro',
+            'city' => 'Jember',
             'role' => 'owner'
         ]);
 
@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '081233247969',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             // password
-            'city' => 'GadingRejo',
+            'city' => 'Malang',
             'role' => 'admin'
         ]);
 
@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '081233247969',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             // password
-            'city' => 'Semboro',
+            'city' => 'Surabaya',
             'role' => 'admin'
         ]);
 
@@ -61,14 +61,14 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '081234567890',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             // password
-            'city' => 'Semboro',
+            'city' => 'Bekasi',
         ]);
 
         \App\Models\Store::factory()->create([
             'store_name' => 'Toko Jaya Abadi',
             'address' => 'Semboro',
             'store_number' => '082123123123',
-            'city_branch' => 'Semboro',
+            'city_branch' => 'Surabaya',
             'sales_id' => '11',
         ]);
 

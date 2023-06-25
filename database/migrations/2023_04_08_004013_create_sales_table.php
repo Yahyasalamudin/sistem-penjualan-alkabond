@@ -21,6 +21,7 @@ class CreateSalesTable extends Migration
             $table->char('phone_number', 14);
             $table->string('password');
             $table->string('city')->nullable();
+            $table->enum('active', [1, 0]);
             $table->timestamps();
         });
     }

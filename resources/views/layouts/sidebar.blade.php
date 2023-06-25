@@ -134,10 +134,19 @@
          User
      </div>
 
-     <li class="nav-item {{ Route::is('user*') ? 'active' : '' }}">
-         <a class="nav-link" href="{{ route('user.index') }}">
-             <i class="fas fa-fw fa-user"></i>
-             <span>Pengguna</span>
+     @if (auth()->user()->role == 'owner')
+         <li class="nav-item {{ Route::is('user*') ? 'active' : '' }}">
+             <a class="nav-link" href="{{ route('user.index') }}">
+                 <i class="fas fa-fw fa-user"></i>
+                 <span>Owner</span>
+             </a>
+         </li>
+     @endif
+
+     <li class="nav-item {{ Route::is('admin*') ? 'active' : '' }}">
+         <a class="nav-link" href="{{ route('admin.index') }}">
+             <i class="fas fa-fw fa-user-friends"></i>
+             <span>Admin</span>
          </a>
      </li>
 

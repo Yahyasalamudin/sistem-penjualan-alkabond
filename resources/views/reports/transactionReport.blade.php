@@ -55,6 +55,10 @@
 
 <body>
 
+    @php
+        use Illuminate\Support\Carbon;
+    @endphp
+
     <table width="500" border="0">
         <tr>
             <td class="title">
@@ -65,8 +69,8 @@
     <table width="500" border="0">
         <tr>
             <td class="tanggal">
-                Dari tanggal {{ date('d-F-Y', strtotime($tgl_awal)) }} Sampai Tanggal
-                {{ date('d-F-Y', strtotime($tgl_akhir)) }}
+                Dari tanggal {{ Carbon::parse($tgl_awal)->locale('id')->isoFormat('D MMMM Y') }} Sampai Tanggal
+                {{ Carbon::parse($tgl_akhir)->locale('id')->isoFormat('D MMMM Y') }}
             </td>
         </tr>
     </table>
@@ -100,7 +104,6 @@
                 <td>Rp {{ number_format($transaction->grand_total) }}</td>
             </tr>
         @endforeach
-
 
         <tr>
             <td scope="row" colspan="8"

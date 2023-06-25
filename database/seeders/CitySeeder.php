@@ -14,10 +14,13 @@ class CitySeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\City::factory(10)->create();
+        $city = [
+            ['city' => 'Malang'],
+            ['city' => 'Surabaya'],
+            ['city' => 'Bekasi'],
+            ['city' => 'Jember']
+        ];
 
-        \App\Models\City::factory()->create([
-            'city' => 'Jember',
-        ]);
+        \App\Models\City::insert($city);
     }
 }

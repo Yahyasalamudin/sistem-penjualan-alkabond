@@ -12,29 +12,29 @@ use \App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
-  public function index(Request $request)
-  {
-    if ($request->type == null) {
-      $products = Product::latest()->get();
-    } else {
-      $products = Product::where('product_name', $request->type)->latest()->get();
+    public function index(Request $request)
+    {
+        if ($request->type == null) {
+            $products = Product::latest()->get();
+        } else {
+            $products = Product::where('product_name', $request->type)->latest()->get();
+        }
+
+        return response()->json([
+            'data' => ProductResource::collection($products),
+            'message' => 'Fetch all products',
+            'status_code' => 200
+        ]);
     }
 
-    return response()->json([
-      'data' => ProductResource::collection($products),
-      'message' => 'Fetch all products',
-      'status_code' => 200
-    ]);
-  }
+    public function getProductTypes()
+    {
+        $types = Type::latest()->get();
 
-  public function getProductTypes()
-  {
-    $types = Type::latest()->get();
-
-    return response()->json([
-      'data' => TypeResource::collection($types),
-      'message' => 'Fetch all types',
-      'status_code' => 200
-    ]);
-  }
+        return response()->json([
+            'data' => TypeResource::collection($types),
+            'message' => 'Fetch all types',
+            'status_code' => 200
+        ]);
+    }
 }

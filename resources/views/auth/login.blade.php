@@ -46,9 +46,7 @@
 
                             </div>
 
-                            <div class="baris" style="
-                        padding-left: 20px;
-                    ">
+                            <div class="baris" style="padding-left: 20px;">
                                 <input type="submit" value="Submit" class="tombol">
                             </div>
                         </form>

@@ -1,27 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
+    <h1 class="h3 mb-3 text-gray-800"> Data Sales</h1>
 
-<h1 class="h3 mb-3 text-gray-800"> Data Sales</h1>
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible" id="flash_data" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ session('success') }}
+        </div>
+    @endif
 
-@if (session('success'))
-<div class="alert alert-success alert-dismissible" id="flash_data" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    {{ session('success') }}
-</div>
-
-@endif
-
-@if (session('error'))
-<div class="alert alert-danger alert-dismissible" id="flash_data" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    {{ session('error') }}
-</div>
-@endif
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible" id="flash_data" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ session('error') }}
+        </div>
+    @endif
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
@@ -45,13 +43,14 @@
                             <th>Email</th>
                             <th>Nomer Hp</th>
                             <th>Kota</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @php
-                        $i = 1;
-                    @endphp
+                            $i = 1;
+                        @endphp
                         @foreach ($sales as $s)
                             <tr>
                                 <th scope="row">{{ $i++ }} </th>
@@ -61,11 +60,17 @@
                                 <td class="col-lg-7">{{ $s->email }}</td>
                                 <td class="col-lg-7">{{ $s->phone_number }}</td>
                                 <td class="col-lg-7">{{ $s->city }}</td>
+                                <td class="col-lg-7">
+                                    @if ($s->active == 1)
+                                        <span class="badge badge-primary">Aktif</span>
+                                    @else
+                                        <span class="badge badge-secondary">Nonaktif</span>
+                                    @endif
+                                </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('sales.edit', $s->id) }}"
-                                            class="btn btn-sm btn-success">
-                                           Edit
+                                        <a href="{{ route('sales.edit', $s->id) }}" class="btn btn-sm btn-success">
+                                            Edit
                                         </a>
                                         <form action="{{ route('sales.destroy', $s->id) }}" method="post">
                                             @csrf

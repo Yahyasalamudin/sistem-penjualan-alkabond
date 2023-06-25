@@ -11,7 +11,7 @@ class Sales extends User
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $fillable = ['sales_name', 'username', 'email', 'phone_number', 'password', 'city'];
+    protected $fillable = ['sales_name', 'username', 'email', 'phone_number', 'password', 'city', 'active'];
 
     public function transactions()
     {

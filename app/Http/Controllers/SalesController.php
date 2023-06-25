@@ -89,6 +89,7 @@ class SalesController extends Controller
                 'sales_name' => $request->sales_name,
                 'phone_number' => $request->phone_number,
                 'city' => $request->city,
+                'active' => $request->active,
             ]);
         } else {
             $request->validate([
@@ -100,6 +101,7 @@ class SalesController extends Controller
                 'sales_name' => $request->sales_name,
                 'phone_number' => $request->phone_number,
                 'city' => $request->city,
+                'active' => $request->active,
                 'password' => Hash::make($request->password),
             ]);
         }

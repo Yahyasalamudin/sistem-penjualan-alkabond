@@ -62,6 +62,20 @@ class AuthController extends Controller
             'password' => 'required|min:6'
         ]);
 
+        $email = $request->email_username;
+        $user = User::where(function ($query) use ($email) {
+            $query->where('email', $email)
+                ->orWhere('username', $email);
+        })->first();
+
+        if (isset($user) && $user->role == 'admin' && $user->active == 0) {
+            return back()->with('error', 'Akun anda telah dinonaktifkan oleh owner');
+        }
+
+        if (isset($user) && $user->role == 'owner') {
+            session(['filterKota' => 'Jember']);
+        }
+
         $credentials = $request->only('email_username', 'password');
 
         if (Auth::attempt(['email' => $credentials['email_username'], 'password' => $credentials['password']]) || Auth::attempt(['username' => $credentials['email_username'], 'password' => $credentials['password']])) {
