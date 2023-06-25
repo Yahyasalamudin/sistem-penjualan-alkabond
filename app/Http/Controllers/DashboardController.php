@@ -40,6 +40,21 @@ class DashboardController extends Controller
         $store = Store::count();
         $product = Product::count();
         $top_selling = $this->topSelling(5);
+        $transaction_chart = Transaction::select(DB::raw('MONTH(created_at) as month'), DB::raw('SUM(grand_total) as pendapatan'))
+            ->where('deleted_at', null)
+            ->whereYear('created_at', $carbon->year)
+            ->groupBy('month')
+            ->get();
+
+        // dd($transaction_chart);
+
+        $pendapatan = [];
+        $months = [];
+        foreach ($transaction_chart as $row) {
+            $pendapatan[] = intval($row->pendapatan);
+            $monthName = Carbon::create()->month($row->month)->locale(app()->getLocale())->isoFormat('MMMM');
+            $months[] = $monthName;
+        }
 
         return view('dashboard', [
             'title' => 'Dashboard',
@@ -49,7 +64,9 @@ class DashboardController extends Controller
             'payment' => $payment,
             'store' => $store,
             'product' => $product,
-            'top_selling' => $top_selling
+            'top_selling' => $top_selling,
+            'pendapatan' => $pendapatan,
+            'months' => $months,
         ]);
     }
 }
