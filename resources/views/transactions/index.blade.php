@@ -127,7 +127,7 @@
                                                 @csrf
                                                 @method('put')
                                                 <button type="button" class="btn btcolor ml-2 text-white"
-                                                    onclick="showConfirmAlert('Apakah yakin ingin melanjutkan transaksi?', 'Restore', 'Transaksi dilanjutkan.', handleRestore)">Lanjutkan
+                                                    onclick="showConfirmAlert('Apakah yakin ingin melanjutkan transaksi?', 'Restore', 'Transaksi dilanjutkan.', handleRestore)">Kembalikan
                                                     Transaksi</button>
                                             </form>
                                             <form id="killForm"
@@ -163,6 +163,14 @@
                                                     <button type="button" class="btn btcolor ml-2 text-white"
                                                         onclick="showConfirmAlert('Apakah yakin ingin memproses transaksi?', 'Lanjut', 'Transaksi berhasil diproses.', handleProcess)">Proses</button>
                                                 </form>
+                                                <form id="cancelTransactionForm"
+                                                    action="{{ route('transaction.destroy', ['delivery_status' => 'proccess', 'id' => $transaction->id]) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button type="button" class="btn btn-danger ml-2 text-white"
+                                                        onclick="showConfirmAlert('Apakah yakin ingin membatal transaksi?', 'Lanjut', 'Transaksi berhasil dibatalkan.', handleCancelTransaction)">Batalkan</button>
+                                                </form>
                                             @elseif($transaction->delivery_status == 'proccess')
                                                 <form id="sendForm"
                                                     action="{{ route('transaction.update', ['delivery_status' => 'sent', 'id' => $transaction->id]) }}"
@@ -171,6 +179,14 @@
                                                     @method('put')
                                                     <button type="button" class="btn btcolor ml-2 text-white"
                                                         onclick="showConfirmAlert('Apakah yakin transaksi sudah terkirim?', 'Lanjut', 'Transaksi berhasil terkirim.', handleSend)">Dikirim</button>
+                                                </form>
+                                                <form id="cancelTransactionForm"
+                                                    action="{{ route('transaction.destroy', ['delivery_status' => 'proccess', 'id' => $transaction->id]) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button type="button" class="btn btn-danger ml-2 text-white"
+                                                        onclick="showConfirmAlert('Apakah yakin ingin membatal transaksi?', 'Lanjut', 'Transaksi berhasil dibatalkan.', handleCancelTransaction)">Batalkan</button>
                                                 </form>
                                             @endif
                                         </div>

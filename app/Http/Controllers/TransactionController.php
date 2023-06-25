@@ -110,6 +110,6 @@ class TransactionController extends Controller
     {
         Transaction::find($id)->delete();
 
-        return back()->with('success', 'Data Transaksi berhasil dihapus');
+        return back()->with('success', 'Data Transaksi berhasil dibatalkan');
     }
 }
