@@ -27,7 +27,7 @@ class SalesController extends Controller
     {
         $cities = City::all();
 
-        return view('Sales.create', ['title' => 'Sales Create', 'cities' => $cities]);
+        return view('sales.create', ['title' => 'Sales Create', 'cities' => $cities]);
     }
 
     public function store(Request $request)

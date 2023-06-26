@@ -13,3 +13,7 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+.ftpquota
+.htaccess
+baca-saya.txt
+public/error_log

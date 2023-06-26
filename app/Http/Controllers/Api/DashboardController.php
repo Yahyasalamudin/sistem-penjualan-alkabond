@@ -16,7 +16,7 @@ class DashboardController extends Controller
         $now = Carbon::now();
 
         $transaction = Transaction::where('sales_id', auth()->user()->id)->count();
-        $thisMonthTransaction = Transaction::where('sales_id', auth()->user()->id)->whereMonth('created_at', $now->month)
+        $thisMonthTransaction = Transaction::where('sales_id', auth()->user()->id)->whereMonth('created_at', $now->month)->whereYear('created_at', $now->year)
             ->count();
 
         return response()->json([
