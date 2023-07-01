@@ -217,7 +217,8 @@
                                                         @foreach ($transaction->payments as $payment)
                                                             <tr>
                                                                 <th scope="row">{{ $i++ }}</th>
-                                                                <td>{{ date('d F Y', strtotime($payment->created_at)) }}
+                                                                <td>
+                                                                    {{ date('d F Y', strtotime($payment->created_at)) }}
                                                                 </td>
                                                                 <td>-Rp {{ number_format($payment->total_pay) }}</td>
                                                             </tr>
@@ -245,7 +246,7 @@
                                                 <div class="col mr-2">
                                                     <div class="text-xs text-center font-weight-bold mb-5">
                                                         <p class="jumlh">
-                                                            Total Sisa Jumlah Cicilan
+                                                            Sisa Hutang
                                                         </p>
                                                         <h2 class="total">
                                                             Rp {{ number_format($transaction->remaining_pay) }}
@@ -253,7 +254,7 @@
                                                     </div>
 
                                                     <h6 class="mb-0 text-center font-weight-bold text-gray-800">Total
-                                                        Pembayaran : Rp {{ number_format($transaction->grand_total) }}</h6>
+                                                        Hutang : Rp {{ number_format($transaction->grand_total) }}</h6>
                                                 </div>
 
                                             </div>

@@ -103,7 +103,7 @@
                                         <button type="button" class="btn p-0"
                                             style="position: absolute; top: 2px; right: 7px;" data-toggle="tooltip"
                                             data-placement="top"
-                                            title="{{ $transaction['tenggatWaktu'] == 0 ? 'Transaksi ini telah mencapai batas waktu pembayaran' : 'Sisa Waktu Pembayaran Untuk Transaksi ini' . $transaction['tenggatWaktu'] . ' Hari' }}">
+                                            title="{{ $transaction['tenggatWaktu'] == 0 ? 'Transaksi ini telah mencapai batas waktu pembayaran' : 'Sisa Waktu Pembayaran Untuk Transaksi ini ' . $transaction['tenggatWaktu'] . ' Hari' }}">
                                             <i
                                                 class="fas fa-exclamation-circle text-{{ $transaction['tenggatWaktu'] == 0 ? 'danger' : 'warning' }}"></i>
                                         </button>

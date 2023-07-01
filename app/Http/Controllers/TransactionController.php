@@ -44,8 +44,9 @@ class TransactionController extends Controller
         foreach ($transactions as $transaction) {
             if (isset($transaction->sent_at)) {
                 $sent_at = Carbon::createFromFormat('Y-m-d H:i:s', $transaction->sent_at);
-                $tenggatWaktu = $sent_at->addDays(30)->diffInDays(Carbon::now());
-                $transaction['tenggatWaktu'] = $tenggatWaktu;
+                $tenggatWaktu = $sent_at->diffInDays(Carbon::now());
+                $selisih = 30 - $tenggatWaktu;
+                $transaction['tenggatWaktu'] = ($selisih >= 0) ? $selisih : 0;
             }
         }
 
