@@ -1,50 +1,49 @@
 @extends('layouts.app')
 
 @section('content')
+    <h1 class="h3 mb-3 text-gray-800">Data Produk</h1>
 
-<h1 class="h3 mb-3 text-gray-800">Data Produk</h1>
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible" id="flash_data" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ session('success') }}
+        </div>
+    @endif
 
-@if (session('success'))
-<div class="alert alert-success alert-dismissible" id="flash_data" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    {{ session('success') }}
-</div>
-@endif
-
-@error('product_name')
-<div class="alert alert-danger alert-dismissible" id="flash_data" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    {{ $message }}
-</div>
-@enderror
-@error('product_brand')
-<div class="alert alert-danger alert-dismissible" id="flash_data1" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    {{ $message }}
-</div>
-@enderror
-@error('unit_id')
-<div class="alert alert-danger alert-dismissible" id="flash_data2" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    {{ $message }}
-</div>
-@enderror
-@error('unit_weight')
-<div class="alert alert-danger alert-dismissible" id="flash_data3" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    {{ $message }}
-</div>
-@enderror
+    @error('product_name')
+        <div class="alert alert-danger alert-dismissible" id="flash_data" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ $message }}
+        </div>
+    @enderror
+    @error('product_brand')
+        <div class="alert alert-danger alert-dismissible" id="flash_data1" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ $message }}
+        </div>
+    @enderror
+    @error('unit_id')
+        <div class="alert alert-danger alert-dismissible" id="flash_data2" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ $message }}
+        </div>
+    @enderror
+    @error('unit_weight')
+        <div class="alert alert-danger alert-dismissible" id="flash_data3" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ $message }}
+        </div>
+    @enderror
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
@@ -95,7 +94,6 @@
 
         <div class="card-body">
             <div class="table-responsive">
-
                 <table class="table table-bordered text-center text-center" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
@@ -109,8 +107,8 @@
                     </thead>
                     <tbody>
                         @php
-                        $i = 1;
-                    @endphp
+                            $i = 1;
+                        @endphp
                         @foreach ($products as $p)
                             <tr>
                                 <th scope="row">{{ $i++ }} </th>

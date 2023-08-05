@@ -13,14 +13,28 @@ class StoreController extends Controller
 {
     public function index()
     {
-        $stores = Store::latest()->get();
-        $sales = Sales::get();
+        $title = 'Daftar Toko';
 
-        if (auth()->user()->role == 'admin') {
-            $sales = Sales::where('city', auth()->user()->city)->get();
-        }
+        $city = session('filterKota');
+        $role = auth()->user()->role;
+        $cityFilter = ($role == 'owner') ? $city : auth()->user()->city;
 
-        return view('stores.index', compact('stores', 'sales'));
+        $stores = Store::with(['transactions' => function ($query) {
+            $query->latest()->take(1);
+        }])
+            ->where('city_branch', $cityFilter)
+            ->orderBy(function ($query) {
+                $query->select('created_at')
+                    ->from('transactions')
+                    ->whereColumn('store_id', 'stores.id')
+                    ->orderBy('created_at', 'desc')
+                    ->take(1);
+            })
+            ->get();
+
+        $sales = Sales::where('city', $cityFilter)->get();
+
+        return view('stores.index', compact('title', 'stores', 'sales'));
     }
 
     public function store(Request $request)

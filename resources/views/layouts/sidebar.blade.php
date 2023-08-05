@@ -5,7 +5,7 @@
              {{-- <i class="fas fa-laugh-wink"></i> --}}
              <img src="{{ asset('img/logo.png') }}" width="40px" alt="">
          </div>
-         <div class="sidebar-brand-text mx-3">Sejahtera Bersama</div>
+         <div class="sidebar-brand-text mx-3">Mortar Alkabon</div>
      </a>
 
      <!-- Divider -->
@@ -45,13 +45,13 @@
                      Jenis Produk
                  </a>
 
-                 <a class="collapse-item {{ Route::is('store*') ? 'active' : '' }}" href="{{ route('store.index') }}">
-                     Toko
-                 </a>
-
                  <a class="collapse-item {{ Route::is('product*') ? 'active' : '' }}"
                      href="{{ route('product.index') }}">
                      Produk
+                 </a>
+
+                 <a class="collapse-item {{ Route::is('store*') ? 'active' : '' }}" href="{{ route('store.index') }}">
+                     Toko
                  </a>
              </div>
          </div>
@@ -94,7 +94,7 @@
 
                  <a class="collapse-item {{ Request::is('transactions/unsent*') ? 'active' : '' }}"
                      href="{{ route('transaction.index', 'unsent') }}">
-                     Belum dikirim
+                     Pre-Order
                  </a>
 
                  <a class="collapse-item {{ Request::is('transactions/proccess*') ? 'active' : '' }}"
@@ -102,10 +102,10 @@
                      Proses
                  </a>
 
-                 <a class="collapse-item {{ Request::is('transactions/sent*') ? 'active' : '' }}"
+                 {{-- <a class="collapse-item {{ Request::is('transactions/sent*') ? 'active' : '' }}"
                      href="{{ route('transaction.index', 'sent') }}">
                      Dikirim
-                 </a>
+                 </a> --}}
 
                  <a class="collapse-item {{ Request::is('transactions/partial*') ? 'active' : '' }}"
                      href="{{ route('transaction.index', 'partial') }}">

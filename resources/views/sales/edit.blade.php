@@ -55,8 +55,8 @@
                                         <label for="email" class="col-sm-2 col-form-label">Email</label>
                                         <div class="col-sm-4">
                                             <input type="email" class="form-control" name="email" id="email"
-                                                value="{{ $sales->email }}"
-                                                placeholder="Masukkan Email. Contoh : user@gmail.com" disabled>
+                                                value="{{ old('email', $sales->email ?? '') }}"
+                                                placeholder="Masukkan Email. Contoh : user@gmail.com">
                                         </div>
                                         <label for="phone_number" class="col-sm-2 col-form-label">Nomor Hp</label>
                                         <div class="col">

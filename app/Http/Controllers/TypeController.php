@@ -10,9 +10,9 @@ class TypeController extends Controller
 {
     public function index()
     {
-        $type = Type::get();
-
         $title = 'Jenis Produk';
+
+        $type = Type::get();
 
         return view('types.index', compact('type', 'title'));
     }

@@ -16,14 +16,18 @@ class DashboardController extends Controller
 {
     public function topSelling($quantity)
     {
+        $city = session('filterKota');
         $topSellingProducts = TransactionDetail::select('product_id', DB::raw('SUM(quantity) as totalQuantity'))
             ->groupBy('product_id')
             ->orderByDesc('totalQuantity')
             ->limit($quantity);
 
-        // if (auth()->user()->role == 'owner') {
-        //     $topSellingProducts = $topSellingProducts->where('city', session('filterKota'));
-        // }
+        if (auth()->user()->role == 'owner') {
+            // $topSellingProducts = $topSellingProducts->where('city', session('filterKota'));
+            $topSellingProducts = $topSellingProducts->whereHas('transaction.sales', function ($query) use ($city) {
+                $query->where('city', $city);
+            });
+        }
 
         $topSellingProducts = $topSellingProducts->get();
 
@@ -47,51 +51,96 @@ class DashboardController extends Controller
     public function index()
     {
         $user = auth()->user();
+        $city = session('filterKota');
 
-        $transaction = Transaction::count();
-        $carbon = Carbon::now();
-        $transaction_now = Transaction::whereMonth('created_at', $carbon)->count();
-        $remaining_pay = Transaction::sum('remaining_pay');
-        $payment = Payment::whereMonth('created_at', $carbon)->sum('total_pay');
-        $store = Store::count();
+        $transaction = Transaction::where('deleted_at', null)
+            ->when($user->role == 'owner', function ($query) use ($city) {
+                $query->whereHas('sales', function ($query) use ($city) {
+                    $query->where('city', $city);
+                });
+            })
+            ->when($user->role == 'admin', function ($query) use ($user) {
+                $query->whereHas('sales', function ($query) use ($user) {
+                    $query->where('city', $user->city);
+                });
+            })
+            ->count();
+
+        $transaction_now = Transaction::where('deleted_at', null)
+            ->whereMonth('created_at', now()->month)
+            ->when($user->role == 'owner', function ($query) use ($city) {
+                $query->whereHas('sales', function ($query) use ($city) {
+                    $query->where('city', $city);
+                });
+            })
+            ->when($user->role == 'admin', function ($query) use ($user) {
+                $query->whereHas('sales', function ($query) use ($user) {
+                    $query->where('city', $user->city);
+                });
+            })
+            ->count();
+
+        $remaining_pay = Transaction::where('deleted_at', null)
+            ->when($user->role == 'owner', function ($query) use ($city) {
+                $query->whereHas('sales', function ($query) use ($city) {
+                    $query->where('city', $city);
+                });
+            })
+            ->when($user->role == 'admin', function ($query) use ($user) {
+                $query->whereHas('sales', function ($query) use ($user) {
+                    $query->where('city', $user->city);
+                });
+            })
+            ->sum('remaining_pay');
+
+        $payment = Payment::whereMonth('created_at', now()->month)
+            ->when($user->role == 'owner', function ($query) use ($city) {
+                $query->whereHas('transactions.sales', function ($query) use ($city) {
+                    $query->where('city', $city);
+                });
+            })
+            ->when($user->role == 'admin', function ($query) use ($user) {
+                $query->whereHas('transactions.sales', function ($query) use ($user) {
+                    $query->where('city', $user->city);
+                });
+            })
+            ->sum('total_pay');
+
+        $store = Store::when($user->role == 'owner', function ($query) use ($city) {
+            $query->where('city_branch', $city);
+        })
+            ->when($user->role == 'admin', function ($query) use ($user) {
+                $query->where('city_branch', $user->city);
+            })
+            ->count();
+
         $product = Product::count();
+
         $top_selling = $this->topSelling(5);
-        $transaction_chart = Transaction::select(DB::raw('MONTH(created_at) as month'), DB::raw('SUM(grand_total) as pendapatan'))
+
+        $transaction_chart = Transaction::selectRaw('MONTH(created_at) as month, SUM(grand_total) as pendapatan')
             ->where('deleted_at', null)
-            ->whereYear('created_at', $carbon->year)
-            ->groupBy('month');
+            ->whereYear('created_at', now()->year)
+            ->when($user->role == 'owner', function ($query) use ($city) {
+                $query->whereHas('sales', function ($query) use ($city) {
+                    $query->where('city', $city);
+                });
+            })
+            ->when($user->role == 'admin', function ($query) use ($user) {
+                $query->whereHas('sales', function ($query) use ($user) {
+                    $query->where('city', $user->city);
+                });
+            })
+            ->groupBy('month')
+            ->get();
 
-        // if ($user->role == 'owner') {
-        //     $transaction = $transaction->where('city', session('filterKota'));
-        //     $transaction_now = $transaction_now->where('city', session('filterKota'));
-        //     $remaining_pay = $remaining_pay->where('city', session('filterKota'));
-        //     $payment = $payment->where('city', session('filterKota'));
-        //     $store = $store->where('city', session('filterKota'));
-        //     $product = $product->where('city', session('filterKota'));
-        //     $transaction_chart = $transaction_chart->where('city', session('filterKota'));
-        // }
+        $pendapatan = $transaction_chart->pluck('pendapatan')->map(function ($value) {
+            return intval($value);
+        });
 
-        // if (auth()->user()->role == 'admin') {
-        //     $transaction = $transaction->where('city', $user->city);
-        //     $transaction_now = $transaction_now->where('city', $user->city);
-        //     $remaining_pay = $remaining_pay->where('city', $user->city);
-        //     $payment = $payment->where('city', $user->city);
-        //     $store = $store->where('city', $user->city);
-        //     $product = $product->where('city', $user->city);
-        //     $transaction_chart = $transaction_chart->where('city', $user->city);
-        // }
-
-        $transaction_chart = $transaction_chart->get();
-
-        // dd($transaction_chart);
-
-        $pendapatan = [];
-        $months = [];
-        foreach ($transaction_chart as $row) {
-            $pendapatan[] = intval($row->pendapatan);
-            $monthName = Carbon::create()->month($row->month)->locale(app()->getLocale())->isoFormat('MMMM');
-            $months[] = $monthName;
-        }
+        $months = $transaction_chart->pluck('month')->map(function ($value) {
+            return Carbon::create()->month($value)->locale(app()->getLocale())->isoFormat('MMMM');
+        });
 
         return view('dashboard', [
             'title' => 'Dashboard',

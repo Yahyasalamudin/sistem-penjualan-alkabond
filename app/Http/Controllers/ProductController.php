@@ -11,11 +11,12 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::latest()->get();
+        $title = 'Product';
 
+        $products = Product::get();
         $type = Type::get();
 
-        return view('products.index', compact('products', 'type'));
+        return view('products.index', compact('title', 'products', 'type'));
     }
 
     public function store(Request $request)

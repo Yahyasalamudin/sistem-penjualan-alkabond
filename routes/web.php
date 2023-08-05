@@ -64,12 +64,15 @@ Route::middleware('auth')->group(function () {
 
     // Transaction
     Route::get('/transactions/{status}', [TransactionController::class, 'index'])->name('transaction.index');
+    Route::get('/transactions/{status}/create', [TransactionController::class, 'create'])->name('transaction.create');
+    Route::post('/transactions/store', [TransactionController::class, 'store'])->name('transaction.store');
     Route::get('/transactions/archive/all', [TransactionController::class, 'archive'])->name('transaction.archive');
     Route::put('/transactions/archive/{id}', [TransactionController::class, 'restore'])->name('transaction.restore');
     Route::delete('/transactions/archive/{id}', [TransactionController::class, 'kill'])->name('transaction.kill');
     Route::get('/transactions/{status}/detail-transaction/{id}', [TransactionController::class, 'show'])->name('transaction.show');
     Route::put('/transactions/{delivery_status}/{id}', [TransactionController::class, 'update_delivery'])->name('transaction.update');
     Route::delete('/transactions/{id}/delete', [TransactionController::class, 'destroy'])->name('transaction.destroy');
+    Route::post('/transaction/pay/{id}', [TransactionController::class, 'payment'])->name('transaction.pay');
 
     // User
     Route::get('/users', [UserController::class, 'index'])->name('user.index');

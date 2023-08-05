@@ -192,7 +192,7 @@
 
                                     <div class="card-body">
                                         <div class="table-responsive">
-                                            @if ($transaction->payments->sum('total_pay') == 0)
+                                            {{-- @if ($transaction->payments->sum('total_pay') == 0)
                                                 <div class="mt-4">
                                                     <div
                                                         class="d-flex
@@ -200,41 +200,49 @@
                                                         Pesanan Masih Belum Dibayar
                                                     </div>
                                                 </div>
-                                            @else
-                                                <table class="table table-striped table-bordered" width="100%"
-                                                    cellspacing="0">
-                                                    <thead>
+                                            @else --}}
+                                            <table class="table table-striped table-bordered" width="100%"
+                                                cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Tanggal Bayar</th>
+                                                        <th>Pembayaran</th>
+                                                    </tr>
+                                                </thead>
+                                                @php
+                                                    $i = 1;
+                                                @endphp
+                                                <tbody>
+                                                    @foreach ($transaction->payments as $payment)
                                                         <tr>
-                                                            <th>No.</th>
-                                                            <th>Tanggal Bayar</th>
-                                                            <th>Pembayaran</th>
+                                                            <th scope="row">{{ $i++ }}</th>
+                                                            <td>
+                                                                {{ date('d F Y', strtotime($payment->created_at)) }}
+                                                            </td>
+                                                            <td>-Rp {{ number_format($payment->total_pay) }}</td>
                                                         </tr>
-                                                    </thead>
-                                                    @php
-                                                        $i = 1;
-                                                    @endphp
-                                                    <tbody>
-                                                        @foreach ($transaction->payments as $payment)
-                                                            <tr>
-                                                                <th scope="row">{{ $i++ }}</th>
-                                                                <td>
-                                                                    {{ date('d F Y', strtotime($payment->created_at)) }}
-                                                                </td>
-                                                                <td>-Rp {{ number_format($payment->total_pay) }}</td>
-                                                            </tr>
-                                                        @endforeach
+                                                    @endforeach
 
-                                                        <tr>
-                                                            <td scope="row" colspan="2" class="grnd">Total
-                                                            </td>
-                                                            <td class="grnd1">
-                                                                -Rp
-                                                                {{ number_format($transaction->payments->sum('total_pay')) }}
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            @endif
+                                                    <tr>
+                                                        <td scope="row" colspan="2" class="grnd">Total
+                                                        </td>
+                                                        <td class="grnd1">
+                                                            -Rp
+                                                            {{ number_format($transaction->payments->sum('total_pay')) }}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            {{-- @endif --}}
+                                            <form action="{{ route('transaction.pay', $transaction->id) }}" method="post">
+                                                <div class="d-flex flex-column">
+                                                    <input class="form-control mb-3" type="text" name="product_brand"
+                                                        id="product_brand" placeholder="Masukkan Jumlah Cicilan">
+                                                    <button type="button" class="btn btn-sm btn-secondary mt-1"
+                                                        data-dismiss="modal">Bayar</button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>

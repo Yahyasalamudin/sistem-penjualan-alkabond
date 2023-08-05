@@ -10,9 +10,9 @@ class CityController extends Controller
 {
     public function index()
     {
-        $city = City::get();
-
         $title = 'Data Kota';
+
+        $city = City::get();
 
         return view('cities.index', compact('city', 'title'));
     }

@@ -4,12 +4,13 @@
 <head>
 
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edgephp a">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>CV. Sejahtera Bersama | {{ isset($title) ? $title : 'Website' }}</title>
+    <title>Mortar | {{ isset($title) ? $title : 'Website' }}</title>
+    <link rel="shrotcut icon" href="{{ asset('img/logo.png') }}">
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
@@ -20,7 +21,7 @@
 
 
     <!-- Custom styles for this template-->
-    <link href="{{ asset('public/css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
     {{-- Sweet Alert --}}
@@ -107,7 +108,6 @@
     </script>
 
     @stack('js')
-
 </body>
 
 </html>

@@ -61,11 +61,18 @@
 @endpush
 
 @section('content')
-    <h1 class="h3 mb-3 text-gray-800"> Transaksi</h1>
+    <h1 class="h3 mb-3 text-gray-800">{{ $title }}</h1>
 
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Table Transaksi</h6>
+
+            @if ($status === 'unsent')
+                <a href="{{ route('transaction.create', $status) }}" class="btn btcolor text-white">
+                    <i class="fas fa-plus"></i>
+                    Pre-Order
+                </a>
+            @endif
         </div>
 
         <div class="card-body">
@@ -93,10 +100,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php
-                            $i = 1;
-                        @endphp
-                        @foreach ($transactions as $transaction)
+                        @foreach ($transactions as $key => $transaction)
                             <tr>
                                 <th scope="row" class="position-relative">
                                     @if ($transaction['tenggatWaktu'] <= 10 && $transaction['tenggatWaktu'] != '')
@@ -108,7 +112,7 @@
                                                 class="fas fa-exclamation-circle text-{{ $transaction['tenggatWaktu'] == 0 ? 'danger' : 'warning' }}"></i>
                                         </button>
                                     @endif
-                                    {{ $i++ }}
+                                    {{ $key + 1 }}
                                 </th>
                                 <td>{{ $transaction->invoice_code }}</td>
                                 <td>{{ $transaction->stores->store_name }}</td>
@@ -127,7 +131,8 @@
                                                 @csrf
                                                 @method('put')
                                                 <button type="button" class="btn btcolor ml-2 text-white"
-                                                    onclick="showConfirmAlert('Apakah yakin ingin melanjutkan transaksi?', 'Restore', 'Transaksi dilanjutkan.', handleRestore)">Kembalikan Transaksi</button>
+                                                    onclick="showConfirmAlert('Apakah yakin ingin melanjutkan transaksi?', 'Restore', 'Transaksi dilanjutkan.', handleRestore)">Kembalikan
+                                                    Transaksi</button>
                                             </form>
                                             <form id="killForm"
                                                 action="{{ route('transaction.kill', ['id' => $transaction->id]) }}"

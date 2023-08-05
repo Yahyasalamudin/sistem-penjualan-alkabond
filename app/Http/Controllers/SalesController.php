@@ -11,11 +11,16 @@ class SalesController extends Controller
 {
     public function index()
     {
-        $sales = Sales::get();
+        $user = auth()->user();
+        $city = session('filterKota');
 
-        if (auth()->user()->role == 'admin') {
-            $sales = $sales->where('city', auth()->user()->city);
-        }
+        $sales = Sales::where(function ($query) use ($city, $user) {
+            if ($user->role == 'owner') {
+                $query->where('city', $city);
+            } elseif ($user->rol == 'admin') {
+                $query->where('city', $user->city);
+            }
+        })->get();
 
         return view('sales.index', [
             'title' => 'Sales',
@@ -35,12 +40,17 @@ class SalesController extends Controller
         $request->validate([
             'sales_name' => 'required',
             'username' => 'required|unique:sales',
-            'email' => 'required|unique:sales|email',
             'phone_number' => 'required',
             'password' => 'required',
             'current_password' => 'required|same:password',
             'city' => 'required'
         ]);
+
+        if ($request->email) {
+            $request->validate([
+                'email' => 'unique:sales|email',
+            ]);
+        }
 
         Sales::create([
             'sales_name' => $request->sales_name,
@@ -88,6 +98,7 @@ class SalesController extends Controller
             Sales::find($id)->update([
                 'sales_name' => $request->sales_name,
                 'phone_number' => $request->phone_number,
+                'email' => $request->email,
                 'city' => $request->city,
                 'active' => $request->active,
             ]);
@@ -100,6 +111,7 @@ class SalesController extends Controller
             Sales::find($id)->update([
                 'sales_name' => $request->sales_name,
                 'phone_number' => $request->phone_number,
+                'email' => $request->email,
                 'city' => $request->city,
                 'active' => $request->active,
                 'password' => Hash::make($request->password),
