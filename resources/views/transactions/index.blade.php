@@ -103,7 +103,7 @@
                         @foreach ($transactions as $key => $transaction)
                             <tr>
                                 <th scope="row" class="position-relative">
-                                    @if ($transaction['tenggatWaktu'] <= 10 && $transaction['tenggatWaktu'] != '')
+                                    @if ($transaction['tenggatWaktu'] != '' && $transaction['tenggatWaktu'] <= 10 && $status === 'partial')
                                         <button type="button" class="btn p-0"
                                             style="position: absolute; top: 2px; right: 7px;" data-toggle="tooltip"
                                             data-placement="top"

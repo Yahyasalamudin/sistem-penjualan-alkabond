@@ -5,22 +5,51 @@
         .hover-pointer {
             cursor: pointer;
         }
+
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
     </style>
 @endpush
 @push('js')
     @livewireScripts()
-    <script>
-        Livewire.on('hideModal', () => {
-            $('#modal-cart').modal('hide');
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            var rupiah = document.getElementById('rupiah');
+            rupiah.value = formatRupiah(rupiah.value, 'Rp. ');
         });
 
-        Livewire.on('showModal', () => {
-            $('#modal-cart').modal('show');
+        var rupiah = document.getElementById('rupiah');
+        rupiah.addEventListener('keyup', function(e) {
+            // tambahkan 'Rp.' pada saat form di ketik
+            // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
+            rupiah.value = formatRupiah(this.value, 'Rp. ');
         });
 
-        Livewire.on('successMessage', message => {
-            toastr.success(message);
-        });
+        /* Fungsi formatRupiah */
+        function formatRupiah(angka, prefix) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            // tambahkan titik jika yang di input sudah menjadi angka ribuan
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+        }
     </script>
 @endpush
 @section('content')

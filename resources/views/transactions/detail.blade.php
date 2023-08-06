@@ -1,3 +1,9 @@
+@php
+    use Carbon\Carbon;
+    
+    Carbon::setLocale('id');
+@endphp
+
 @extends('layouts.app')
 
 @push('js')
@@ -32,6 +38,44 @@
         let handleSend = () => {
             let sendForm = document.getElementById("sendForm");
             sendForm.submit();
+        }
+
+        document.getElementById('paymentForm').addEventListener('submit', function() {
+            var payButton = document.getElementById('payButton');
+            payButton.disabled = true;
+
+            setTimeout(function() {
+                payButton.disabled = false;
+            }, 5000);
+        });
+    </script>
+
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            var rupiah = document.getElementById('total_pay');
+            rupiah.value = formatRupiah(rupiah.value, 'Rp. ');
+        });
+
+        var rupiah = document.getElementById('total_pay');
+        rupiah.addEventListener('keyup', function(e) {
+            rupiah.value = formatRupiah(this.value, 'Rp. ');
+        });
+
+        /* Fungsi formatRupiah */
+        function formatRupiah(angka, prefix) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
         }
     </script>
 @endpush
@@ -89,7 +133,7 @@
                     <a class="nav-link" id="step2-tab" data-bs-toggle="tab" href="#step2">Pembayaran</a>
 
                     @if (isset($transaction->payment_method))
-                        <a class="nav-link" id="step3-tab" data-bs-toggle="tab" href="#step3">Return Pesanan</a>
+                        <a class="nav-link" id="step3-tab" data-bs-toggle="tab" href="#step3">Retur Pesanan</a>
                     @endif
                 </div>
                 <hr>
@@ -222,8 +266,6 @@
                                                 <td class="grnd1">
                                                     Rp {{ number_format($transaction->grand_total) }}
                                                 </td>
-
-                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -261,14 +303,14 @@
                                     @endif
                                     <div class="table-responsive">
                                         {{-- @if ($transaction->payments->sum('total_pay') == 0)
-                                                <div class="mt-4">
-                                                    <div
-                                                        class="d-flex
+                                            <div class="mt-4">
+                                                <div
+                                                    class="d-flex
                                                     justify-content-center">
-                                                        Pesanan Masih Belum Dibayar
-                                                    </div>
+                                                    Pesanan Masih Belum Dibayar
                                                 </div>
-                                            @else --}}
+                                            </div>
+                                        @else --}}
                                         <table class="table table-striped table-bordered" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
@@ -281,20 +323,43 @@
                                                 $i = 1;
                                             @endphp
                                             <tbody>
-                                                @foreach ($transaction->payments as $payment)
+                                                @foreach ($transaction->payments->sortBy('created_at') as $payment)
                                                     <tr>
                                                         <th scope="row">{{ $i++ }}</th>
                                                         <td>
-                                                            {{ date('d F Y', strtotime($payment->created_at)) }}
+                                                            {{ Carbon::parse($payment->created_at)->isoFormat('D MMMM Y HH:mm') }}
                                                         </td>
-                                                        <td>-Rp {{ number_format($payment->total_pay) }}</td>
+                                                        <td>
+                                                            -Rp {{ number_format($payment->total_pay) }}
+                                                        </td>
                                                     </tr>
                                                 @endforeach
 
+                                                @if ($transaction->remaining_pay !== 0)
+                                                    <form action="{{ route('transaction.pay', $transaction->id) }}"
+                                                        method="post">
+                                                        @csrf
+                                                        <tr>
+                                                            <td scope="row" class="text-center align-middle">Bayar
+                                                                Cicilan</td>
+                                                            <td class="text-center align-middle">
+                                                                <input class="form-control" type="text"
+                                                                    name="total_pay" id="total_pay"
+                                                                    placeholder="Masukkan Jumlah Cicilan">
+                                                            </td>
+                                                            <td class="text-center align-middle">
+                                                                <button type="submit" id="payButton"
+                                                                    class="btn btn-secondary mt-1"
+                                                                    data-dismiss="modal">Bayar</button>
+                                                            </td>
+                                                        </tr>
+                                                    </form>
+                                                @endif
+
                                                 <tr>
-                                                    <td scope="row" colspan="2" class="grnd">Total
+                                                    <td scope="row" class="grnd">Total
                                                     </td>
-                                                    <td class="grnd1">
+                                                    <td colspan="2" class="grnd1 text-center">
                                                         -Rp
                                                         {{ number_format($transaction->payments->sum('total_pay')) }}
                                                     </td>
@@ -302,15 +367,6 @@
                                             </tbody>
                                         </table>
                                         {{-- @endif --}}
-                                        <form action="{{ route('transaction.pay', $transaction->id) }}" method="post">
-                                            @csrf
-                                            <div class="d-flex flex-column">
-                                                <input class="form-control mb-3" type="text" name="total_pay"
-                                                    id="total_pay" placeholder="Masukkan Jumlah Cicilan">
-                                                <button type="submit" class="btn btn-sm btn-secondary mt-1"
-                                                    data-dismiss="modal">Bayar</button>
-                                            </div>
-                                        </form>
                                     </div>
                                 </div>
                             </div>

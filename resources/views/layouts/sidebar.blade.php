@@ -107,7 +107,7 @@
                      Dikirim
                  </a> --}}
 
-                 <a class="collapse-item {{ Request::is('transactions/partial*') ? 'active' : '' }}"
+                 <a class="collapse-item {{ Request::is('transactions/partial*') || Request::is('transactions/sent*') ? 'active' : '' }}"
                      href="{{ route('transaction.index', 'partial') }}">
                      Dicicil
                  </a>

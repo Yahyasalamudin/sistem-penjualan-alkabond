@@ -44,11 +44,11 @@ class TransactionController extends Controller
                     ->where('status', 'unpaid')
                     ->where('delivery_status', 'proccess');
                 break;
-            // case 'sent':
-            //     $transactions = $transactions
-            //         ->where('status', 'unpaid')
-            //         ->where('delivery_status', 'sent');
-            //     break;
+                // case 'sent':
+                //     $transactions = $transactions
+                //         ->where('status', 'unpaid')
+                //         ->where('delivery_status', 'sent');
+                //     break;
             case 'partial':
                 $transactions = $transactions
                     ->where('delivery_status', 'sent')
@@ -189,6 +189,7 @@ class TransactionController extends Controller
         $title = 'Daftar Arsip Transaksi';
         $user = auth()->user();
         $city = session('filterKota');
+        $status = 'archive';
 
         $transactions = Transaction::onlyTrashed()
             ->when($user->role == 'owner', function ($query) use ($city) {
@@ -203,7 +204,7 @@ class TransactionController extends Controller
             })
             ->get();
 
-        return view('transactions.index', compact('title', 'transactions'));
+        return view('transactions.index', compact('title', 'status', 'transactions'));
     }
 
     public function restore($id)
@@ -263,7 +264,7 @@ class TransactionController extends Controller
     public function payment(Request $request, $id)
     {
         $request->validate([
-            'total_pay' => 'required|numeric'
+            'total_pay' => 'required'
         ]);
 
         $check = Transaction::find($id);
@@ -275,18 +276,28 @@ class TransactionController extends Controller
         $transaction = Transaction::find($id);
         $sum_totalpay = Payment::where('transaction_id', $id)->sum('total_pay');
 
-        $check_pay = $sum_totalpay + $request->total_pay;
+        $total_pay = str_replace(['Rp. ', '.', ','], '', $request->total_pay);
+        $check_pay = $sum_totalpay + $total_pay;
 
-        if ((int) $request->total_pay > $transaction->remaining_pay) {
+        if ((int) $total_pay > $transaction->remaining_pay) {
             return Redirect::to(URL::previous() . "#step2")->with('error', 'Pembayaran tidak boleh melebihi sisa hutang');
         }
 
-        $payment = Payment::create([
-            'total_pay' => $request->total_pay,
+        $lastPayment = Payment::where('transaction_id', $id)
+            ->where('total_pay', $total_pay)
+            ->where('created_at', '>', Carbon::now()->subSeconds(5))
+            ->first();
+
+        if ($lastPayment) {
+            return Redirect::to(URL::previous() . "#step2")->with('error', 'Pembayaran hanya bisa dilakukan sekali dalam 5 detik. Mohon coba lagi jika perlu.');
+        }
+
+        Payment::create([
+            'total_pay' => $total_pay,
             'transaction_id' => $id
         ]);
 
-        $remaining_pay = $transaction->remaining_pay - $request->total_pay;
+        $remaining_pay = $transaction->remaining_pay - $total_pay;
 
         if ((int) $check_pay < $transaction->grand_total) {
             Transaction::find($id)->update([
