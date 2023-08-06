@@ -93,14 +93,32 @@
                     <td></td>
                 </tr>
             </table>
+            {{-- <div style="display: flex; margin-top: 24px;">
+                <div style="display: inline-block;">
+                    Kepada,
+                    <p style="margin: 0;">{{ $transaction->stores->store_name }}</p>
+                </div>
+                <div style="display: inline-block; margin-left: 256px;">
+                    <p style="margin: 0;">Status : {{ $transaction->delivery_status }}</p>
+                    <p style="margin: 0;">Invoice Code : {{ $transaction->invoice_code }}</p>
+                    <p style="margin: 0;">Tanggal</p>
+                    <p style="margin: 0;">Nomor Telepon</p>
+                </div>
+            </div> --}}
             <table>
-
                 <tr class="jarak">
                     <td>Kepada,
                     </td>
                     <td width="38"></td>
                     <td width="80">Status</td>
-                    <td>: {{ $transaction->delivery_status }}
+                    <td>:
+                        @if ($transaction->delivery_status == 'sent')
+                            Dikirim
+                        @elseif ($transaction->delivery_status == 'unsent')
+                            Belum Dikirim
+                        @else
+                            Sedang Diproses
+                        @endif
                     </td>
                 </tr>
                 <tr class="jarak">
