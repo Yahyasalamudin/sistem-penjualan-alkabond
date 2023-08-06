@@ -66,6 +66,10 @@ class ProductCart extends Component
         if ($productCart) {
             $data = $this->product_cart[$productCartId] ?? [];
 
+            if (!empty($data['price'])) {
+                $price = str_replace(['Rp. ', '.', ','], '', $data['price']);
+            }
+
             if (isset($data['quantity'])) {
                 $productCart->update([
                     'quantity' => $data['quantity'] ?: 0,
@@ -74,7 +78,7 @@ class ProductCart extends Component
 
             if (isset($data['price'])) {
                 $productCart->update([
-                    'price' => $data['price'] ?: 0,
+                    'price' => $price ?: 0,
                 ]);
             }
         }

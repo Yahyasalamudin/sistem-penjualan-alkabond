@@ -32,7 +32,6 @@
 </head>
 
 <body id="page-top">
-
     @yield('app')
 
     <!-- Bootstrap core JavaScript-->
