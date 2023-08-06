@@ -17,6 +17,14 @@ class ReportController extends Controller
         return $pdf->stream();
     }
 
+    public function struk($invoice)
+    {
+        $transaction = Transaction::with('sales')->with('stores')->with('transaction_details')->where('invoice_code', $invoice)->first();
+
+        $pdf = Pdf::loadview('reports.struk', compact("transaction"));
+        return $pdf->stream();
+    }
+
     public function transactionReport(Request $request)
     {
         $filter = $request->status;
@@ -31,7 +39,7 @@ class ReportController extends Controller
                     $transactions = $transactions->where('delivery_status', 'unsent');
                     break;
                 case 'process':
-                    $transactions = $transactions->where('delivery_status',  'proccess');
+                    $transactions = $transactions->where('delivery_status', 'proccess');
                     break;
                 case 'sent':
                     $transactions = $transactions

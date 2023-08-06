@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\City;
 use App\Models\Sales;
 use App\Models\Store;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -19,18 +20,17 @@ class StoreController extends Controller
         $role = auth()->user()->role;
         $cityFilter = ($role == 'owner') ? $city : auth()->user()->city;
 
-        $stores = Store::with(['transactions' => function ($query) {
-            $query->latest()->take(1);
-        }])
-            ->where('city_branch', $cityFilter)
-            ->orderBy(function ($query) {
-                $query->select('created_at')
-                    ->from('transactions')
-                    ->whereColumn('store_id', 'stores.id')
-                    ->orderBy('created_at', 'desc')
-                    ->take(1);
-            })
-            ->get();
+        $stores = Store::where('city_branch', $cityFilter)->get();
+
+        $today = Carbon::today();
+        foreach ($stores as $key => $store) {
+            $latest_transaction = $store->transactions->min('created_at');
+            $stores[$key]['last_transaction_date'] = $latest_transaction;
+            $stores[$key]['is_more_than_60_days'] = $latest_transaction ? $latest_transaction->diffInDays($today) > 60 : false;
+        }
+        $stores = $stores->sortBy(function ($store) {
+            return $store['last_transaction_date'] ?? Carbon::now()->addYears(100);
+        });
 
         $sales = Sales::where('city', $cityFilter)->get();
 

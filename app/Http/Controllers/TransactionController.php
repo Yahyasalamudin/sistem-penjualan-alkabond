@@ -10,6 +10,8 @@ use App\Models\TransactionDetail;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 
 class TransactionController extends Controller
@@ -21,10 +23,10 @@ class TransactionController extends Controller
         $city = session('filterKota');
 
         $transactions = Transaction::when($user->role == 'owner', function ($query) use ($city) {
-                $query->whereHas('sales', function ($query) use ($city) {
-                    $query->where('city', $city);
-                });
-            })
+            $query->whereHas('sales', function ($query) use ($city) {
+                $query->where('city', $city);
+            });
+        })
             ->when($user->role == 'admin', function ($query) use ($user) {
                 $query->whereHas('sales', function ($query) use ($user) {
                     $query->where('city', $user->city);
@@ -42,11 +44,11 @@ class TransactionController extends Controller
                     ->where('status', 'unpaid')
                     ->where('delivery_status', 'proccess');
                 break;
-                // case 'sent':
-                //     $transactions = $transactions
-                //         ->where('status', 'unpaid')
-                //         ->where('delivery_status', 'sent');
-                //     break;
+            // case 'sent':
+            //     $transactions = $transactions
+            //         ->where('status', 'unpaid')
+            //         ->where('delivery_status', 'sent');
+            //     break;
             case 'partial':
                 $transactions = $transactions
                     ->where('delivery_status', 'sent')
@@ -267,20 +269,14 @@ class TransactionController extends Controller
         $check = Transaction::find($id);
 
         if ($check->status == 'paid') {
-            return back()->with('error', 'Data Transaksi sudah lunas');
+            return Redirect::to(URL::previous() . "#step2")->with('error', 'Data Transaksi sudah lunas');
         }
 
         $transaction = Transaction::find($id);
         $sum_totalpay = Payment::where('transaction_id', $id)->sum('total_pay');
 
-        $check_pay = $sum_totalpay + $request->total_pay;
-
-        if ((int) $check_pay > $transaction->grand_total) {
-            return response()->json([
-                'message' => 'Transaction may not exceed the grand total',
-                'status' => 'invalid',
-                'status_code' => 401
-            ]);
+        if ((int) $sum_totalpay > $transaction->remaining_pay) {
+            return Redirect::to(URL::previous() . "#step2")->with('error', 'Pembayaran tidak boleh melebihi sisa hutang');
         }
 
         $payment = Payment::create([
@@ -289,6 +285,8 @@ class TransactionController extends Controller
         ]);
 
         $remaining_pay = $transaction->remaining_pay - $request->total_pay;
+
+        $check_pay = $sum_totalpay + $request->total_pay;
 
         if ((int) $check_pay < $transaction->grand_total) {
             Transaction::find($id)->update([
@@ -314,10 +312,6 @@ class TransactionController extends Controller
             }
         }
 
-        return response()->json([
-            'data' => new PaymentResource($payment),
-            'message' => 'Payment Transaction Successfully',
-            'status_code' => 200
-        ]);
+        return Redirect::to(URL::previous() . "#step2")->with('success', 'Pembayaran berhasil');
     }
 }

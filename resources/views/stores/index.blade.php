@@ -1,55 +1,51 @@
 @extends('layouts.app')
 
 @section('content')
-<h1 class="h3 mb-3 text-gray-800"> Data Toko</h1>
+    <h1 class="h3 mb-3 text-gray-800"> Data Toko</h1>
 
 
 
-@if (session('success'))
-    <div class="alert alert-success alert-dismissible" id="flash_data" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        {{ session('success') }}
-    </div>
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible" id="flash_data" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ session('success') }}
+        </div>
+    @endif
 
-@endif
-
-@error('store_name')
-<div class="alert alert-danger alert-dismissible" id="flash_data" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    {{ $message }}
-</div>
-
-@enderror
-@error('address')
-<div class="alert alert-danger alert-dismissible" id="flash_data1" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    {{ $message }}
-</div>
-
-@enderror
-@error('store_number')
-<div class="alert alert-danger alert-dismissible" id="flash_data2" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    {{ $message }}
-</div>
-
-@enderror
-@error('sales_id')
-<div class="alert alert-danger alert-dismissible" id="flash_data3" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    {{ $message }}
-</div>
-@enderror
+    @error('store_name')
+        <div class="alert alert-danger alert-dismissible" id="flash_data" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ $message }}
+        </div>
+    @enderror
+    @error('address')
+        <div class="alert alert-danger alert-dismissible" id="flash_data1" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ $message }}
+        </div>
+    @enderror
+    @error('store_number')
+        <div class="alert alert-danger alert-dismissible" id="flash_data2" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ $message }}
+        </div>
+    @enderror
+    @error('sales_id')
+        <div class="alert alert-danger alert-dismissible" id="flash_data3" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ $message }}
+        </div>
+    @enderror
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
@@ -119,10 +115,10 @@
                     </thead>
                     <tbody>
                         @php
-                        $i = 1;
-                    @endphp
+                            $i = 1;
+                        @endphp
                         @foreach ($stores as $store)
-                            <tr>
+                            <tr class="@if ($store->is_more_than_60_days) bg-warning text-dark @endif">
                                 <th scope="row">{{ $i++ }} </th>
                                 <td>{{ $store->store_name }}</td>
                                 <td>{{ $store->address }}</td>
@@ -139,7 +135,7 @@
                                             @csrf
                                             @method('delete')
                                             <button type="submit" class="btn btn-sm btn-danger  ml-2">
-                                               Hapus
+                                                Hapus
                                             </button>
                                         </form>
                                     </div>

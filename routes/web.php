@@ -103,6 +103,7 @@ Route::middleware('auth')->group(function () {
 
     // Laporan
     Route::get('/Laporan/surat-jalan={invoice}', [ReportController::class, 'suratJalan'])->name('suratjalan');
+    Route::get('/Laporan/struk={invoice}', [ReportController::class, 'struk'])->name('struk');
     Route::post('/Laporan/transaksi', [ReportController::class, 'transactionReport'])->name('transactionReport');
     Route::get('/Laporan/pendapatan', [ReportController::class, 'incomeReport'])->name('incomeReport');
 
