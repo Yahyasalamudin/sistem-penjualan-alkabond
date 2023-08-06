@@ -275,7 +275,9 @@ class TransactionController extends Controller
         $transaction = Transaction::find($id);
         $sum_totalpay = Payment::where('transaction_id', $id)->sum('total_pay');
 
-        if ((int) $sum_totalpay > $transaction->remaining_pay) {
+        $check_pay = $sum_totalpay + $request->total_pay;
+
+        if ((int) $request->total_pay > $transaction->remaining_pay) {
             return Redirect::to(URL::previous() . "#step2")->with('error', 'Pembayaran tidak boleh melebihi sisa hutang');
         }
 
@@ -285,8 +287,6 @@ class TransactionController extends Controller
         ]);
 
         $remaining_pay = $transaction->remaining_pay - $request->total_pay;
-
-        $check_pay = $sum_totalpay + $request->total_pay;
 
         if ((int) $check_pay < $transaction->grand_total) {
             Transaction::find($id)->update([

@@ -84,7 +84,7 @@
             <table>
                 <tr class="jarak">
                     <td>
-                        <p style="font-size:16px;font-weight:bold;">DELIVERY ORDER</p>
+                        <p style="font-size:16px;font-weight:bold;">STRUK PEMBAYARAN</p>
                     </td>
                     <td width="150"></td>
                     <td>
@@ -179,7 +179,6 @@
             <tr class="jarak tengah">
                 <td>Dibuat
                 </td>
-                <td width="120">Diperiksa</td>
                 <td width="210">Dikirim</td>
                 <td>Penerima </td>
             </tr>
@@ -187,7 +186,6 @@
             <tr class="jarak tengah">
                 <td>( {{ auth()->user()->name }} )
                 </td>
-                <td width="">(..................................)</td>
                 <td width="210">(..................................)</td>
                 <td>{{ $transaction->stores->store_name }}</td>
             </tr>
@@ -195,8 +193,7 @@
             <tr class="jarak tengah ">
                 <td>Admin
                 </td>
-                <td width="">Gudang</td>
-                <td width="210">Sopir</td>
+                <td width="210">Sales</td>
                 <td>
 
                 </td>

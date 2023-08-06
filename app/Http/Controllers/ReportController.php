@@ -6,6 +6,7 @@ use App\Models\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -66,7 +67,18 @@ class ReportController extends Controller
 
     public function incomeReport()
     {
-        $pdf = Pdf::loadview('reports.incomeReport');
+        $transactions = Transaction::select(
+            DB::raw('YEAR(created_at) as year'),
+            DB::raw('MONTH(created_at) as month'),
+            DB::raw('COUNT(id) as transaction_count'),
+            DB::raw('SUM(grand_total) as transaction_gross'),
+            DB::raw('SUM(grand_total - remaining_pay) as transaction_net'),
+        )
+            ->groupBy('month', 'year')
+            ->orderBy('year')
+            ->get();
+
+        $pdf = Pdf::loadview('reports.incomeReport', compact('transactions'));
         return $pdf->stream();
     }
 }

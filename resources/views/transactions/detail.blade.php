@@ -64,7 +64,7 @@
                     target="_blank">
                     Cetak Surat Jalan
                 </a>
-                @if ($transaction->delivery_status == 'sent')
+                @if ($transaction->delivery_status == 'sent' && $transaction->status == 'paid')
                     <a href="{{ route('struk', $transaction->invoice_code) }}" class="btn btn-primary mb-1" target="_blank">
                         Cetak Struk Transaksi
                     </a>

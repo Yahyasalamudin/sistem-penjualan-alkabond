@@ -145,7 +145,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <div class="h5 mb-0 font-weigh<p></p>t-bold text-gray-800">{{ $transaction_now }}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $transaction_now }}</div>
                         </div>
                     </div>
                 </div>
