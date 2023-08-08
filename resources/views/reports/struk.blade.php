@@ -100,7 +100,15 @@
                     </td>
                     <td width="38"></td>
                     <td width="80">Status</td>
-                    <td>: {{ $transaction->delivery_status }}
+                    <td>:
+                        @if ($transaction->delivery_status == 'sent')
+                            Dikirim
+                        @elseif ($transaction->delivery_status == 'unsent')
+                            Belum Dikirim
+                        @else
+                            Sedang Diproses
+                        @endif
+                    </td>
                     </td>
                 </tr>
                 <tr class="jarak">
