@@ -73,6 +73,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/transactions/{delivery_status}/{id}', [TransactionController::class, 'update_delivery'])->name('transaction.update');
     Route::delete('/transactions/{id}/delete', [TransactionController::class, 'destroy'])->name('transaction.destroy');
     Route::post('/transaction/pay/{id}', [TransactionController::class, 'payment'])->name('transaction.pay');
+    Route::put('/transaction/pay/edit/{id}', [TransactionController::class, 'edit_payment'])->name('transaction.pay.edit');
 
     // User
     Route::get('/users', [UserController::class, 'index'])->name('user.index');

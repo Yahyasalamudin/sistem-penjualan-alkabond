@@ -6,6 +6,17 @@
 
 @extends('layouts.app')
 
+@push('css')
+    <style>
+        .lunas-rotate {
+            font-size: 32px;
+            transform: rotate(-15deg);
+            color: #3d8080;
+            display: inline-block;
+        }
+    </style>
+@endpush
+
 @push('js')
     <script>
         function showConfirmAlert(
@@ -26,11 +37,6 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     callback();
-                    // Swal.fire(
-                    //     'Berhasil!',
-                    //     successText,
-                    //     'success'
-                    // )
                 }
             })
         }
@@ -38,6 +44,76 @@
         let handleSend = () => {
             let sendForm = document.getElementById("sendForm");
             sendForm.submit();
+        }
+
+        var activeInputId = null;
+
+        function toggleEdit(paymentId) {
+            var textElement = document.getElementById(`payment-amount-${paymentId}`);
+            var inputElement = document.getElementById(`payment-input-${paymentId}`);
+            var editButton = document.getElementById(`edit-button-${paymentId}`);
+            var cancelButton = document.getElementById(`cancel-button-${paymentId}`);
+            var saveButton = document.getElementById(`save-button-${paymentId}`);
+
+            if (activeInputId !== null && activeInputId !== paymentId) {
+                var previousInputElement = document.getElementById(`payment-input-${activeInputId}`);
+                var previousTextElement = document.getElementById(`payment-amount-${activeInputId}`);
+                var previousEditButton = document.getElementById(`edit-button-${activeInputId}`);
+                var previousCancelButton = document.getElementById(`cancel-button-${activeInputId}`);
+                var previousSaveButton = document.getElementById(`save-button-${activeInputId}`);
+                previousInputElement.classList.add('d-none');
+                previousCancelButton.classList.add('d-none');
+                previousSaveButton.classList.add('d-none');
+                previousTextElement.classList.remove('d-none');
+                previousEditButton.classList.remove('d-none');
+                previousInputElement.setAttribute('readonly', 'readonly');
+            }
+
+            if (textElement.classList.contains('d-none')) {
+                textElement.classList.remove('d-none');
+                editButton.classList.remove('d-none')
+                inputElement.classList.add('d-none');
+                cancelButton.classList.add('d-none')
+                saveButton.classList.add('d-none')
+                inputElement.setAttribute('readonly', 'readonly');
+                activeInputId = null;
+            } else {
+                textElement.classList.add('d-none');
+                editButton.classList.add('d-none')
+                inputElement.classList.remove('d-none');
+                cancelButton.classList.remove('d-none')
+                saveButton.classList.remove('d-none')
+                inputElement.removeAttribute('readonly');
+                inputElement.focus();
+                activeInputId = paymentId;
+
+                var rupiah = document.getElementById(`payment-input-${paymentId}`);
+                applyFormatRupiah(rupiah);
+            }
+        }
+
+        function applyFormatRupiah(input) {
+            input.value = formatRupiah(input.value, 'Rp. ');
+
+            input.addEventListener('keyup', function(e) {
+                input.value = formatRupiah(input.value, 'Rp. ');
+            });
+        }
+
+        function formatRupiah(angka, prefix) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
         }
 
         document.getElementById('paymentForm').addEventListener('submit', function() {
@@ -61,7 +137,6 @@
             rupiah.value = formatRupiah(this.value, 'Rp. ');
         });
 
-        /* Fungsi formatRupiah */
         function formatRupiah(angka, prefix) {
             var number_string = angka.replace(/[^,\d]/g, '').toString(),
                 split = number_string.split(','),
@@ -301,22 +376,22 @@
                                             {{ session('error') }}
                                         </div>
                                     @endif
+                                    @error('total_pay')
+                                        <div class="alert alert-danger alert-dismissible" id="flash_data" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                     <div class="table-responsive">
-                                        {{-- @if ($transaction->payments->sum('total_pay') == 0)
-                                            <div class="mt-4">
-                                                <div
-                                                    class="d-flex
-                                                    justify-content-center">
-                                                    Pesanan Masih Belum Dibayar
-                                                </div>
-                                            </div>
-                                        @else --}}
                                         <table class="table table-striped table-bordered" width="100%" cellspacing="0">
-                                            <thead>
+                                            <thead class="text-center align-middle">
                                                 <tr>
                                                     <th>No.</th>
                                                     <th>Tanggal Bayar</th>
                                                     <th>Pembayaran</th>
+                                                    <th>Aksi</th>
                                                 </tr>
                                             </thead>
                                             @php
@@ -324,25 +399,59 @@
                                             @endphp
                                             <tbody>
                                                 @foreach ($transaction->payments->sortBy('created_at') as $payment)
-                                                    <tr>
-                                                        <th scope="row">{{ $i++ }}</th>
-                                                        <td>
-                                                            {{ Carbon::parse($payment->created_at)->isoFormat('D MMMM Y HH:mm') }}
-                                                        </td>
-                                                        <td>
-                                                            -Rp {{ number_format($payment->total_pay) }}
-                                                        </td>
-                                                    </tr>
+                                                    <form action="{{ route('transaction.pay.edit', $payment->id) }}"
+                                                        method="post">
+                                                        @csrf
+                                                        @method('put')
+                                                        <tr>
+                                                            <th class="text-center align-middle" scope="row">
+                                                                {{ $i++ }}
+                                                            </th>
+                                                            <td class=" text-center align-middle">
+                                                                {{ Carbon::parse($payment->created_at)->isoFormat('D MMMM Y HH:mm') }}
+                                                            </td>
+                                                            <td class="text-center align-middle col-4">
+                                                                <span id="payment-amount-{{ $payment->id }}">
+                                                                    -Rp {{ number_format($payment->total_pay) }}
+                                                                </span>
+                                                                <input type="text" name="total_pay"
+                                                                    id="payment-input-{{ $payment->id }}"
+                                                                    class="form-control d-none"
+                                                                    value="{{ $payment->total_pay }}">
+                                                            </td>
+                                                            <td class="text-center align-middle">
+                                                                <button type="button" class="btn btn-sm btn-success"
+                                                                    onclick="toggleEdit({{ $payment->id }})"
+                                                                    id="edit-button-{{ $payment->id }}">
+                                                                    Edit
+                                                                </button>
+                                                                <div class="btn-group-vertical">
+                                                                    <button type="button"
+                                                                        class="btn btn-sm btn-danger d-none"
+                                                                        onclick="toggleEdit({{ $payment->id }})"
+                                                                        id="cancel-button-{{ $payment->id }}">
+                                                                        Batal
+                                                                    </button>
+                                                                    <button type="submit"
+                                                                        class="btn btn-sm btn-primary d-none"
+                                                                        id="save-button-{{ $payment->id }}">
+                                                                        Simpan
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </form>
                                                 @endforeach
 
-                                                @if ($transaction->remaining_pay !== 0)
+                                                @if ($transaction->delivery_status == 'sent' && $transaction->remaining_pay !== 0)
                                                     <form action="{{ route('transaction.pay', $transaction->id) }}"
                                                         method="post">
                                                         @csrf
                                                         <tr>
-                                                            <td scope="row" class="text-center align-middle">Bayar
-                                                                Cicilan</td>
-                                                            <td class="text-center align-middle">
+                                                            <td scope="row" class="text-center align-middle">
+                                                                Bayar Cicilan
+                                                            </td>
+                                                            <td colspan="2" class="text-center align-middle">
                                                                 <input class="form-control" type="text"
                                                                     name="total_pay" id="total_pay"
                                                                     placeholder="Masukkan Jumlah Cicilan">
@@ -357,16 +466,19 @@
                                                 @endif
 
                                                 <tr>
-                                                    <td scope="row" class="grnd">Total
+                                                    <td class="text-center align-middle" scope="row" colspan="2"
+                                                        class="grnd">Total
                                                     </td>
-                                                    <td colspan="2" class="grnd1 text-center">
+                                                    <td class="grnd1 text-center">
                                                         -Rp
                                                         {{ number_format($transaction->payments->sum('total_pay')) }}
+                                                    </td>
+                                                    <td class="text-center align-middle">
+                                                        <h3>-</h3>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        {{-- @endif --}}
                                     </div>
                                 </div>
                             </div>
@@ -380,15 +492,25 @@
                                                     <p class="jumlh">
                                                         Sisa Hutang
                                                     </p>
-                                                    <h2 class="total">
-                                                        Rp {{ number_format($transaction->remaining_pay) }}
-                                                    </h2>
+                                                    @if ($transaction->remaining_pay == 0)
+                                                        <p class="total">
+                                                            <span class="font-italic lunas-rotate">Lunas</span>
+                                                        </p>
+                                                    @else
+                                                        <h2 class="total">
+                                                            Rp {{ number_format($transaction->remaining_pay) }}
+                                                        </h2>
+                                                    @endif
                                                 </div>
-
-                                                <h6 class="mb-0 text-center font-weight-bold text-gray-800">Total
-                                                    Hutang : Rp {{ number_format($transaction->grand_total) }}</h6>
+                                                <h6 class="mb-0 text-center font-weight-bold text-gray-800">
+                                                    Total Hutang :
+                                                    @if ($transaction->remaining_pay == 0)
+                                                        <del> Rp {{ number_format($transaction->grand_total) }} </del>
+                                                    @else
+                                                        Rp {{ number_format($transaction->grand_total) }}
+                                                    @endif
+                                                </h6>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -435,47 +557,19 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    {{-- <div class="table-responsive">
-                                            <table class="table table-striped table-bordered" width="100%"
-                                                cellspacing="0">
-                                                <thead>
-                                                    <th>Nama Produk</th>
-                                                    <th>Jumlah Return</th>
-                                                    <th>Jumlah Product</th>
-                                                    <th>Keterangan Return</th>
-                                                </thead>
-                                                @foreach ($transaction->transaction_details as $detail)
-                                                    @if (isset($detail->return_id))
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>{{ $detail->product->product_name }}</td>
-                                                        </tr>
-                                                    </tbody>
-                                                    @endif
-                                                @endforeach
-                                            </table>
-                                        </div> --}}
                                 </div>
                             </div>
                         </div>
                     </div>
                 @endif
             </div>
-            {{-- <div class="row justify-content-between">
-            <div class="col-auto"><button type="button" class="btn btn-secondary" data-enchanter="previous">Previous</button></div>
-            <div class="col-auto">
-              <button type="button" class="btn btn-primary" data-enchanter="next">Next</button>
-              <button type="submit" class="btn btn-primary" data-enchanter="finish">Finish</button>
-            </div>
-          </div> --}}
-            {{-- </form> --}}
         </div>
     </div>
 @endsection
 
 @push('js')
     <script>
-        var id = window.location.hash.substring(1);
+        var id = @json(session('step', null));
         var triggerEl = document.querySelector(`#${id}-tab`)
         var tab = new bootstrap.Tab(triggerEl)
         tab.show()

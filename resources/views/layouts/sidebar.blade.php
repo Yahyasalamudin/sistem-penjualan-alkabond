@@ -1,27 +1,22 @@
  <ul class="navbar-nav bg-gradient-color sidebar sidebar-dark accordion" id="accordionSidebar">
      <!-- Sidebar - Brand -->
-     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
          <div class="sidebar-brand-icon ">
-             {{-- <i class="fas fa-laugh-wink"></i> --}}
              <img src="{{ asset('img/logo.png') }}" width="40px" alt="">
          </div>
          <div class="sidebar-brand-text mx-3">Mortar Alkabon</div>
      </a>
 
-     <!-- Divider -->
      <hr class="sidebar-divider my-0">
 
-     <!-- Nav Item - Dashboard -->
      <li class="nav-item {{ Route::is('dashboard*') ? 'active' : '' }}">
          <a class="nav-link" href="{{ route('dashboard') }}">
              <i class="fas fa-fw fa-solid fa-home"></i>
              <span>Dashboard</span></a>
      </li>
 
-     <!-- Divider -->
      <hr class="sidebar-divider">
 
-     <!-- Heading -->
      <div class="sidebar-heading">
          Data
      </div>

@@ -94,6 +94,7 @@ class DashboardController extends Controller
             ->sum('remaining_pay');
 
         $payment = Payment::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
             ->when($user->role == 'owner', function ($query) use ($city) {
                 $query->whereHas('transactions.sales', function ($query) use ($city) {
                     $query->where('city', $city);

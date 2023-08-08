@@ -270,7 +270,7 @@ class TransactionController extends Controller
         $check = Transaction::find($id);
 
         if ($check->status == 'paid') {
-            return Redirect::to(URL::previous() . "#step2")->with('error', 'Data Transaksi sudah lunas');
+            return redirect()->back()->with(['step' => 'step2', 'error' => 'Data Transaksi sudah lunas']);
         }
 
         $transaction = Transaction::find($id);
@@ -280,7 +280,7 @@ class TransactionController extends Controller
         $check_pay = $sum_totalpay + $total_pay;
 
         if ((int) $total_pay > $transaction->remaining_pay) {
-            return Redirect::to(URL::previous() . "#step2")->with('error', 'Pembayaran tidak boleh melebihi sisa hutang');
+            return redirect()->back()->with(['step' => 'step2', 'error' => 'Pembayaran tidak boleh melebihi sisa hutang']);
         }
 
         $lastPayment = Payment::where('transaction_id', $id)
@@ -289,7 +289,7 @@ class TransactionController extends Controller
             ->first();
 
         if ($lastPayment) {
-            return Redirect::to(URL::previous() . "#step2")->with('error', 'Pembayaran hanya bisa dilakukan sekali dalam 5 detik. Mohon coba lagi jika perlu.');
+            return redirect()->back()->with(['step' => 'step2', 'success' => 'Pembayaran berhasil']);
         }
 
         Payment::create([
@@ -323,6 +323,57 @@ class TransactionController extends Controller
             }
         }
 
-        return Redirect::to(URL::previous() . "#step2")->with('success', 'Pembayaran berhasil');
+        return redirect()->back()->with(['step' => 'step2', 'success' => 'Pembayaran berhasil']);
+    }
+
+    public function edit_payment(Request $request, $id)
+    {
+        $request->validate([
+            'total_pay' => 'required'
+        ]);
+
+        $payment = Payment::find($id);
+        $transaction = Transaction::find($payment->transaction_id);
+        $total_pay = str_replace(['Rp. ', '.', ','], '', $request->total_pay);
+
+        if ($payment->total_pay > $total_pay) {
+            $pay = $payment->total_pay - $total_pay;
+
+            $transaction->update([
+                'remaining_pay' => $transaction->remaining_pay + $pay
+            ]);
+        } else {
+            $pay = $total_pay - $payment->total_pay;
+
+            if ($pay > $transaction->remaining_pay) {
+                return redirect()->back()->with(['step' => 'step2', 'error' => 'Pembayaran tidak boleh melebihi sisa hutang']);
+            }
+
+            $transaction->update([
+                'remaining_pay' => $transaction->remaining_pay - $pay
+            ]);
+        }
+
+        if ($total_pay == 0) {
+            $payment->delete();
+        } else {
+            $payment->update([
+                'total_pay' => $total_pay
+            ]);
+        }
+
+        $sum_totalpay = Payment::where('transaction_id', $transaction->id)->sum('total_pay');
+
+        if ($sum_totalpay < $transaction->grand_total) {
+            $transaction->update([
+                'status' => 'partial'
+            ]);
+        } elseif ($sum_totalpay == $transaction->grand_total) {
+            $transaction->update([
+                'status' => 'paid'
+            ]);
+        }
+
+        return redirect()->back()->with(['step' => 'step2', 'success' => 'Pembayaran berhasil diedit']);
     }
 }

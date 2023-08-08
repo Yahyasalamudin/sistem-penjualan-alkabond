@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -36,7 +37,14 @@ class TypeController extends Controller
             'type' => 'required'
         ]);
 
-        Type::find($id)->update([
+        $type = Type::find($id);
+
+        $products = Product::where('product_name', $type->type)->get();
+        foreach ($products as $product) {
+            $product->update(['product_name' => $request->type]);
+        }
+
+        $type->update([
             'type' => $request->type
         ]);
 

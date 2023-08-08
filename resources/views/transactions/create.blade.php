@@ -21,29 +21,39 @@
 @push('js')
     @livewireScripts()
     <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function() {
-            var rupiah = document.getElementById('rupiah');
-            rupiah.value = formatRupiah(rupiah.value, 'Rp. ');
+        document.addEventListener("livewire:load", function() {
+            Livewire.on('componentLoaded', function() {
+                applyFormatRupiah();
+            });
+
+            applyFormatRupiah();
         });
 
-        var rupiah = document.getElementById('rupiah');
-        rupiah.addEventListener('keyup', function(e) {
-            // tambahkan 'Rp.' pada saat form di ketik
-            // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
-            rupiah.value = formatRupiah(this.value, 'Rp. ');
-        });
+        function applyFormatRupiah() {
+            var rupiahInputs = document.querySelectorAll('[data-format="rupiah"]');
 
-        /* Fungsi formatRupiah */
+            rupiahInputs.forEach(function(input) {
+                var inputValue = input.value;
+                var formattedValue = formatRupiah(inputValue, 'Rp. ');
+                input.value = formattedValue;
+
+                input.addEventListener('input', function(event) {
+                    var inputValue = event.target.value;
+                    var formattedValue = formatRupiah(inputValue, 'Rp. ');
+                    event.target.value = formattedValue;
+                });
+            });
+        }
+
         function formatRupiah(angka, prefix) {
-            var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                split = number_string.split(','),
-                sisa = split[0].length % 3,
-                rupiah = split[0].substr(0, sisa),
-                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+            var number_string = angka.replace(/[^,\d]/g, '').toString();
+            var split = number_string.split(',');
+            var sisa = split[0].length % 3;
+            var rupiah = split[0].substr(0, sisa);
+            var ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-            // tambahkan titik jika yang di input sudah menjadi angka ribuan
             if (ribuan) {
-                separator = sisa ? '.' : '';
+                var separator = sisa ? '.' : '';
                 rupiah += separator + ribuan.join('.');
             }
 

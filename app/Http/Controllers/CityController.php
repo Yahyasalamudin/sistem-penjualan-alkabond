@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\City;
+use App\Models\Sales;
+use App\Models\Store;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
@@ -35,16 +38,31 @@ class CityController extends Controller
         $request->validate([
             'city' => 'required|regex:/^[a-zA-Z\s]*$/|unique:cities'
         ], [
-            'city.regex' => 'Nama Kota tidak boleh berupa angka'
+            'city.regex' => 'Kota tidak boleh berupa angka'
+        ], [
+            'city' => 'Kota'
         ]);
 
-        City::find($id)->update([
+        $city = City::find($id);
+
+        $users = User::where('city', $city->city)->get();
+        foreach ($users as $user) {
+            $user->update(['city' => $request->city]);
+        }
+
+        $sales = Sales::where('city', $city->city)->get();
+        foreach ($sales as $s) {
+            $s->update(['city' => $request->city]);
+        }
+
+        $stores = Store::where('city_branch', $city->city)->get();
+        foreach ($stores as $store) {
+            $store->update(['city_branch' => $request->city]);
+        }
+
+        $city->update([
             'city' => $request->city
         ]);
-
-        // [
-        //     'city' => 'Nama Kota tidak boleh berupa angka'
-        // ]
 
         return redirect('cities')->with('success', 'Kota berhasil diubah');
     }

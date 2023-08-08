@@ -77,10 +77,10 @@
                                 value="{{ $product_cart->quantity }}">
                         </td>
                         <td>
-                            <input class="form-control mb-3" type="text"
-                                wire:model="product_cart.{{ $product_cart->id }}.price"
+                            <input class="form-control mb-3" type="text" data-format="rupiah"
+                                wire:model.lazy="product_cart.{{ $product_cart->id }}.price"
                                 wire:blur="update({{ $product_cart->id }})" placeholder="Masukkan Harga"
-                                value="{{ $product_cart->price }}" id="rupiah">
+                                value="{{ $product_cart->price }}" id="rupiah_{{ $product_cart->id }}">
                         </td>
                         <td>
                             {{ 'Rp ' . number_format(($product_cart->quantity ?: 0) * ($product_cart->price ?: 0)) }}

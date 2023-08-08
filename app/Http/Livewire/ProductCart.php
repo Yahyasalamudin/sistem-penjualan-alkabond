@@ -18,6 +18,7 @@ class ProductCart extends Component
         $this->user = auth()->user();
         $this->types = Type::get();
         $this->products = Product::get();
+        $this->emit('componentLoaded');
 
         $productCarts = ProductCartModel::where('user_id', $this->user->id)->get();
 
@@ -53,10 +54,14 @@ class ProductCart extends Component
             'user.id.unique' => 'Anda sudah menambahkan produk ini ke keranjang.',
         ]);
 
-        ProductCartModel::create([
+        $product_cart = ProductCartModel::create([
             'user_id' => $this->user->id,
             'product_id' => $product_id,
         ]);
+
+        if ($product_cart) {
+            $this->emit('componentLoaded');
+        }
     }
 
     public function update($productCartId)
@@ -66,6 +71,7 @@ class ProductCart extends Component
         if ($productCart) {
             $data = $this->product_cart[$productCartId] ?? [];
 
+            $price = '';
             if (!empty($data['price'])) {
                 $price = str_replace(['Rp. ', '.', ','], '', $data['price']);
             }
@@ -87,5 +93,7 @@ class ProductCart extends Component
     public function delete($productCartId)
     {
         ProductCartModel::find($productCartId)->delete();
+
+        $this->emit('componentLoaded');
     }
 }
