@@ -22,6 +22,7 @@
                 @csrf
                 <select class="form-control  @error('active') is-invalid @enderror" name="filterKota"
                     id="input-filter-kota">
+                    <option value="">Semua Kota</option>
                     @foreach ($kota as $k)
                         <option {{ session('filterKota') == $k->city ? 'selected' : '' }}>{{ $k->city }}</option>
                     @endforeach

@@ -207,9 +207,9 @@
 
                     <a class="nav-link" id="step2-tab" data-bs-toggle="tab" href="#step2">Pembayaran</a>
 
-                    @if (isset($transaction->payment_method))
+                    {{-- @if (isset($transaction->payment_method))
                         <a class="nav-link" id="step3-tab" data-bs-toggle="tab" href="#step3">Retur Pesanan</a>
-                    @endif
+                    @endif --}}
                 </div>
                 <hr>
             </nav>

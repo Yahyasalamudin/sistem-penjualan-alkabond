@@ -43,7 +43,7 @@ class DashboardController extends Controller
 
     public function filterKota(Request $request)
     {
-        session(['filterKota' => $request->filterKota]);
+        session(['filterKota' => $request->filterKota ?? ""]);
 
         return back();
     }
