@@ -127,22 +127,24 @@ class TransactionController extends Controller
             }
         }
 
-        $check = Transaction::where('store_id', $request->store_id)
-            ->where('sales_id', auth()->user()->id)
+        $store = Store::find($request->store_id);
+
+        $check = Transaction::where('store_id', $store->store_id)
+            ->where('sales_id', $store->sales_id)
             ->where('status', 'unpaid')
             ->where('delivery_status', 'unsent')
             ->first();
 
         if (empty($check)) {
-            $transaction = Transaction::create([
+            Transaction::create([
                 'invoice_code' => $invoice_code,
                 'store_id' => $request->store_id,
-                'sales_id' => auth()->user()->id
+                'sales_id' => $store->sales_id
             ]);
         }
 
         $check_transactions = Transaction::where('store_id', $request->store_id)
-            ->where('sales_id', auth()->user()->id)
+            ->where('sales_id', $store->sales_id)
             ->where('status', 'unpaid')
             ->where('delivery_status', 'unsent')
             ->first();
@@ -152,7 +154,7 @@ class TransactionController extends Controller
         foreach ($product_cart as $pc) {
             $check_detail = TransactionDetail::where('transaction_id', $check_transactions['id'])->where('product_id', $pc->product_id)->first();
             if (empty($check_detail)) {
-                $transaction = TransactionDetail::create([
+                TransactionDetail::create([
                     'transaction_id' => $check_transactions['id'],
                     'product_id' => $pc->product_id,
                     'quantity' => $pc->quantity,
@@ -161,7 +163,7 @@ class TransactionController extends Controller
                 ]);
             } else {
                 $quantity_new = $pc->quantity + $check_detail['quantity'];
-                $transaction = $check_detail->update([
+                $check_detail->update([
                     'quantity' => $quantity_new,
                     'subtotal' => $quantity_new * $check_detail['price']
                 ]);
@@ -176,10 +178,6 @@ class TransactionController extends Controller
             'grand_total' => $grand_total,
             'remaining_pay' => $grand_total
         ]);
-
-        $transaction = Transaction::with('transaction_details')
-            ->with('payments')
-            ->find($check_transactions->id);
 
         return redirect('/transactions/unsent')->with('success', 'Transaksi Berhasil ditambahkan!');
     }
