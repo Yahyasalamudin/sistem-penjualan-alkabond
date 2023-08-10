@@ -20,7 +20,10 @@ class StoreController extends Controller
         $role = auth()->user()->role;
         $cityFilter = ($role == 'owner') ? $city : auth()->user()->city;
 
-        $stores = Store::where('city_branch', $cityFilter)->get();
+        // $stores = Store::where('city_branch', $cityFilter)->get();
+        $stores = Store::when($cityFilter, function ($query) use ($cityFilter) {
+            $query->where('city_branch', $cityFilter);
+        })->get();
 
         $today = Carbon::today();
         foreach ($stores as $key => $store) {
@@ -28,11 +31,14 @@ class StoreController extends Controller
             $stores[$key]['last_transaction_date'] = $latest_transaction;
             $stores[$key]['is_more_than_60_days'] = $latest_transaction ? $latest_transaction->diffInDays($today) > 60 : false;
         }
+
         $stores = $stores->sortBy(function ($store) {
             return $store['last_transaction_date'] ?? Carbon::now()->addYears(100);
         });
 
-        $sales = Sales::where('city', $cityFilter)->get();
+        $sales = Sales::when($cityFilter, function ($query) use ($cityFilter) {
+            $query->where('city', $cityFilter);
+        })->get();
 
         return view('stores.index', compact('title', 'stores', 'sales'));
     }

@@ -6,6 +6,7 @@ use App\Models\Sales;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -78,7 +79,7 @@ class AuthController extends Controller
 
         $credentials = $request->only('email_username', 'password');
 
-        if (Auth::attempt(['email' => $credentials['email_username'], 'password' => $credentials['password']]) || Auth::attempt(['username' => $credentials['email_username'], 'password' => $credentials['password']])) {
+        if (Auth::attempt(['email' => $credentials['email_username'], 'password' => $credentials['password']], $request->remember) || Auth::attempt(['username' => $credentials['email_username'], 'password' => $credentials['password']], $request->remember)) {
             return redirect('dashboard');
         } else {
             $email = User::where('email', $credentials['email_username'])->first();
@@ -94,6 +95,6 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
-        return redirect('/login');
+        return redirect('/login')->withCookie(Cookie::forget('remember_token'));
     }
 }

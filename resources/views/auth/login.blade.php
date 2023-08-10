@@ -43,7 +43,13 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
+                            </div>
 
+                            <div class="baris d-flex align-items-center mt-3 ml-3">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                                    <label class="form-check-label" for="remember">Ingat Saya</label>
+                                </div>
                             </div>
 
                             <div class="baris" style="padding-left: 20px;">

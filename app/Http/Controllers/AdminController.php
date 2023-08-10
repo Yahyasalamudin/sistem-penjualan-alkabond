@@ -12,11 +12,11 @@ class AdminController extends Controller
     public function index()
     {
         $auth = auth()->user();
-        $kota = session('filterKota');
+        $city = session('filterKota');
         $users = User::where('role', 'admin')->latest()->whereNotIn('id', [$auth->id]);
 
-        if ($auth->role == 'owner') {
-            $users = $users->where('city', $kota);
+        if ($auth->role == 'owner' && !empty($city)) {
+            $users = $users->where('city', $city);
         }
 
         return view('admins.index', [

@@ -22,16 +22,17 @@ class TransactionController extends Controller
         $user = auth()->user();
         $city = session('filterKota');
 
-        $transactions = Transaction::when($user->role == 'owner', function ($query) use ($city) {
-            $query->whereHas('sales', function ($query) use ($city) {
-                $query->where('city', $city);
-            });
-        })
-            ->when($user->role == 'admin', function ($query) use ($user) {
+        $transactions = Transaction::when(!empty($city), function ($query) use ($user, $city) {
+            $query->when($user->role == 'owner', function ($query) use ($city) {
+                $query->whereHas('sales', function ($query) use ($city) {
+                    $query->where('city', $city);
+                });
+            })->when($user->role == 'admin', function ($query) use ($user) {
                 $query->whereHas('sales', function ($query) use ($user) {
                     $query->where('city', $user->city);
                 });
             });
+        });
 
         switch ($status) {
             case 'unsent':
@@ -366,10 +367,27 @@ class TransactionController extends Controller
             $transaction->update([
                 'status' => 'partial'
             ]);
+
+            if ($transaction->payments->count() == 0) {
+                $transaction->update([
+                    'payment_method' => null,
+                    'status' => 'unpaid'
+                ]);
+            } else {
+                $transaction->update([
+                    'payment_method' => 'tempo'
+                ]);
+            }
         } elseif ($sum_totalpay == $transaction->grand_total) {
             $transaction->update([
                 'status' => 'paid'
             ]);
+
+            if ($transaction->payments->count() == 1) {
+                $transaction->update([
+                    'payment_method' => 'cash'
+                ]);
+            }
         }
 
         return redirect()->back()->with(['step' => 'step2', 'success' => 'Pembayaran berhasil diedit']);

@@ -72,6 +72,17 @@ body {
     box-shadow: 0 0 5px rgba(0, 80, 80, 0.4);
     border-radius: 4px;
 }
+
+.form-check-input[type="checkbox"] {
+    width: 1em;
+    height: 1em;
+    cursor: pointer;
+}
+
+.form-check-label[for="remember"] {
+    cursor: pointer;
+}
+
 .tombol {
     transition: all 0.5s ease;
     width: 60%;

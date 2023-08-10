@@ -15,7 +15,7 @@ class SalesController extends Controller
         $city = session('filterKota');
 
         $sales = Sales::where(function ($query) use ($city, $user) {
-            if ($user->role == 'owner') {
+            if ($user->role == 'owner' && !empty($city)) {
                 $query->where('city', $city);
             } elseif ($user->rol == 'admin') {
                 $query->where('city', $user->city);
