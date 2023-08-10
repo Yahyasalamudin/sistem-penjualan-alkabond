@@ -22,9 +22,9 @@
         <div id="content-wrapper">
             <div id="content">
                 <div class="container text-center">
-                    <div class="error mx-auto" data-text="404">404</div>
-                    <p class="lead text-gray-800 mb-5">Page Not Found</p>
-                    <p class="text-gray-500 mb-0">Maaf, halaman yang Anda cari tidak ditemukan.</p>
+                    <div class="error mx-auto" data-text="500">500</div>
+                    <p class="lead text-gray-800 mb-5">Internal Server Error</p>
+                    <p class="text-gray-500 mb-0">Kami menemui masalah saat memproses permintaan Anda.</p>
                     <a href="/">&larr; Kembali ke Beranda</a>
                 </div>
             </div>

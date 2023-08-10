@@ -22,10 +22,10 @@
         <div id="content-wrapper">
             <div id="content">
                 <div class="container text-center">
-                    <div class="error mx-auto" data-text="404">404</div>
-                    <p class="lead text-gray-800 mb-5">Page Not Found</p>
-                    <p class="text-gray-500 mb-0">Maaf, halaman yang Anda cari tidak ditemukan.</p>
-                    <a href="/">&larr; Kembali ke Beranda</a>
+                    <div class="error mx-auto" data-text="401">401</div>
+                    <p class="lead text-gray-800 mb-5">Unauthorized</p>
+                    <p class="text-gray-500 mb-0">Mohon maaf, Anda harus login untuk melanjutkan.</p>
+                    <a href="/login">&larr; Kembali ke halaman login</a>
                 </div>
             </div>
 

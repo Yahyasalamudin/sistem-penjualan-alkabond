@@ -32,8 +32,13 @@ Route::get('/', function () {
     return redirect('login');
 });
 
-Route::get('/login', [AuthController::class, 'login'])->name('login');
+// Error Handle
+Route::get('/Unauthorized', function () {
+    return view('errors.401');
+})->name('unauthorized');
 
+// Login
+Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/process-login', [AuthController::class, 'actionLogin'])->name('actionLogin');
 
 Route::middleware('auth')->group(function () {
@@ -62,8 +67,8 @@ Route::middleware('auth')->group(function () {
     // CRUD Data Product
     Route::get('/products', [ProductController::class, 'index'])->name('product.index');
     Route::post('/products', [ProductController::class, 'store'])->name('product.store');
-    // Route::get('/product/{id}/edit', [ProductController::class, 'edit'])->name('product.edit');
-    // Route::put('/product/{id}/update', [ProductController::class, 'update'])->name('product.update');
+    Route::get('/product/{id}/edit', [ProductController::class, 'edit'])->name('product.edit');
+    Route::put('/product/{id}/update', [ProductController::class, 'update'])->name('product.update');
     Route::delete('/product/{id}/delete', [ProductController::class, 'destroy'])->name('product.destroy');
 
     // Transaction

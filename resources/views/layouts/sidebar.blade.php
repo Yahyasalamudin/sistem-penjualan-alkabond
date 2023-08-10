@@ -12,7 +12,7 @@
      <li class="nav-item {{ Route::is('dashboard*') ? 'active' : '' }}">
          <a class="nav-link" href="{{ route('dashboard') }}">
              <i class="fas fa-fw fa-solid fa-home"></i>
-             <span>Dashboard</span></a>
+             <span>Beranda</span></a>
      </li>
 
      <hr class="sidebar-divider">
