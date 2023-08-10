@@ -10,6 +10,7 @@ use App\Models\TransactionDetail;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
@@ -22,62 +23,70 @@ class TransactionController extends Controller
         $user = auth()->user();
         $city = session('filterKota');
 
-        $transactions = Transaction::when(!empty($city), function ($query) use ($user, $city) {
-            $query->when($user->role == 'owner', function ($query) use ($city) {
-                $query->whereHas('sales', function ($query) use ($city) {
-                    $query->where('city', $city);
-                });
-            })->when($user->role == 'admin', function ($query) use ($user) {
-                $query->whereHas('sales', function ($query) use ($user) {
-                    $query->where('city', $user->city);
+        $cacheKey = "transactions_{$status}_{$user->id}_{$city}";
+
+        $transactions = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($status, $user, $city) {
+            $query = Transaction::query();
+
+            $transactions = $query->when(!empty($city), function ($query) use ($user, $city) {
+                $query->when($user->role == 'owner', function ($query) use ($city) {
+                    $query->whereHas('sales', function ($query) use ($city) {
+                        $query->where('city', $city);
+                    });
+                })->when($user->role == 'admin', function ($query) use ($user) {
+                    $query->whereHas('sales', function ($query) use ($user) {
+                        $query->where('city', $user->city);
+                    });
                 });
             });
-        });
 
-        switch ($status) {
-            case 'unsent':
-                $transactions = $transactions
-                    ->where('status', 'unpaid')
-                    ->where('delivery_status', 'unsent');
-                break;
-            case 'proccess':
-                $transactions = $transactions
-                    ->where('status', 'unpaid')
-                    ->where('delivery_status', 'proccess');
-                break;
-                // case 'sent':
-                //     $transactions = $transactions
-                //         ->where('status', 'unpaid')
-                //         ->where('delivery_status', 'sent');
-                //     break;
-            case 'partial':
-                $transactions = $transactions
-                    ->where('delivery_status', 'sent')
-                    ->whereIn('status', ['partial', 'unpaid'])
-                    ->where(function ($query) {
-                        $query->whereIn('payment_method', ['tempo'])
-                            ->orWhereNull('payment_method');
-                    })
-                    ->orderBy('sent_at', 'asc');
-                break;
-            case 'paid':
-                $transactions = $transactions
-                    ->where('status', 'paid')
-                    ->where('delivery_status', 'sent');
-                break;
-        }
-
-        $transactions = $transactions->get();
-
-        $tenggatWaktu = "";
-        foreach ($transactions as $transaction) {
-            if (isset($transaction->sent_at)) {
-                $sent_at = Carbon::createFromFormat('Y-m-d H:i:s', $transaction->sent_at);
-                $tenggatWaktu = $sent_at->diffInDays(Carbon::now());
-                $selisih = 30 - $tenggatWaktu;
-                $transaction['tenggatWaktu'] = ($selisih >= 0) ? $selisih : 0;
+            switch ($status) {
+                case 'unsent':
+                    $transactions = $transactions
+                        ->where('status', 'unpaid')
+                        ->where('delivery_status', 'unsent');
+                    break;
+                case 'proccess':
+                    $transactions = $transactions
+                        ->where('status', 'unpaid')
+                        ->where('delivery_status', 'proccess');
+                    break;
+                    // case 'sent':
+                    //     $transactions = $transactions
+                    //         ->where('status', 'unpaid')
+                    //         ->where('delivery_status', 'sent');
+                    //     break;
+                case 'partial':
+                    $transactions = $transactions
+                        ->where('delivery_status', 'sent')
+                        ->whereIn('status', ['partial', 'unpaid'])
+                        ->where(function ($query) {
+                            $query->whereIn('payment_method', ['tempo'])
+                                ->orWhereNull('payment_method');
+                        })
+                        ->orderBy('sent_at', 'asc');
+                    break;
+                case 'paid':
+                    $transactions = $transactions
+                        ->where('status', 'paid')
+                        ->where('delivery_status', 'sent');
+                    break;
             }
-        }
+
+            $transactions = $transactions->get();
+
+            $tenggatWaktu = "";
+            foreach ($transactions as $transaction) {
+                if (isset($transaction->sent_at)) {
+                    $sent_at = Carbon::createFromFormat('Y-m-d H:i:s', $transaction->sent_at);
+                    $tenggatWaktu = $sent_at->diffInDays(Carbon::now());
+                    $selisih = 30 - $tenggatWaktu;
+                    $transaction['tenggatWaktu'] = ($selisih >= 0) ? $selisih : 0;
+                }
+            }
+
+            return $transactions;
+        });
 
         return view('transactions.index', compact('title', 'transactions', 'status'));
     }
