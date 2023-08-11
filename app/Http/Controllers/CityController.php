@@ -23,7 +23,9 @@ class CityController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'city' => 'required|string|unique:cities'
+            'city' => 'required|string|regex:/^[a-zA-Z\s]*$/|unique:cities'
+        ], [
+            'city.regex' => 'Kota tidak boleh berupa angka'
         ]);
 
         City::create([
@@ -39,8 +41,6 @@ class CityController extends Controller
             'city' => 'required|regex:/^[a-zA-Z\s]*$/|unique:cities'
         ], [
             'city.regex' => 'Kota tidak boleh berupa angka'
-        ], [
-            'city' => 'Kota'
         ]);
 
         $city = City::find($id);

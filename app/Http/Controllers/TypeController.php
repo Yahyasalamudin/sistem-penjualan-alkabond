@@ -28,7 +28,7 @@ class TypeController extends Controller
             'type' => $request->type
         ]);
 
-        return back()->with('success', 'Data Type berhasil dibuat');
+        return back()->with('success', 'Jenis Produk berhasil ditambahkan');
     }
 
     public function update(Request $request, $id)
@@ -48,13 +48,13 @@ class TypeController extends Controller
             'type' => $request->type
         ]);
 
-        return redirect('types')->with('success', 'Data type berhasil di edit');
+        return redirect('types')->with('success', 'Jenis Produk berhasil diubah');
     }
 
     public function destroy($id)
     {
         Type::find($id)->delete();
 
-        return back()->with('success', 'Data Type berhasil dihapus');
+        return back()->with('success', 'Jenis Produk berhasil dihapus');
     }
 }

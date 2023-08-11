@@ -32,12 +32,18 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'username' => 'required|unique:users',
-            'email' => 'required|unique:users|email',
+            // 'email' => 'required|unique:users|email',
             'phone_number' => 'required',
             'password' => 'required',
             'current_password' => 'required|same:password',
             'city' => 'required',
         ]);
+
+        if ($request->email) {
+            $request->validate([
+                'email' => 'unique:sales|email',
+            ]);
+        }
 
         User::create([
             'name' => $request->name,

@@ -155,7 +155,7 @@
                                                 </a>
                                             @else
                                                 <a href="{{ route('transaction.show', ['status' => $transaction->status, 'id' => $transaction->id]) }}"
-                                                    class="btn  btn-warning">
+                                                    class="btn btn-warning">
                                                     Detail
                                                 </a>
                                             @endif

@@ -2,14 +2,12 @@
 
 @section('content')
     <div class="content-header">
-
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="h3 mb-3  text-gray-800">Edit Admin</h1>
 
             </div>
-        </div><!-- /.row -->
-
+        </div>
     </div>
 
     <div class="row">
@@ -154,6 +152,8 @@
                                         <a href="{{ route('admin.index') }}" class="btn btn-secondary ">Batal</a>
                                         <button type="submit" class="btn btcolor ml-2 text-white">Edit Admin</button>
                                     </div>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>

@@ -146,6 +146,27 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'Nama',
+        'sales_name' => 'Nama Sales',
+        'phone_number' => 'Nomer HP',
+        'city' => 'Kota',
+        'city_branch' => 'Kota',
+        'password' => 'Kata Sandi',
+        'current_password' => 'Konfirmasi Kata Sandi',
+        'product_name' => 'Nama Produk',
+        'product_brand' => 'Merk Produk',
+        'unit_weight' => 'Satuan Berat',
+        'store_name' => 'Nama Toko',
+        'address' => 'Alamat',
+        'store_number' => 'Nomer Toko',
+        'sales_id' => 'Sales',
+        'store_id' => 'Toko',
+        'details' => 'Detail Barang',
+        'details.*.product_id' => 'Barang',
+        'details.*.price' => 'Harga Barang',
+        'total_pay' => 'Jumlah Pembayaran',
+        'type' => 'Jenis Barang'
+    ],
 
 ];

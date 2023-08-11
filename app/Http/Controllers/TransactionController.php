@@ -108,12 +108,10 @@ class TransactionController extends Controller
     {
         $request->validate([
             'store_id' => 'required',
-            'details' => 'requiered|array',
+            'details' => 'required|array',
             'details.*.product_id' => 'required',
             // 'details.*.quantity' => 'required',
             'details.*.price' => 'required',
-        ], [], [
-            'store_id' => 'Toko'
         ]);
 
         $now = Carbon::now();
@@ -278,7 +276,7 @@ class TransactionController extends Controller
         $check = Transaction::find($id);
 
         if ($check->status == 'paid') {
-            return redirect()->back()->with(['step' => 'step2', 'error' => 'Data Transaksi sudah lunas']);
+            return redirect()->back()->with(['step' => 'step2', 'error' => 'Transaksi sudah lunas']);
         }
 
         $transaction = Transaction::find($id);
