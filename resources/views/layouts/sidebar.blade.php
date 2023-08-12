@@ -153,16 +153,13 @@
          </a>
      </li>
 
-     <!-- Divider -->
      <hr class="sidebar-divider">
 
-     <!-- Heading -->
      <div class="sidebar-heading">
          Laporan
      </div>
-
-     <li class="nav-item ">
-         <a class="nav-link" href="{{ route('transactionReport') }}">
+     <li class="nav-item {{ Route::is('report.transaction') ? 'active' : '' }}">
+         <a class="nav-link" href="{{ route('report.transaction') }}">
              <i class="fas fa-fw fa-solid fa-file-pdf"></i>
              <span>Laporan Transaksi</span>
          </a>
