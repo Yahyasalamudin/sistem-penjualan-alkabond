@@ -14,7 +14,7 @@ class ReportController extends Controller
     {
         $transaction = Transaction::with('sales')->with('stores')->with('transaction_details')->where('invoice_code', $invoice)->first();
 
-        $pdf = Pdf::loadview('reports.suratJalan', compact("transaction"));
+        $pdf = Pdf::loadview('reports.prints.suratJalan', compact("transaction"));
         return $pdf->stream();
     }
 
@@ -22,11 +22,16 @@ class ReportController extends Controller
     {
         $transaction = Transaction::with('sales')->with('stores')->with('transaction_details')->where('invoice_code', $invoice)->first();
 
-        $pdf = Pdf::loadview('reports.struk', compact("transaction"));
+        $pdf = Pdf::loadview('reports.prints.struk', compact("transaction"));
         return $pdf->stream();
     }
 
-    public function transactionReport(Request $request)
+    public function transactionReport()
+    {
+        return view('reports.transactionReport');
+    }
+
+    public function printTransactionReport(Request $request)
     {
         $filter = $request->status;
         $tgl_awal = $request->tgl_awal;
@@ -56,12 +61,12 @@ class ReportController extends Controller
                     $transactions = $transactions->where('status', 'paid');
                     break;
                 default:
-                    $pdf = Pdf::loadview('reports.transactionReport', compact('transactions', 'tgl_awal', 'tgl_akhir'));
+                    $pdf = Pdf::loadview('reports.prints.transactionReport', compact('transactions', 'tgl_awal', 'tgl_akhir'));
                     return $pdf->stream();
             }
         }
 
-        $pdf = Pdf::loadview('reports.transactionReport', compact('transactions', 'tgl_awal', 'tgl_akhir'));
+        $pdf = Pdf::loadview('reports.prints.transactionReport', compact('transactions', 'tgl_awal', 'tgl_akhir'));
         return $pdf->stream();
     }
 
@@ -78,7 +83,7 @@ class ReportController extends Controller
             ->orderBy('year')
             ->get();
 
-        $pdf = Pdf::loadview('reports.incomeReport', compact('transactions'));
+        $pdf = Pdf::loadview('reports.prints.incomeReport', compact('transactions'));
         return $pdf->stream();
     }
 }
