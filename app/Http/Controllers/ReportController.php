@@ -134,8 +134,8 @@ class ReportController extends Controller
         $productTypes = Type::all();
 
         $product_type = $request->product_type;
-        $start_month = $request->start_month ? Carbon::create(null, array_search($request->start_month, $months) + 1) : null;
-        $end_month = $request->end_month ? Carbon::create(null, array_search($request->end_month, $months) + 1) : null;
+        $start_month = $request->start_month ? Carbon::create(null, array_search($request->start_month, $months) + 1) : 1;
+        $end_month = $request->end_month ? Carbon::create(null, array_search($request->end_month, $months) + 1) : 12;
 
         $products = TransactionDetail::selectRaw('SUM(transaction_details.quantity) as total_quantity, products.product_code, products.product_name, products.product_brand, products.unit_weight')
             ->join('products', 'product_id', 'products.id')
@@ -150,9 +150,9 @@ class ReportController extends Controller
             ->get();
 
         if ($request->excel == 1) {
-            return Excel::download(new BestSellerProductExport($products, $start_month, $end_month), 'transactions.xlsx');
+            return Excel::download(new BestSellerProductExport($products, $start_month, $end_month, $product_type), 'transactions.xlsx');
         } elseif ($request->pdf == 1) {
-            $pdf = Pdf::loadview('reports.prints.transaction-pdf', compact('transactions', 'start_month', 'end_month'));
+            $pdf = Pdf::loadview('reports.prints.best-seller-products', compact('products', 'start_month', 'end_month', 'product_type'));
             return $pdf->stream();
         }
 
