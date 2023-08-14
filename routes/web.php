@@ -116,6 +116,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/struk={invoice}', [ReportController::class, 'struk'])->name('struk');
     Route::get('/laporan/transaksi', [ReportController::class, 'transaction_report'])->name('report.transaction');
     Route::post('/laporan/transaksi', [ReportController::class, 'printTransactionReport'])->name('print.transactionReport');
+    Route::get('/laporan/barang-terjual', [ReportController::class, 'bestSellerProductReport'])->name('report.bestSellerProductReport');
     Route::get('/laporan/pendapatan', [ReportController::class, 'incomeReport'])->name('incomeReport');
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
