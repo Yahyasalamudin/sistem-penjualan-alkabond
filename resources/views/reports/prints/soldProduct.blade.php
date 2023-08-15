@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Transaksi</title>
+    <title>Laporan Pendapatan</title>
     <style>
         .title {
             text-align: center;
@@ -62,15 +62,15 @@
     <table width="500" border="0">
         <tr>
             <td class="title">
-                Laporan Transaksi
+                Laporan Pendapatan
             </td>
         </tr>
     </table>
     <table width="500" border="0">
         <tr>
             <td class="tanggal">
-                Dari tanggal {{ Carbon::parse($tgl_awal)->locale('id')->isoFormat('D MMMM Y') }} Sampai Tanggal
-                {{ Carbon::parse($tgl_akhir)->locale('id')->isoFormat('D MMMM Y') }}
+                {{-- Dari tanggal {{ Carbon::parse($tgl_awal)->locale('id')->isoFormat('D MMMM Y') }} Sampai Tanggal
+                {{ Carbon::parse($tgl_akhir)->locale('id')->isoFormat('D MMMM Y') }} --}}
             </td>
         </tr>
     </table>
@@ -78,45 +78,44 @@
     <table id="table">
         <tr>
             <th>No</th>
-            <th>Invoice Code</th>
-            <th>Nama Toko</th>
-            <th>Nama Sales</th>
-            <th>Metode Pembayaran</th>
-            <th>Status Pembayaran</th>
-            <th>Status Pengiriman</th>
-            <th>Tanggal Transaksi</th>
-            <th>Total Transaksi</th>
+            <th>Tahun</th>
+            <th>Bulan</th>
+            <th>Jumlah Transaksi</th>
+            <th>Penjualan Kotor</th>
+            <th>Penjualan Bersih</th>
         </tr>
         @php
             $i = 1;
+            setlocale(LC_TIME, 'ID_id');
         @endphp
-        @foreach ($transactions as $transaction)
-            <tr>
-                <td>{{ $i++ }}</td>
-                <td>{{ $transaction->invoice_code }}</td>
-                <td>{{ $transaction->stores->store_name }}</td>
-                <td>{{ $transaction->sales->sales_name }}</td>
-                <td>{{ $transaction->payment_method != null ? $transaction->payment_method : 'Belum Dibayar' }}
-                </td>
-                <td>{{ $transaction->status }}</td>
-                <td>{{ $transaction->delivery_status }}</td>
-                <td>{{ date('d F Y', strtotime($transaction->created_at)) }}</td>
-                <td>Rp {{ number_format($transaction->grand_total) }}</td>
-            </tr>
+        @foreach ($transactions->groupBy('year') as $year => $yearTransactions)
+            @foreach ($yearTransactions as $index => $transaction)
+                <tr>
+                    @if ($index === 0)
+                        <td rowspan="{{ $yearTransactions->count() }}">{{ $i++ }}</td>
+                        <td rowspan="{{ $yearTransactions->count() }}">{{ $year }}</td>
+                    @endif
+                    <td>{{ Carbon::createFromFormat('m', $transaction->month)->formatLocalized('%B') }}</td>
+                    <td>{{ $transaction->transaction_count }}</td>
+                    <td>Rp {{ number_format($transaction->transaction_gross) }}</td>
+                    <td>Rp {{ number_format($transaction->transaction_net) }}</td>
+                </tr>
+            @endforeach
         @endforeach
 
         <tr>
-            <td scope="row" colspan="8"
+            <td scope="row" colspan="4"
                 style="text-align:center ; font-weight:bold; font-size: 13px;background-color: #f9f8f8;">Grand Total
             </td>
             <td style="font-weight:bold; font-size: 13px;background-color: #f9f8f8;">
-                Rp {{ number_format($transactions->sum('grand_total')) }}
+                Rp {{ number_format($transactions->sum('transaction_gross')) }}
+            </td>
+            <td style="font-weight:bold; font-size: 13px;background-color: #f9f8f8;">
+                Rp {{ number_format($transactions->sum('transaction_net')) }}
             </td>
         </tr>
     </table>
 
 </body>
-
-
 
 </html>

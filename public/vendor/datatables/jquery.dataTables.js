@@ -11398,7 +11398,7 @@
                  *      } );
                  *    } );
                  */
-                sNext: "Selanjutnya",
+                sNext: "Next",
 
                 /**
                  * Text to use for the 'previous' pagination button (to take the user to
@@ -11420,7 +11420,7 @@
                  *      } );
                  *    } );
                  */
-                sPrevious: "Sebelumnya",
+                sPrevious: "Previous",
             },
 
             /**
@@ -11443,7 +11443,7 @@
              *      } );
              *    } );
              */
-            sEmptyTable: "Tidak ada data yang tersedia",
+            sEmptyTable: "No data available in table",
 
             /**
              * This string gives information to the end user about the information
@@ -11474,7 +11474,7 @@
              *      } );
              *    } );
              */
-            sInfo: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+            sInfo: "Showing _START_ to _END_ of _TOTAL_ entries",
 
             /**
              * Display information string for when the table is empty. Typically the
@@ -11494,7 +11494,7 @@
              *      } );
              *    } );
              */
-            sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
+            sInfoEmpty: "Showing 0 to 0 of 0 entries",
 
             /**
              * When a user filters the information in a table, this string is appended
@@ -11515,7 +11515,7 @@
              *      } );
              *    } );
              */
-            sInfoFiltered: "(difilter dari _MAX_ data)",
+            sInfoFiltered: "(filtered from _MAX_ total entries)",
 
             /**
              * If can be useful to append extra information to the info string at times,
@@ -11706,7 +11706,7 @@
              *      } );
              *    } );
              */
-            sSearch: "Cari:",
+            sSearch: "Search:",
 
             /**
              * Assign a `placeholder` attribute to the search `input` element
@@ -11761,7 +11761,7 @@
              *      } );
              *    } );
              */
-            sZeroRecords: "Tidak ditemukan data yang cocok",
+            sZeroRecords: "No matching records found",
         },
 
         /**
