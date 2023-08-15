@@ -4,38 +4,11 @@
     Carbon::setLocale('id');
 @endphp
 @extends('layouts.app')
-@push('js')
-    <script>
-        $('#dataTable').dataTable({
-            "ordering": false,
-            "dom": 'Bfrtip',
-            "paging": false,
-            "searching": false,
-            "language": {
-                "emptyTable": "Tidak ada data",
-                "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                "infoEmpty": "Menampilkan 0 sampai 0 dari 0 data",
-                "infoFiltered": "(ter-filter dari _MAX_ total data)",
-                "infoPostFix": "",
-                "thousands": ",",
-                "lengthMenu": "Tampilkan _MENU_ data",
-                "loadingRecords": "Memuat...",
-                "processing": "Memproses...",
-                "search": "Cari:",
-                "zeroRecords": "Tidak ada data yang ditemukan",
-                "paginate": {
-                    "first": "Awal",
-                    "last": "Akhir",
-                    "next": "Berikutnya",
-                    "previous": "Sebelum"
-                },
-                "aria": {
-                    "sortAscending": ": aktifkan untuk mengurutkan kolom menaik",
-                    "sortDescending": ": aktifkan untuk mengurutkan kolom menurun"
-                }
-            }
-        })
-    </script>
+@push('datatables')
+    "ordering": false,
+    "dom": 'Bfrtip',
+    "paging": false,
+    "searching": false
 @endpush
 @section('content')
     <div class="row">
