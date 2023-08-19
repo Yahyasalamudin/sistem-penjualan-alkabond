@@ -82,45 +82,6 @@ class ReportController extends Controller
         return view('reports.transaction-report', compact('transactions', 'stores'));
     }
 
-    public function printTransactionReport(Request $request)
-    {
-        $filter = $request->status;
-        $tgl_awal = $request->tgl_awal;
-        $tgl_akhir = $request->tgl_akhir;
-
-        $transactions = Transaction::whereBetween('created_at', [$tgl_awal, $tgl_akhir])->get();
-
-        if ($filter != "semua") {
-            switch ($filter) {
-                case 'unsent':
-                    $transactions = $transactions->where('delivery_status', 'unsent');
-                    break;
-                case 'process':
-                    $transactions = $transactions->where('delivery_status', 'proccess');
-                    break;
-                case 'sent':
-                    $transactions = $transactions
-                        ->where('status', 'unpaid')
-                        ->where('delivery_status', 'sent');
-                    break;
-                case 'partial':
-                    $transactions = $transactions
-                        ->where('payment_method', 'tempo')
-                        ->where('status', 'partial');
-                    break;
-                case 'paid':
-                    $transactions = $transactions->where('status', 'paid');
-                    break;
-                default:
-                    $pdf = Pdf::loadview('reports.prints.transactionReport', compact('transactions', 'tgl_awal', 'tgl_akhir'));
-                    return $pdf->stream();
-            }
-        }
-
-        $pdf = Pdf::loadview('reports.prints.transactionReport', compact('transactions', 'tgl_awal', 'tgl_akhir'));
-        return $pdf->stream();
-    }
-
     public function incomeReport()
     {
         $transactions = Transaction::select(
