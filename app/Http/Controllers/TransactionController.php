@@ -7,13 +7,12 @@ use App\Models\ProductCart;
 use App\Models\Store;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
+use Illuminate\Http\File;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\View;
+use Spatie\Browsershot\Browsershot;
 
 class TransactionController extends Controller
 {
@@ -185,6 +184,18 @@ class TransactionController extends Controller
             'remaining_pay' => $grand_total
         ]);
 
+        $transaction = Transaction::find($check_transaction->id);
+        $html = View::make('reports.images.struk', ['transaction' => $transaction])->render();
+        Browsershot::html($html)
+            ->format('png')
+            ->save('struk.png');
+        $imageFile = new File(public_path('struk.png'));
+
+        Http::attach('file_dikirim', file_get_contents($imageFile->getPathname()), 'struk.png')
+            ->post('https://api.mortaralkabon.com/send-message', [
+                'number' => $store->store_number,
+            ]);
+
         return redirect('/transactions/unsent')->with('success', 'Transaksi Berhasil ditambahkan!');
     }
 
@@ -328,14 +339,28 @@ class TransactionController extends Controller
             }
         }
 
+        $transaction = Transaction::find($transaction->id);
+        $remaining = number_format($transaction->remaining_pay, 0, ',', '.');
+
+        $message = "Anda telah melakukan pembayaran sebesar $request->total_pay  dengan nomor invoice $transaction->invoice_code. Sisa cicilan yang harus anda bayar sebesar Rp. $remaining. Terima kasih atas kepercayaan dan dukungannya.";
+
+        Http::post('https://api.mortaralkabon.com/send-message', [
+            'number' => $transaction->stores->store_number,
+            'message' => $message,
+        ]);
+
         return redirect()->back()->with(['step' => 'step2', 'success' => 'Pembayaran berhasil']);
     }
 
     public function edit_payment(Request $request, $id)
     {
-        $request->validate([
-            'total_pay' => 'required'
-        ]);
+        // $request->validate([
+        //     'total_pay' => 'required'
+        // ]);
+
+        if (empty($request->total_pay)) {
+            $request->total_pay = 'Rp. 0';
+        }
 
         $payment = Payment::find($id);
         $transaction = Transaction::find($payment->transaction_id);
@@ -396,6 +421,6 @@ class TransactionController extends Controller
             }
         }
 
-        return redirect()->back()->with(['step' => 'step2', 'success' => 'Pembayaran berhasil diedit']);
+        return redirect()->back()->with(['step' => 'step2', 'success' => 'Pembayaran berhasil diubah']);
     }
 }
