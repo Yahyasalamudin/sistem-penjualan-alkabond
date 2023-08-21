@@ -25,68 +25,62 @@ class TransactionController extends Controller
 
         $cacheKey = "transactions_{$status}_{$user->id}_{$city}";
 
-        $transactions = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($status, $user, $city) {
-            $query = Transaction::query();
-
-            $transactions = $query->when(!empty($city), function ($query) use ($user, $city) {
-                $query->when($user->role == 'owner', function ($query) use ($city) {
-                    $query->whereHas('sales', function ($query) use ($city) {
-                        $query->where('city', $city);
-                    });
-                })->when($user->role == 'admin', function ($query) use ($user) {
-                    $query->whereHas('sales', function ($query) use ($user) {
-                        $query->where('city', $user->city);
-                    });
+        $transactions = Transaction::when(!empty($city), function ($query) use ($user, $city) {
+            $query->when($user->role == 'owner', function ($query) use ($city) {
+                $query->whereHas('sales', function ($query) use ($city) {
+                    $query->where('city', $city);
+                });
+            })->when($user->role == 'admin', function ($query) use ($user) {
+                $query->whereHas('sales', function ($query) use ($user) {
+                    $query->where('city', $user->city);
                 });
             });
-
-            switch ($status) {
-                case 'unsent':
-                    $transactions = $transactions
-                        ->where('status', 'unpaid')
-                        ->where('delivery_status', 'unsent');
-                    break;
-                case 'proccess':
-                    $transactions = $transactions
-                        ->where('status', 'unpaid')
-                        ->where('delivery_status', 'proccess');
-                    break;
-                    // case 'sent':
-                    //     $transactions = $transactions
-                    //         ->where('status', 'unpaid')
-                    //         ->where('delivery_status', 'sent');
-                    //     break;
-                case 'partial':
-                    $transactions = $transactions
-                        ->where('delivery_status', 'sent')
-                        ->whereIn('status', ['partial', 'unpaid'])
-                        ->where(function ($query) {
-                            $query->whereIn('payment_method', ['tempo'])
-                                ->orWhereNull('payment_method');
-                        })
-                        ->orderBy('sent_at', 'asc');
-                    break;
-                case 'paid':
-                    $transactions = $transactions
-                        ->where('status', 'paid')
-                        ->where('delivery_status', 'sent');
-                    break;
-            }
-
-            $transactions = $transactions->get();
-
-            $tenggatWaktu = "";
-            foreach ($transactions as $transaction) {
-                if (isset($transaction->sent_at)) {
-                    $sent_at = Carbon::createFromFormat('Y-m-d H:i:s', $transaction->sent_at);
-                    $tenggatWaktu = $sent_at->diffInDays(Carbon::now());
-                    $selisih = 30 - $tenggatWaktu;
-                    $transaction['tenggatWaktu'] = ($selisih >= 0) ? $selisih : 0;
-                }
-            }
-
-            return $transactions;
         });
+
+        switch ($status) {
+            case 'unsent':
+                $transactions = $transactions
+                    ->where('status', 'unpaid')
+                    ->where('delivery_status', 'unsent');
+                break;
+            case 'proccess':
+                $transactions = $transactions
+                    ->where('status', 'unpaid')
+                    ->where('delivery_status', 'proccess');
+                break;
+                // case 'sent':
+                //     $transactions = $transactions
+                //         ->where('status', 'unpaid')
+                //         ->where('delivery_status', 'sent');
+                //     break;
+            case 'partial':
+                $transactions = $transactions
+                    ->where('delivery_status', 'sent')
+                    ->whereIn('status', ['partial', 'unpaid'])
+                    ->where(function ($query) {
+                        $query->whereIn('payment_method', ['tempo'])
+                            ->orWhereNull('payment_method');
+                    })
+                    ->orderBy('sent_at', 'asc');
+                break;
+            case 'paid':
+                $transactions = $transactions
+                    ->where('status', 'paid')
+                    ->where('delivery_status', 'sent');
+                break;
+        }
+
+        $transactions = $transactions->get();
+
+        $tenggatWaktu = "";
+        foreach ($transactions as $transaction) {
+            if (isset($transaction->sent_at)) {
+                $sent_at = Carbon::createFromFormat('Y-m-d H:i:s', $transaction->sent_at);
+                $tenggatWaktu = $sent_at->diffInDays(Carbon::now());
+                $selisih = 30 - $tenggatWaktu;
+                $transaction['tenggatWaktu'] = ($selisih >= 0) ? $selisih : 0;
+            }
+        }
 
         return view('transactions.index', compact('title', 'transactions', 'status'));
     }
@@ -107,11 +101,7 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'store_id' => 'required',
-            'details' => 'required|array',
-            'details.*.product_id' => 'required',
-            // 'details.*.quantity' => 'required',
-            'details.*.price' => 'required',
+            'store_id' => 'required'
         ]);
 
         $now = Carbon::now();
@@ -137,11 +127,21 @@ class TransactionController extends Controller
 
         $store = Store::find($request->store_id);
 
-        $check = Transaction::where('store_id', $store->store_id)
+        $check = Transaction::where('store_id', $store->id)
             ->where('sales_id', $store->sales_id)
             ->where('status', 'unpaid')
             ->where('delivery_status', 'unsent')
             ->first();
+
+        $product_carts = ProductCart::where('user_id', auth()->user()->id)->get();
+        if ($product_carts->count() === 0) {
+            return redirect()->back()->with(['error' => 'Maaf, produk tidak boleh kosong. Mohon tambahkan produk terlebih dahulu.', 'store_id' => $request->store_id]);
+        }
+        foreach ($product_carts as $product_cart) {
+            if (empty($product_cart->quantity) || empty($product_cart->price)) {
+                return redirect()->back()->with(['error' => 'Mohon isi jumlah atau harga barang.', 'store_id' => $request->store_id]);
+            }
+        }
 
         if (empty($check)) {
             Transaction::create([
@@ -151,19 +151,17 @@ class TransactionController extends Controller
             ]);
         }
 
-        $check_transactions = Transaction::where('store_id', $request->store_id)
+        $check_transaction = Transaction::where('store_id', $store->id)
             ->where('sales_id', $store->sales_id)
             ->where('status', 'unpaid')
             ->where('delivery_status', 'unsent')
             ->first();
 
-        $product_cart = ProductCart::where('user_id', auth()->user()->id)->get();
-
-        foreach ($product_cart as $pc) {
-            $check_detail = TransactionDetail::where('transaction_id', $check_transactions['id'])->where('product_id', $pc->product_id)->first();
+        foreach ($product_carts as $pc) {
+            $check_detail = TransactionDetail::where('transaction_id', $check_transaction['id'])->where('product_id', $pc->product_id)->first();
             if (empty($check_detail)) {
                 TransactionDetail::create([
-                    'transaction_id' => $check_transactions['id'],
+                    'transaction_id' => $check_transaction['id'],
                     'product_id' => $pc->product_id,
                     'quantity' => $pc->quantity,
                     'price' => $pc->price,
@@ -180,9 +178,9 @@ class TransactionController extends Controller
             ProductCart::find($pc->id)->delete();
         }
 
-        $grand_total = TransactionDetail::where('transaction_id', $check_transactions->id)->sum('subtotal');
+        $grand_total = TransactionDetail::where('transaction_id', $check_transaction->id)->sum('subtotal');
 
-        Transaction::where('id', $check_transactions->id)->update([
+        Transaction::where('id', $check_transaction->id)->update([
             'grand_total' => $grand_total,
             'remaining_pay' => $grand_total
         ]);
