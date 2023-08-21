@@ -23,8 +23,6 @@ class TransactionController extends Controller
         $user = auth()->user();
         $city = session('filterKota');
 
-        $cacheKey = "transactions_{$status}_{$user->id}_{$city}";
-
         $transactions = Transaction::when(!empty($city), function ($query) use ($user, $city) {
             $query->when($user->role == 'owner', function ($query) use ($city) {
                 $query->whereHas('sales', function ($query) use ($city) {
@@ -198,14 +196,15 @@ class TransactionController extends Controller
         $status = 'archive';
 
         $transactions = Transaction::onlyTrashed()
-            ->when($user->role == 'owner', function ($query) use ($city) {
-                $query->whereHas('sales', function ($query) use ($city) {
-                    $query->where('city', $city);
-                });
-            })
-            ->when($user->role == 'admin', function ($query) use ($user) {
-                $query->whereHas('sales', function ($query) use ($user) {
-                    $query->where('city', $user->city);
+            ->when(!empty($city), function ($query) use ($user, $city) {
+                $query->when($user->role == 'owner', function ($query) use ($city) {
+                    $query->whereHas('sales', function ($query) use ($city) {
+                        $query->where('city', $city);
+                    });
+                })->when($user->role == 'admin', function ($query) use ($user) {
+                    $query->whereHas('sales', function ($query) use ($user) {
+                        $query->where('city', $user->city);
+                    });
                 });
             })
             ->get();
