@@ -93,7 +93,9 @@ class TransactionController extends Controller
         $role = auth()->user()->role;
         $cityFilter = ($role == 'owner') ? $city : auth()->user()->city;
 
-        $stores = Store::where('city_branch', $cityFilter)->latest()->get();
+        $stores = Store::when($cityFilter, function ($query) use ($cityFilter) {
+            $query->where('city_branch', $cityFilter);
+        })->get();
 
         return view('transactions.create', compact('stores'));
     }
