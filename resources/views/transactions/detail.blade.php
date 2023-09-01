@@ -295,7 +295,11 @@
                                                 </tr>
                                                 <tr>
                                                     <td>Kota</td>
-                                                    <td>{{ $transaction->stores->city_branch }}</td>
+                                                    <td>{{ $transaction->stores->city->city }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Cabang Kota</td>
+                                                    <td>{{ $transaction->stores->city_branch->branch }}</td>
                                                 </tr>
 
                                             </tbody>

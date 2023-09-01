@@ -60,7 +60,7 @@
                                 <td class="col-lg-7">{{ $user->username }}</td>
                                 <td class="col-lg-7">{{ $user->email }}</td>
                                 <td class="col-lg-7">{{ $user->phone_number }}</td>
-                                <td class="col-lg-7">{{ $user->city }}</td>
+                                <td class="col-lg-7">{{ $user->city->city }}</td>
                                 <td class="col-lg-7">
                                     @if ($user->active == 1)
                                         <span class="badge badge-primary">Aktif</span>
