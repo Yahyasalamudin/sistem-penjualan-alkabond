@@ -109,6 +109,8 @@ class TransactionExport implements FromCollection, WithHeadings, WithMapping, Wi
 
     public function styles(Worksheet $sheet)
     {
+        $sheet->mergeCells('A1:I1');
+
         return [
             'A' => ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]], // No
             'B' => ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]], // Invoice Code

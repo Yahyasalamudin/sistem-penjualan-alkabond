@@ -59,7 +59,7 @@
                                 <td class="col-lg-7">{{ $user->username }}</td>
                                 <td class="col-lg-7">{{ $user->email }}</td>
                                 <td class="col-lg-7">{{ $user->phone_number }}</td>
-                                <td class="col-lg-7">{{ $user->city }}</td>
+                                <td class="col-lg-7">{{ $user->city->city }}</td>
                                 @if (auth()->user()->role == 'owner')
                                     <td>
                                         <div class="d-flex justify-content-center">

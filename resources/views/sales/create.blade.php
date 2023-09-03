@@ -1,12 +1,41 @@
 @extends('layouts.app')
+@push('js')
+    <script>
+        const input_city_id = document.getElementById("city_id");
 
+        input_city_id.addEventListener("change", function() {
+            let url =
+                "{{ route('city-branch.get-city-branches', ':id') }}";
+            url = url.replace(':id', input_city_id.value) + '?sales=' + 0;
+            $.ajax({
+                url: url,
+                success: function(result) {
+                    $("label[for='city_branch_id']").attr('hidden', false);
+                    $("#city_branch_id").attr('hidden', false);
+                    $("#city_branch_id").empty();
+
+                    const option = document.createElement('option');
+                    option.text = " - Pilih Cabang Kota - ";
+                    option.value = "";
+                    $("#city_branch_id").append(option);
+
+                    result.forEach(item => {
+                        const option = document.createElement('option');
+                        option.text = item.branch;
+                        option.value = item.id;
+                        $("#city_branch_id").append(option);
+                    });
+                }
+            })
+        })
+    </script>
+@endpush
 @section('content')
     <div class="content-header">
 
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="h3 mb-3 text-gray-800">Registrasi Sales</h1>
-
             </div>
         </div>
     </div>
@@ -83,6 +112,34 @@
                                     </div>
 
                                     <div class="form-group row mb-4">
+                                        <label for="city_id" class="col-sm-2 col-form-label">Pilih Kota</label>
+                                        <div class="col-sm-4">
+                                            <select class="form-control  @error('city_id') is-invalid @enderror"
+                                                name="city_id" id="city_id">
+                                                <option value="">- Pilih Kota -</option>
+                                                @foreach ($cities as $city)
+                                                    <option value="{{ $city->id }}">{{ $city->city }}</option>
+                                                @endforeach
+                                            </select>
+
+                                            @error('city_id')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+
+                                        <label for="city_branch_id" class="col-sm-2 col-form-label" hidden>Kota
+                                            Cabang</label>
+                                        <div class="col-sm">
+                                            <select class="form-control @error('city_branch_id') is-invalid @enderror"
+                                                name="city_branch_id" id="city_branch_id" hidden>
+                                                <option value=""> - Pilih Cabang Kota - </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row mb-4">
                                         <label for="password" class="col-sm-2 col-form-label">Password</label>
                                         <div class="col-sm-4">
                                             <input type="password"
@@ -109,28 +166,8 @@
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
-                                            {{-- <p class="mt-2">NB:Harus sama dengan password disamping!!"</p> --}}
+                                            <p class="mt-2">NB:Harus sama dengan password disamping!!</p>
                                         </div>
-                                    </div>
-
-                                    <div class="form-group row mb-4">
-                                        <label for="city" class="col-sm-2 col-form-label">Pilih Kota</label>
-                                        <div class="col-sm-4">
-                                            <select class="form-control  @error('city') is-invalid @enderror" name="city"
-                                                id="city">
-                                                <option value="">- Pilih Kota -</option>
-                                                @foreach ($cities as $city)
-                                                    <option value="{{ $city->city }}">{{ $city->city }}</option>
-                                                @endforeach
-                                            </select>
-
-                                            @error('city')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-
                                     </div>
 
                                     <div class="form-group" style="text-align:right;">

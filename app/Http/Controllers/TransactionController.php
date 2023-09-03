@@ -3,90 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
-use App\Models\ProductCart;
 use App\Models\Store;
 use App\Models\Transaction;
-use App\Models\TransactionDetail;
+use App\Http\Traits\TransactionTrait;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Validator;
 
 class TransactionController extends Controller
 {
+    use TransactionTrait;
+
     public function index($status)
     {
         $title = 'Daftar Transaksi';
         $user = auth()->user();
         $city = session('filterKota');
+        $city_branch = session('filterCabangKota');
 
-        $cacheKey = "transactions_{$status}_{$user->id}_{$city}";
+        $transactions = Transaction::filterCity($user, $city, $city_branch)->status($status)->get();
 
-        $transactions = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($status, $user, $city) {
-            $query = Transaction::query();
-
-            $transactions = $query->when(!empty($city), function ($query) use ($user, $city) {
-                $query->when($user->role == 'owner', function ($query) use ($city) {
-                    $query->whereHas('sales', function ($query) use ($city) {
-                        $query->where('city', $city);
-                    });
-                })->when($user->role == 'admin', function ($query) use ($user) {
-                    $query->whereHas('sales', function ($query) use ($user) {
-                        $query->where('city', $user->city);
-                    });
-                });
-            });
-
-            switch ($status) {
-                case 'unsent':
-                    $transactions = $transactions
-                        ->where('status', 'unpaid')
-                        ->where('delivery_status', 'unsent');
-                    break;
-                case 'proccess':
-                    $transactions = $transactions
-                        ->where('status', 'unpaid')
-                        ->where('delivery_status', 'proccess');
-                    break;
-                    // case 'sent':
-                    //     $transactions = $transactions
-                    //         ->where('status', 'unpaid')
-                    //         ->where('delivery_status', 'sent');
-                    //     break;
-                case 'partial':
-                    $transactions = $transactions
-                        ->where('delivery_status', 'sent')
-                        ->whereIn('status', ['partial', 'unpaid'])
-                        ->where(function ($query) {
-                            $query->whereIn('payment_method', ['tempo'])
-                                ->orWhereNull('payment_method');
-                        })
-                        ->orderBy('sent_at', 'asc');
-                    break;
-                case 'paid':
-                    $transactions = $transactions
-                        ->where('status', 'paid')
-                        ->where('delivery_status', 'sent');
-                    break;
-            }
-
-            $transactions = $transactions->get();
-
-            $tenggatWaktu = "";
-            foreach ($transactions as $transaction) {
-                if (isset($transaction->sent_at)) {
-                    $sent_at = Carbon::createFromFormat('Y-m-d H:i:s', $transaction->sent_at);
-                    $tenggatWaktu = $sent_at->diffInDays(Carbon::now());
-                    $selisih = 30 - $tenggatWaktu;
-                    $transaction['tenggatWaktu'] = ($selisih >= 0) ? $selisih : 0;
-                }
-            }
-
-            return $transactions;
-        });
+        $this->deadline($transactions);
 
         return view('transactions.index', compact('title', 'transactions', 'status'));
     }
@@ -95,11 +31,11 @@ class TransactionController extends Controller
     {
         $title = 'Tambah Transaksi';
 
+        $user = auth()->user();
         $city = session('filterKota');
-        $role = auth()->user()->role;
-        $cityFilter = ($role == 'owner') ? $city : auth()->user()->city;
+        $city_branch = session('filterCabangKota');
 
-        $stores = Store::where('city_branch', $cityFilter)->latest()->get();
+        $stores = Store::filterCity($user, $city, $city_branch)->get();
 
         return view('transactions.create', compact('stores'));
     }
@@ -107,41 +43,19 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'store_id' => 'required',
-            'details' => 'required|array',
-            'details.*.product_id' => 'required',
-            // 'details.*.quantity' => 'required',
-            'details.*.price' => 'required',
+            'store_id' => 'required'
         ]);
 
-        $now = Carbon::now();
-        $date = date('Ym', strtotime($now));
-        $check = Transaction::count();
-        if ($check == 0) {
-            $code = 100001;
-            $invoice_code = 'INV' . $date . $code;
-        } else {
-            $query = Transaction::all()->last();
+        $invoice_code = $this->invoiceCode();
+        $store = Store::find($request->store_id);
+        $check = Transaction::findUnpaidTransaction($store)->first();
+        $result = $this->checkProductCart($request);
 
-            $check_date = substr($query->invoice_code, 0, -6);
-            $int_date = (int) substr($check_date, 3);
-
-            if ($date != $int_date) {
-                $code = 100001;
-                $invoice_code = 'INV' . $date . $code;
-            } else {
-                $code = (int) substr($query->invoice_code, -6) + 1;
-                $invoice_code = 'INV' . $date . $code;
-            }
+        if (isset($result['error'])) {
+            return redirect()->back()->with($result);
         }
 
-        $store = Store::find($request->store_id);
-
-        $check = Transaction::where('store_id', $store->store_id)
-            ->where('sales_id', $store->sales_id)
-            ->where('status', 'unpaid')
-            ->where('delivery_status', 'unsent')
-            ->first();
+        $product_carts = $result['product_carts'];
 
         if (empty($check)) {
             Transaction::create([
@@ -151,41 +65,8 @@ class TransactionController extends Controller
             ]);
         }
 
-        $check_transactions = Transaction::where('store_id', $request->store_id)
-            ->where('sales_id', $store->sales_id)
-            ->where('status', 'unpaid')
-            ->where('delivery_status', 'unsent')
-            ->first();
-
-        $product_cart = ProductCart::where('user_id', auth()->user()->id)->get();
-
-        foreach ($product_cart as $pc) {
-            $check_detail = TransactionDetail::where('transaction_id', $check_transactions['id'])->where('product_id', $pc->product_id)->first();
-            if (empty($check_detail)) {
-                TransactionDetail::create([
-                    'transaction_id' => $check_transactions['id'],
-                    'product_id' => $pc->product_id,
-                    'quantity' => $pc->quantity,
-                    'price' => $pc->price,
-                    'subtotal' => $pc->quantity * $pc->price,
-                ]);
-            } else {
-                $quantity_new = $pc->quantity + $check_detail['quantity'];
-                $check_detail->update([
-                    'quantity' => $quantity_new,
-                    'subtotal' => $quantity_new * $check_detail['price']
-                ]);
-            }
-
-            ProductCart::find($pc->id)->delete();
-        }
-
-        $grand_total = TransactionDetail::where('transaction_id', $check_transactions->id)->sum('subtotal');
-
-        Transaction::where('id', $check_transactions->id)->update([
-            'grand_total' => $grand_total,
-            'remaining_pay' => $grand_total
-        ]);
+        $check_transaction = Transaction::findUnpaidTransaction($store)->first();
+        $this->createUpdateTransaction($product_carts, $check_transaction);
 
         return redirect('/transactions/unsent')->with('success', 'Transaksi Berhasil ditambahkan!');
     }
@@ -195,20 +76,10 @@ class TransactionController extends Controller
         $title = 'Daftar Arsip Transaksi';
         $user = auth()->user();
         $city = session('filterKota');
+        $city_branch = session('filterCabangKota');
         $status = 'archive';
 
-        $transactions = Transaction::onlyTrashed()
-            ->when($user->role == 'owner', function ($query) use ($city) {
-                $query->whereHas('sales', function ($query) use ($city) {
-                    $query->where('city', $city);
-                });
-            })
-            ->when($user->role == 'admin', function ($query) use ($user) {
-                $query->whereHas('sales', function ($query) use ($user) {
-                    $query->where('city', $user->city);
-                });
-            })
-            ->get();
+        $transactions = Transaction::onlyTrashed()->filterCity($user, $city, $city_branch)->get();
 
         return view('transactions.index', compact('title', 'status', 'transactions'));
     }
@@ -231,13 +102,7 @@ class TransactionController extends Controller
 
     public function show($status, $id)
     {
-        $transaction = Transaction::with('transaction_details')
-            ->with('transaction_details.product_return')
-            ->with([
-                'payments' => function ($query) {
-                    $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
-                }
-            ])->find($id);
+        $transaction = Transaction::findTransaction($id);
 
         return view('transactions.detail', compact('transaction'));
     }
@@ -369,34 +234,8 @@ class TransactionController extends Controller
         }
 
         $sum_totalpay = Payment::where('transaction_id', $transaction->id)->sum('total_pay');
+        $this->updatePayment($sum_totalpay, $transaction);
 
-        if ($sum_totalpay < $transaction->grand_total) {
-            $transaction->update([
-                'status' => 'partial'
-            ]);
-
-            if ($transaction->payments->count() == 0) {
-                $transaction->update([
-                    'payment_method' => null,
-                    'status' => 'unpaid'
-                ]);
-            } else {
-                $transaction->update([
-                    'payment_method' => 'tempo'
-                ]);
-            }
-        } elseif ($sum_totalpay == $transaction->grand_total) {
-            $transaction->update([
-                'status' => 'paid'
-            ]);
-
-            if ($transaction->payments->count() == 1) {
-                $transaction->update([
-                    'payment_method' => 'cash'
-                ]);
-            }
-        }
-
-        return redirect()->back()->with(['step' => 'step2', 'success' => 'Pembayaran berhasil diedit']);
+        return redirect()->back()->with(['step' => 'step2', 'success' => 'Pembayaran berhasil diubah']);
     }
 }

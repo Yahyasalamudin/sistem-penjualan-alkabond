@@ -73,10 +73,6 @@ class AuthController extends Controller
             return back()->with('error', 'Akun anda telah dinonaktifkan oleh owner');
         }
 
-        if (isset($user) && $user->role == 'owner') {
-            session(['filterKota' => 'Jember']);
-        }
-
         $credentials = $request->only('email_username', 'password');
 
         if (Auth::attempt(['email' => $credentials['email_username'], 'password' => $credentials['password']], $request->remember) || Auth::attempt(['username' => $credentials['email_username'], 'password' => $credentials['password']], $request->remember)) {
@@ -95,6 +91,8 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
+        session(['filterKota' => ""]);
+        session(['filterCabangKota' => ""]);
         return redirect('/login')->withCookie(Cookie::forget('remember_token'));
     }
 }

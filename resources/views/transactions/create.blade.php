@@ -84,7 +84,8 @@
                                     <option value="">- Pilih Toko -</option>
                                     @foreach ($stores as $store)
                                         <option value="{{ $store->id }}"
-                                            {{ old('store_id') == $store->id ? 'selected' : '' }}>{{ $store->store_name }}
+                                            {{ session('store_id') == $store->id ? 'selected' : '' }}>
+                                            {{ $store->store_name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -102,6 +103,15 @@
                         <div class="row-lg-12">
                             <div class="col-md-12">
                                 <div style="margin-top: 30px;" class="col-xl-12 col-lg-6">
+                                    @if (session('error'))
+                                        <div class="alert alert-danger alert-dismissible mb-4" id="flash_data"
+                                            role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            {{ session('error') }}
+                                        </div>
+                                    @endif
                                     @livewire('product-cart')
                                     <div class="form-group" style="text-align:right;">
                                         <a href="{{ route('transaction.index', 'unsent') }}"

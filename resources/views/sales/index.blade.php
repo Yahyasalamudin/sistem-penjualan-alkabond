@@ -43,6 +43,7 @@
                             <th>Email</th>
                             <th>Nomer Hp</th>
                             <th>Kota</th>
+                            <th>Cabang Kota</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -59,7 +60,8 @@
                                 <td class="col-lg-7">{{ $s->username }}</td>
                                 <td class="col-lg-7">{{ $s->email }}</td>
                                 <td class="col-lg-7">{{ $s->phone_number }}</td>
-                                <td class="col-lg-7">{{ $s->city }}</td>
+                                <td class="col-lg-7">{{ $s->city->city }}</td>
+                                <td class="col-lg-7">{{ $s->city_branch->branch }}</td>
                                 <td class="col-lg-7">
                                     @if ($s->active == 1)
                                         <span class="badge badge-primary">Aktif</span>

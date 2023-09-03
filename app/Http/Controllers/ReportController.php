@@ -36,8 +36,8 @@ class ReportController extends Controller
     public function transaction_report(Request $request)
     {
         $filter = $request->status;
-        $start_date = $request->start_date;
-        $end_date = $request->end_date;
+        $start_date = $request->start_date ?: now();
+        $end_date = $request->end_date ?: now();
         $stores = Store::all();
 
         $transactions = Transaction::when($request->store_id, function ($query) use ($request) {

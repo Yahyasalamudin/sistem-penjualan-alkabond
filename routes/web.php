@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CityBranchController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\StoreController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,6 +25,13 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/clear-cache', function () {
+    Artisan::call('config:clear');
+    Artisan::call('cache:clear');
+    Artisan::call('config:cache');
+    return 'DONE';
+});
 
 Route::fallback(function () {
     return view('errors.404');
@@ -43,13 +52,21 @@ Route::post('/process-login', [AuthController::class, 'actionLogin'])->name('act
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::post('/filterkota', [DashboardController::class, 'filterKota'])->name('filterKota');
+    Route::post('/filter-kota', [DashboardController::class, 'filterKota'])->name('filterKota');
+    Route::post('/filter-cabang-kota', [DashboardController::class, 'filterCabangKota'])->name('filterCabangKota');
 
     // CRUD Data City
     Route::get('/cities', [CityController::class, 'index'])->name('city.index');
     Route::post('/cities', [CityController::class, 'store'])->name('city.store');
     Route::put('/city/{id}/update', [CityController::class, 'update'])->name('city.update');
     Route::delete('/city/{id}/delete', [CityController::class, 'destroy'])->name('city.destroy');
+
+    // CRUD Data Branch
+    Route::get('/city-branches', [CityBranchController::class, 'index'])->name('city-branch.index');
+    Route::post('/city-branches', [CityBranchController::class, 'store'])->name('city-branch.store');
+    Route::put('/city-branch/{id}/update', [CityBranchController::class, 'update'])->name('city-branch.update');
+    Route::delete('/city-branch/{id}/delete', [CityBranchController::class, 'destroy'])->name('city-branch.destroy');
+    Route::get('/city-branches/{id}/get', [CityBranchController::class, 'get_city_branches'])->name('city-branch.get-city-branches');
 
     // CRUD Data Type Product
     Route::get('/types', [TypeController::class, 'index'])->name('type.index');

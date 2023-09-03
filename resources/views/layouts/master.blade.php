@@ -86,7 +86,7 @@
         integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous">
     </script>
     <script src="{{ asset('js/enchanter.js') }}"></script>
-    <script>
+    {{-- <script>
         var registrationForm = $('#registration');
         var formValidate = registrationForm.validate({
             errorClass: 'is-invalid',
@@ -101,6 +101,34 @@
                 }
             }
         });
+    </script> --}}
+    <script>
+        $('#dataTable').dataTable({
+            "language": {
+                "emptyTable": "Tidak ada data",
+                "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                "infoEmpty": "Menampilkan 0 sampai 0 dari 0 data",
+                "infoFiltered": "(ter-filter dari _MAX_ total data)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Tampilkan _MENU_ data",
+                "loadingRecords": "Memuat...",
+                "processing": "Memproses...",
+                "search": "Cari:",
+                "zeroRecords": "Tidak ada data yang ditemukan",
+                "paginate": {
+                    "first": "Awal",
+                    "last": "Akhir",
+                    "next": "Berikutnya",
+                    "previous": "Sebelum"
+                },
+                "aria": {
+                    "sortAscending": ": aktifkan untuk mengurutkan kolom menaik",
+                    "sortDescending": ": aktifkan untuk mengurutkan kolom menurun"
+                }
+            },
+            @stack('datatables')
+        })
     </script>
 
     @stack('js')
