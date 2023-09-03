@@ -144,14 +144,14 @@
                  <span>Owner</span>
              </a>
          </li>
-     @endif
 
-     <li class="nav-item {{ Route::is('admin*') ? 'active' : '' }}">
-         <a class="nav-link" href="{{ route('admin.index') }}">
-             <i class="fas fa-fw fa-user-friends"></i>
-             <span>Admin</span>
-         </a>
-     </li>
+         <li class="nav-item {{ Route::is('admin*') ? 'active' : '' }}">
+             <a class="nav-link" href="{{ route('admin.index') }}">
+                 <i class="fas fa-fw fa-user-friends"></i>
+                 <span>Admin</span>
+             </a>
+         </li>
+     @endif
 
      <!-- Nav Item - Tables -->
      <li class="nav-item {{ Route::is('sales*') ? 'active' : '' }}">
