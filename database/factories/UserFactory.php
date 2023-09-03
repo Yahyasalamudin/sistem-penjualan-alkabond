@@ -19,7 +19,7 @@ class UserFactory extends Factory
      */
     public function definition()
     {
-        $city = ['Jember', 'Surabaya', 'Malang', 'Bekasi'];
+        $city = [1, 2, 3, 4];
 
         return [
             'name' => $this->faker->name(),
@@ -28,7 +28,8 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'phone_number' => '08' . $this->faker->numberBetween(9, 12) . $this->faker->randomNumber(9),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'city' => $this->faker->randomElement($city),
+            'city_id' => $this->faker->randomElement($city),
+            'city_branch_id' => $this->faker->randomElement($city),
             'role' => $this->faker->randomElement(['owner', 'admin']),
             'remember_token' => Str::random(10),
         ];

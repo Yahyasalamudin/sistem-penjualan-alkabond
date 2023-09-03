@@ -9,5 +9,5 @@ class Type extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['type'];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 }

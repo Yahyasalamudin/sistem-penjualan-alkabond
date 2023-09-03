@@ -17,7 +17,7 @@ class SalesFactory extends Factory
      */
     public function definition()
     {
-        $city = ['Jember', 'Surabaya', 'Malang', 'Bekasi'];
+        $city = [1, 2, 3, 4];
 
         return [
             'sales_name' => $this->faker->name(),
@@ -25,7 +25,8 @@ class SalesFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'phone_number' => '08' . $this->faker->numberBetween(9, 12) . $this->faker->randomNumber(9),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'city' => $this->faker->randomElement($city),
+            'city_id' => $this->faker->randomElement($city),
+            'city_branch_id' => $this->faker->randomElement($city),
         ];
     }
 }

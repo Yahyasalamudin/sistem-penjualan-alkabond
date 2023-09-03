@@ -36,7 +36,7 @@ class UserController extends Controller
             'phone_number' => 'required',
             'password' => 'required',
             'current_password' => 'required|same:password',
-            'city' => 'required',
+            'city_id' => 'required',
         ]);
 
         if ($request->email) {
@@ -51,8 +51,8 @@ class UserController extends Controller
             'email' => $request->email,
             'phone_number' => $request->phone_number,
             'password' => Hash::make($request->password),
-            'city' => $request->city,
-            'role' => 'owner',
+            'city_id' => $request->city_id,
+            'role' => 'owner'
         ]);
 
         return redirect('users')->with('success', 'User berhasil ditambahkan');
@@ -85,14 +85,14 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'phone_number' => 'required',
-            'city' => 'required',
+            'city_id' => 'required',
         ]);
 
         if (empty($request->password)) {
             User::find($id)->update([
                 'name' => $request->name,
                 'phone_number' => $request->phone_number,
-                'city' => $request->city,
+                'city_id' => $request->city_id,
             ]);
         } else {
             $request->validate([
@@ -103,7 +103,7 @@ class UserController extends Controller
             User::find($id)->update([
                 'name' => $request->name,
                 'phone_number' => $request->phone_number,
-                'city' => $request->city,
+                'city_id' => $request->city_id,
                 'password' => Hash::make($request->password),
             ]);
         }

@@ -20,7 +20,8 @@ class CreateSalesTable extends Migration
             $table->string('email')->unique();
             $table->char('phone_number', 14);
             $table->string('password');
-            $table->string('city')->nullable();
+            $table->foreignId('city_id')->constrained('cities')->nullable();
+            $table->foreignId('city_branch_id')->constrained('city_branches')->nullable();
             $table->enum('active', [1, 0]);
             $table->timestamps();
         });

@@ -28,7 +28,6 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '081233247969',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             // password
-            'city' => 'Jember',
             'role' => 'owner'
         ]);
 
@@ -39,7 +38,7 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '081233247969',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             // password
-            'city' => 'Malang',
+            'city_id' => 1,
             'role' => 'admin'
         ]);
 
@@ -50,7 +49,7 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '081233247969',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             // password
-            'city' => 'Surabaya',
+            'city_id' => 1,
             'role' => 'admin'
         ]);
 
@@ -61,14 +60,16 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '081234567890',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             // password
-            'city' => 'Bekasi',
+            'city_id' => 1,
+            'city_branch_id' => 1,
         ]);
 
         \App\Models\Store::factory()->create([
             'store_name' => 'Toko Jaya Abadi',
             'address' => 'Semboro',
             'store_number' => '082123123123',
-            'city_branch' => 'Surabaya',
+            'city_id' => 1,
+            'city_branch_id' => 1,
             'sales_id' => '11',
         ]);
 

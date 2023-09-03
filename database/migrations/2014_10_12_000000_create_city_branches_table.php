@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateCityBranchesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('city_branches', function (Blueprint $table) {
             $table->id();
-            $table->integer('total_pay');
-            $table->foreignId('transaction_id')->constrained('transactions')->onDelete('cascade');
+            $table->foreignId('city_id')->constrained('cities');
+            $table->string('branch');
             $table->timestamps();
-
-            // $table->foreign('invoice_code')->references('invoice_code')->on('transactions')->onDelete('cascade');
         });
     }
 
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payments');
+        Schema::dropIfExists('city_branches');
     }
-};
+}

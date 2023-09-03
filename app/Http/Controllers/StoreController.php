@@ -16,14 +16,11 @@ class StoreController extends Controller
     {
         $title = 'Daftar Toko';
 
+        $user = auth()->user();
         $city = session('filterKota');
-        $role = auth()->user()->role;
-        $cityFilter = ($role == 'owner') ? $city : auth()->user()->city;
+        $city_branch = session('filterCabangKota');
 
-        // $stores = Store::where('city_branch', $cityFilter)->get();
-        $stores = Store::when($cityFilter, function ($query) use ($cityFilter) {
-            $query->where('city_branch', $cityFilter);
-        })->get();
+        $stores = Store::filterCity($user, $city, $city_branch)->get();
 
         $today = Carbon::today();
         foreach ($stores as $key => $store) {
@@ -36,9 +33,7 @@ class StoreController extends Controller
             return $store['last_transaction_date'] ?? Carbon::now()->addYears(100);
         });
 
-        $sales = Sales::when($cityFilter, function ($query) use ($cityFilter) {
-            $query->where('city', $cityFilter);
-        })->get();
+        $sales = Sales::filterCity($user, $city)->get();
 
         return view('stores.index', compact('title', 'stores', 'sales'));
     }
@@ -51,6 +46,7 @@ class StoreController extends Controller
             'address' => 'required|max:255',
             'store_number' => 'required|numeric|digits_between:10,14',
             'sales_id' => 'required',
+            'city_branch_id' => 'required'
         ]);
 
         $sales = Sales::find($request->sales_id);
@@ -60,7 +56,8 @@ class StoreController extends Controller
             'address' => $request->address,
             'store_number' => $request->store_number,
             'sales_id' => $request->sales_id,
-            'city_branch' => $sales->city
+            'city_id' => $sales->city_id,
+            'city_branch_id' => $sales->city_branch_id
         ]);
 
         return back()->with('success', 'Toko Berhasil ditambahkan');
@@ -76,13 +73,9 @@ class StoreController extends Controller
     public function edit($id)
     {
         $id = Crypt::decrypt($id);
-        $store = DB::table('stores')
-            ->where('stores.id', $id)
-            ->join('sales', 'stores.sales_id', 'sales.id')
-            ->select('stores.*', 'sales.sales_name')
-            ->first();
+        $store = Store::find($id);
 
-        $sales = Sales::where('city', $store->city_branch)->whereNotIn('id', [$store->sales_id])->get();
+        $sales = Sales::where('city_id', $store->city_id)->whereNotIn('id', [$store->sales_id])->get();
 
         return view('stores.edit', compact('store', 'sales'));
     }
@@ -96,11 +89,15 @@ class StoreController extends Controller
             'sales_id' => 'required'
         ]);
 
+        $sales = Sales::find($request->sales_id);
+
         Store::find($id)->update([
             'store_name' => $request->store_name,
             'address' => $request->address,
             'store_number' => $request->store_number,
             'sales_id' => $request->sales_id,
+            'city_id' => $sales->city_id,
+            'city_branch_id' => $sales->city_branch_id
         ]);
 
         return redirect('stores')->with('success', 'Data Toko berhasil diubah');
