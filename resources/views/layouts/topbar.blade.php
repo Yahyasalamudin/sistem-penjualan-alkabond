@@ -52,7 +52,7 @@
             <select class="form-control  @error('active') is-invalid @enderror" name="filterCabangKota"
                 id="input-filter-cabang-kota">
                 <option value="">Semua Cabang</option>
-                @foreach ($city_branches as $branch)
+                @foreach ($city_branches_topbar as $branch)
                     @if (
                         ($user->role === 'owner' && $branch->city_id == session('filterKota')) ||
                             ($user->role === 'admin' && $branch->city_id == $user->city_id))

@@ -26,9 +26,18 @@ class SalesController extends Controller
 
     public function create()
     {
-        $cities = City::all();
+        $user = auth()->user();
+        $cities = City::when($user->role == 'admin', function ($query) use ($user) {
+            $query->where('id', $user->city_id);
+        })->get();
+        $city_branches = CityBranch::where('city_id', $user->city_id)->get();
 
-        return view('sales.create', ['title' => 'Sales Create', 'cities' => $cities]);
+        return view('sales.create', [
+            'title' => 'Sales Create',
+            'cities' => $cities,
+            'city_branches' => $city_branches,
+            'user' => $user
+        ]);
     }
 
     public function store(Request $request)
@@ -74,13 +83,15 @@ class SalesController extends Controller
 
     public function edit($id)
     {
+        $user = auth()->user();
         $sales = Sales::find($id);
         $cities = City::all();
-        $city_branches = CityBranch::where('city_id', $sales->city_branch_id)->get();
+        $city_branches = CityBranch::where('city_id', $sales->city_id)->get();
 
         return view('sales.edit', [
             'title' => 'Edit Sales',
             'sales' => $sales,
+            'user' => $user,
             'cities' => $cities,
             'city_branches' => $city_branches,
         ]);
