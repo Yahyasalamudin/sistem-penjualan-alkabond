@@ -32,11 +32,15 @@
              <div class="bg-white py-2 collapse-inner rounded">
                  <h6 class="collapse-header">Master Data :</h6>
 
-                 <a class="collapse-item {{ Route::is('city.*') ? 'active' : '' }}" href="{{ route('city.index') }}">
-                     Kota
-                 </a>
+                 @if (auth()->user()->role == 'owner')
+                     <a class="collapse-item {{ Route::is('city.*') ? 'active' : '' }}"
+                         href="{{ route('city.index') }}">
+                         Kota
+                     </a>
+                 @endif
 
-                 <a class="collapse-item {{ Route::is('city-branch*') ? 'active' : '' }}" href="{{ route('city-branch.index') }}">
+                 <a class="collapse-item {{ Route::is('city-branch*') ? 'active' : '' }}"
+                     href="{{ route('city-branch.index') }}">
                      Cabang Kota
                  </a>
 

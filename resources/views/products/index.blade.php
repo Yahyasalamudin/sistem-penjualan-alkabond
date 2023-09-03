@@ -12,6 +12,14 @@
         </div>
     @endif
 
+    @error('product_code')
+        <div class="alert alert-danger alert-dismissible" id="flash_data" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ $message }}
+        </div>
+    @enderror
     @error('product_name')
         <div class="alert alert-danger alert-dismissible" id="flash_data" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -67,6 +75,10 @@
                     <form action="{{ route('product.store') }}" method="post">
                         @csrf
                         <div class="modal-body">
+                            <label for="product_code">Kode Produk</label>
+                            <input class="form-control mb-3" type="text" name="product_code" id="product_code"
+                                placeholder="Masukkan Kode Produk">
+
                             <label for="product_name">Nama Produk</label>
                             <select class="form-control mb-3" name="product_name" id="product_name">
                                 <option value="">- Pilih Nama/Jenis Produk -</option>
@@ -94,7 +106,8 @@
 
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered text-center text-center" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered text-center text-center" id="dataTable" width="100%"
+                    cellspacing="0">
                     <thead>
                         <tr>
                             <th>No.</th>

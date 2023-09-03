@@ -22,31 +22,32 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'product_code' => 'required',
             'product_name' => 'required',
             'product_brand' => 'required',
             'unit_weight' => 'required',
         ]);
 
-        $words = explode(" ", $request->product_name);
-        $output = "";
-        foreach ($words as $word) {
-            $output .= substr($word, 0, 1);
-        }
+        // $words = explode(" ", $request->product_name);
+        // $output = "";
+        // foreach ($words as $word) {
+        //     $output .= substr($word, 0, 1);
+        // }
 
-        $now = Carbon::now();
-        $date = date('Ym', strtotime($now));
-        $check = Product::count();
-        if ($check == 0) {
-            $code = 10001;
-            $product_code = $output . $code;
-        } else {
-            $query = Product::all()->last();
-            $code = (int) substr($query->product_code, -5) + 1;
-            $product_code = $output . $code;
-        }
+        // $now = Carbon::now();
+        // $date = date('Ym', strtotime($now));
+        // $check = Product::count();
+        // if ($check == 0) {
+        //     $code = 10001;
+        //     $product_code = $output . $code;
+        // } else {
+        //     $query = Product::all()->last();
+        //     $code = (int) substr($query->product_code, -5) + 1;
+        //     $product_code = $output . $code;
+        // }
 
         Product::create([
-            'product_code' => $product_code,
+            'product_code' => $request->product_code,
             'product_name' => $request->product_name,
             'product_brand' => $request->product_brand,
             'unit_weight' => $request->unit_weight

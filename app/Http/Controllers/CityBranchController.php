@@ -12,11 +12,11 @@ class CityBranchController extends Controller
     public function index()
     {
         $title = 'Data Cabang Kota';
-        $city = session('filterKota');
+        $user = auth()->user();
 
         $cities = City::get();
-        $city_branches = CityBranch::when($city, function ($query) use ($city) {
-            $query->where('city_id', $city);
+        $city_branches = CityBranch::when($user->role == 'admin', function ($query) use ($user) {
+            $query->where('city_id', $user->city_id);
         })->get();
 
         return view('city-branches.index', compact('cities', 'city_branches', 'title'));
