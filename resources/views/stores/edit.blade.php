@@ -53,21 +53,22 @@
                                 <option value="{{ $s->id }}">{{ $s->sales_name }}</option>
                             @endforeach
                         </select>
+
+                        @error('sales_id')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
                     </div>
-                    @error('sales_id')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
                     <div class="form-group ">
-                        <label for="city_branch">Kota Toko</label>
-                        <select class="form-control mb-3" name="city_branch" id="city_branch" disabled>
+                        <label for="city_id">Kota Toko</label>
+                        <select class="form-control mb-3" name="city_id" id="city_id" disabled>
                             <option>{{ $store->city->city }}</option>
                         </select>
                     </div>
                     <div class="form-group ">
-                        <label for="city_branch">Cabang Kota</label>
-                        <select class="form-control mb-3" name="city_branch" id="city_branch" disabled>
+                        <label for="city_branch_id">Cabang Kota</label>
+                        <select class="form-control mb-3" name="city_branch_id" id="city_branch_id" disabled>
                             <option>{{ $store->city_branch->branch }}</option>
                         </select>
                     </div>
