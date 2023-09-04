@@ -137,9 +137,12 @@
         </div>
 
         <div class="card-body">
+            <div class="mb-3">
+                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#importModal">
+                    <i class="fas fa-file-upload"></i> Import
+                </button>
+            </div>
             <div class="table-responsive">
-
-
                 <table class="table table-bordered text-center text-center" id="dataTable" width="100%"
                     cellspacing="0">
                     <thead>
@@ -187,5 +190,47 @@
                 </table>
             </div>
         </div>
+
+        <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="importModalLabel">Import Toko</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post" action="{{ route('import.store') }}" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            @csrf
+                            <div class="card card-outline card-primary mb-3">
+                                <div class="card-header">
+                                    <h5 class="modal-title">Petunjuk :</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Kolom 1 = Nama Toko</li>
+                                        <li>Kolom 2 = Alamat</li>
+                                        <li>Kolom 3 = Nomer Toko</li>
+                                        <li>Kolom 4 = Kota</li>
+                                        <li>Kolom 5 = Cabang Kota</li>
+                                        <li>Kolom 6 = Sales (Pengelola Toko)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <label>Pilih File</label>
+                            <div class="form-group">
+                                <input type="file" name="file" required="required">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Import</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 @endsection
