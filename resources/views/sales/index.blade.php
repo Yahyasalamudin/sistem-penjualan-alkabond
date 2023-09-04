@@ -58,7 +58,7 @@
 
                                 <td class="col-lg-7">{{ $s->sales_name }}</td>
                                 <td class="col-lg-7">{{ $s->username }}</td>
-                                <td class="col-lg-7">{{ $s->email }}</td>
+                                <td class="col-lg-7">{{ !empty($s->email) ? $s->email : '-' }}</td>
                                 <td class="col-lg-7">{{ $s->phone_number }}</td>
                                 <td class="col-lg-7">{{ $s->city->city }}</td>
                                 <td class="col-lg-7">{{ $s->city_branch->branch }}</td>

@@ -103,7 +103,8 @@
                                         <label for="city_id" class="col-sm-2 col-form-label">Pilih Kota</label>
                                         <div class="col-sm-4">
                                             <select class="form-control @error('city_id') is-invalid @enderror"
-                                                name="city_id" id="city_id">
+                                                name="city_id" id="city_id"
+                                                @if ($user->role == 'admin') disabled @endif>
                                                 <option value="{{ $sales->city_id }}">{{ $sales->city->city }}</option>
                                                 @foreach ($cities as $city)
                                                     @if ($city->id != $sales->city_id)
@@ -111,6 +112,10 @@
                                                     @endif
                                                 @endforeach
                                             </select>
+
+                                            @if ($user->role == 'admin')
+                                                <input type="hidden" name="city_id" value="{{ $user->city_id }}">
+                                            @endif
 
                                             @error('city_id')
                                                 <span class="invalid-feedback" role="alert">

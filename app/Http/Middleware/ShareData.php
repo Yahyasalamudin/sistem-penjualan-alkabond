@@ -21,8 +21,8 @@ class ShareData
     {
         if (!Auth::check()) {
             $cities = City::get();
-            $city_branches = CityBranch::get();
-            view()->share(['cities' => $cities, 'city_branches' => $city_branches]);
+            $city_branches_topbar = CityBranch::get();
+            view()->share(['cities' => $cities, 'city_branches_topbar' => $city_branches_topbar]);
         }
 
         return $next($request);

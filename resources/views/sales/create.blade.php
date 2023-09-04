@@ -10,8 +10,8 @@
             $.ajax({
                 url: url,
                 success: function(result) {
-                    $("label[for='city_branch_id']").attr('hidden', false);
-                    $("#city_branch_id").attr('hidden', false);
+                    // $("label[for='city_branch_id']").attr('hidden', false);
+                    // $("#city_branch_id").attr('hidden', false);
                     $("#city_branch_id").empty();
 
                     const option = document.createElement('option');
@@ -115,12 +115,20 @@
                                         <label for="city_id" class="col-sm-2 col-form-label">Pilih Kota</label>
                                         <div class="col-sm-4">
                                             <select class="form-control  @error('city_id') is-invalid @enderror"
-                                                name="city_id" id="city_id">
+                                                name="city_id" id="city_id"
+                                                @if ($user->role == 'admin') disabled @endif>
                                                 <option value="">- Pilih Kota -</option>
                                                 @foreach ($cities as $city)
-                                                    <option value="{{ $city->id }}">{{ $city->city }}</option>
+                                                    <option value="{{ $city->id }}"
+                                                        @if ($user->role == 'admin') selected @endif>
+                                                        {{ $city->city }}
+                                                    </option>
                                                 @endforeach
                                             </select>
+
+                                            @if ($user->role == 'admin')
+                                                <input type="hidden" name="city_id" value="{{ $user->city_id }}">
+                                            @endif
 
                                             @error('city_id')
                                                 <span class="invalid-feedback" role="alert">
@@ -129,12 +137,19 @@
                                             @enderror
                                         </div>
 
-                                        <label for="city_branch_id" class="col-sm-2 col-form-label" hidden>Kota
+                                        <label for="city_branch_id" class="col-sm-2 col-form-label">Kota
                                             Cabang</label>
                                         <div class="col-sm">
                                             <select class="form-control @error('city_branch_id') is-invalid @enderror"
-                                                name="city_branch_id" id="city_branch_id" hidden>
+                                                name="city_branch_id" id="city_branch_id">
                                                 <option value=""> - Pilih Cabang Kota - </option>
+                                                @if ($user->role == 'admin')
+                                                    @foreach ($city_branches as $city_branch)
+                                                        <option value="{{ $city_branch->id }}">
+                                                            {{ $city_branch->branch }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
                                             </select>
                                         </div>
                                     </div>
@@ -181,7 +196,5 @@
                 </div>
             </div>
         </div>
-    </div>
-    </div>
     </div>
 @endsection
