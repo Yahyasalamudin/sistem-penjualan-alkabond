@@ -150,7 +150,7 @@ class ReportController extends Controller
             ->get();
 
         if ($request->excel == 1) {
-            return Excel::download(new BestSellerProductExport($products, $start_month, $end_month, $product_type), 'transactions.xlsx');
+            return Excel::download(new BestSellerProductExport($products, $start_month, $end_month, $product_type), 'produk-terlaris.xlsx');
         } elseif ($request->pdf == 1) {
             $pdf = Pdf::loadview('reports.prints.best-seller-products', compact('products', 'start_month', 'end_month', 'product_type'));
             return $pdf->stream();
