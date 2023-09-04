@@ -5,6 +5,7 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CityBranchController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ImportController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SalesController;
@@ -127,6 +128,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/sales/edit/{id}', [SalesController::class, 'edit'])->name('sales.edit');
     Route::put('/sales/update/{id}', [SalesController::class, 'update'])->name('sales.update');
     Route::delete('/sales/delete/{id}', [SalesController::class, 'destroy'])->name('sales.destroy');
+
+    // Import
+    Route::post('/import/product', [ImportController::class, 'import_product'])->name('import.product');
+    Route::post('/import/store', [ImportController::class, 'import_store'])->name('import.store');
+    Route::post('/import/sales', [ImportController::class, 'import_sales'])->name('import.sales');
 
     // Laporan
     Route::get('/laporan/surat-jalan={invoice}', [ReportController::class, 'suratJalan'])->name('suratjalan');
