@@ -39,7 +39,7 @@
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                cancelButtonText: 'Kembali',
+                cancelButtonText: 'Batal',
                 confirmButtonText: confirmBtnText,
                 reverseButtons: true,
             }).then((result) => {

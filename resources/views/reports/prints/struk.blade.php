@@ -164,8 +164,10 @@
                 <th class="border-bottom border-top" height="10">No</th>
                 <th class="border-bottom border-top">Kode Barang</th>
                 <th class="border-bottom border-top">Nama Barang</th>
+                <th class="border-bottom border-top">Harga Jual</th>
                 <th class="border-bottom border-top">QTY</th>
                 <th class="border-bottom border-top">Sat</th>
+                <th class="border-bottom border-top">Subtotal</th>
             </tr>
             <tbody>
                 @php
@@ -176,10 +178,16 @@
                         <td align="center" height="10">{{ $i++ }}</td>
                         <td align="center">{{ $detail->product->product_code }}</td>
                         <td align="center">{{ $detail->product->product_name }}</td>
+                        <td align="center">Rp. {{ number_format($detail->price) }}</td>
                         <td align="center">{{ $detail->quantity }}</td>
                         <td align="center">{{ $detail->product->unit_weight }}</td>
+                        <td align="center">Rp. {{ number_format($detail->subtotal) }}</td>
                     </tr>
                 @endforeach
+                <tr>
+                    <td colspan="6" align="right">Total : </td>
+                    <td align="center">Rp. {{ number_format($transaction->transaction_details->sum('subtotal')) }}</td>
+                </tr>
             </tbody>
         </table>
         <br><br><br>
