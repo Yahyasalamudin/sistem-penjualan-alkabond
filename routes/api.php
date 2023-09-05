@@ -29,10 +29,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/transaction-detail/{id}/return', [TransactionController::class, 'storeReturn']);
     Route::delete('/transaction-detail/{id}/destroy', [TransactionController::class, 'destroyReturn']);
 
-    // Route::get('/profile', function (Request $request) {
-    //     return auth()->user();
-    // });
-
     //Logout
     Route::post('/logout', [AuthController::class, 'logout']);
 });

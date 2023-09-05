@@ -56,17 +56,14 @@
 
         .tengah {
             text-align: center;
-            line-height: 3px;
         }
 
         .kiri {
             text-align: left;
-            line-height: 3px;
         }
 
         .kanan {
             text-align: right;
-            line-height: 3px;
         }
 
         .jarak {
@@ -193,26 +190,20 @@
         <br><br><br>
         <table>
             <tr class="jarak tengah">
-                <td>Dibuat
-                </td>
+                <td>Dibuat</td>
                 <td width="210">Dikirim</td>
-                <td>Penerima </td>
+                <td>Penerima</td>
             </tr>
             <br><br><br><br><br>
             <tr class="jarak tengah">
-                <td>( {{ auth()->user()->name }} )
-                </td>
-                <td width="210">(..................................)</td>
+                <td>{{ auth()->user()->name }}</td>
+                <td width="210">{{ $transaction->sales->sales_name }}</td>
                 <td>{{ $transaction->stores->store_name }}</td>
             </tr>
-            <br>
             <tr class="jarak tengah ">
-                <td>Admin
-                </td>
-                <td width="210">Sales</td>
-                <td>
-
-                </td>
+                <td>(Admin)</td>
+                <td width="210">(Sales)</td>
+                <td></td>
             </tr>
         </table>
     </div>
