@@ -1,15 +1,42 @@
 @extends('layouts.app')
+@push('js')
+    <script>
+        const input_city_id = document.getElementById("city_id");
 
+        input_city_id.addEventListener("change", function() {
+            let url =
+                "{{ route('city-branch.get-city-branches', ':id') }}";
+            url = url.replace(':id', input_city_id.value) + '?sales=' + 0;
+            $.ajax({
+                url: url,
+                success: function(result) {
+                    $("label[for='city_branch_id']").attr('hidden', false);
+                    $("#city_branch_id").attr('hidden', false);
+                    $("#city_branch_id").empty();
+
+                    const option = document.createElement('option');
+                    option.text = " - Pilih Cabang Kota - ";
+                    option.value = "";
+                    $("#city_branch_id").append(option);
+
+                    result.forEach(item => {
+                        const option = document.createElement('option');
+                        option.text = item.branch;
+                        option.value = item.id;
+                        $("#city_branch_id").append(option);
+                    });
+                }
+            })
+        })
+    </script>
+@endpush
 @section('content')
     <div class="content-header">
-
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="h3 mb-3 text-gray-800">Edit Sales</h1>
-
             </div>
-        </div><!-- /.row -->
-
+        </div>
     </div>
 
     <div class="row">
@@ -19,7 +46,6 @@
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between btcolor">
                         <h6 class="m-0 font-weight-bold text-white ">Tambah Sales</h6>
                     </div>
-
                     <div class="row-lg-12">
                         <form action="{{ route('sales.update', $sales->id) }}" method="post">
                             @csrf
@@ -50,7 +76,6 @@
                                         </div>
                                     </div>
 
-
                                     <div class="form-group row mb-4">
                                         <label for="email" class="col-sm-2 col-form-label">Email</label>
                                         <div class="col-sm-4">
@@ -71,29 +96,54 @@
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
-
                                         </div>
                                     </div>
 
                                     <div class="form-group row mb-4">
-                                        <label for="city" class="col-sm-2 col-form-label">Pilih Kota</label>
+                                        <label for="city_id" class="col-sm-2 col-form-label">Pilih Kota</label>
                                         <div class="col-sm-4">
-                                            <select class="form-control @error('city') is-invalid @enderror" name="city"
-                                                id="city">
-                                                <option value="{{ $sales->city }}">{{ $sales->city }}</option>
+                                            <select class="form-control @error('city_id') is-invalid @enderror"
+                                                name="city_id" id="city_id"
+                                                @if ($user->role == 'admin') disabled @endif>
+                                                <option value="{{ $sales->city_id }}">{{ $sales->city->city }}</option>
                                                 @foreach ($cities as $city)
-                                                    <option value="{{ $city->city }}">{{ $city->city }}</option>
+                                                    @if ($city->id != $sales->city_id)
+                                                        <option value="{{ $city->id }}">{{ $city->city }}</option>
+                                                    @endif
                                                 @endforeach
                                             </select>
 
-                                            @error('city')
+                                            @if ($user->role == 'admin')
+                                                <input type="hidden" name="city_id" value="{{ $user->city_id }}">
+                                            @endif
+
+                                            @error('city_id')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
                                         </div>
+
+                                        <label for="city_branch_id" class="col-sm-2 col-form-label">Kota
+                                            Cabang</label>
+                                        <div class="col-sm">
+                                            <select class="form-control @error('city_branch_id') is-invalid @enderror"
+                                                name="city_branch_id" id="city_branch_id">
+                                                <option value=""> - Pilih Cabang Kota - </option>
+                                                <option value="{{ $sales->city_branch_id }}" selected>
+                                                    {{ $sales->city_branch->branch }}</option>
+                                                @foreach ($city_branches as $item)
+                                                    @if ($item->id != $sales->city_branch_id)
+                                                        <option value="{{ $item->id }}">{{ $item->branch }}</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row mb-4">
                                         <label for="active" class="col-sm-2 col-form-label">Status</label>
-                                        <div class="col">
+                                        <div class="col-4">
                                             <select class="form-control  @error('active') is-invalid @enderror"
                                                 name="active" id="active">
                                                 <option value="1" {{ $sales->active == 1 ? 'selected' : '' }}>Aktif
@@ -119,7 +169,6 @@
                                                 placeholder="Masukkan Password">
                                             <span class="font-italic">NB : Kosongkan password jika tidak ingin
                                                 diganti</span>
-
 
                                             @error('password')
                                                 <span class="invalid-feedback" role="alert">

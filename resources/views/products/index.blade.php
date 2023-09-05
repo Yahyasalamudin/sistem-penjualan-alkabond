@@ -12,6 +12,14 @@
         </div>
     @endif
 
+    @error('product_code')
+        <div class="alert alert-danger alert-dismissible" id="flash_data" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ $message }}
+        </div>
+    @enderror
     @error('product_name')
         <div class="alert alert-danger alert-dismissible" id="flash_data" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -67,6 +75,10 @@
                     <form action="{{ route('product.store') }}" method="post">
                         @csrf
                         <div class="modal-body">
+                            <label for="product_code">Kode Produk</label>
+                            <input class="form-control mb-3" type="text" name="product_code" id="product_code"
+                                placeholder="Masukkan Kode Produk">
+
                             <label for="product_name">Nama Produk</label>
                             <select class="form-control mb-3" name="product_name" id="product_name">
                                 <option value="">- Pilih Nama/Jenis Produk -</option>
@@ -93,8 +105,18 @@
         </div>
 
         <div class="card-body">
+            <div class="mb-3">
+                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#importModal">
+                    <i class="fas fa-file-upload"></i> Import
+                </button>
+                {{-- <a href="{{ route('report.transaction', array_merge(request()->all(), ['excel' => true])) }}"
+                    class="btn btn-success btn-sm">
+                    <i class="far fa-file-excel mr-1"></i> Export
+                </a> --}}
+            </div>
             <div class="table-responsive">
-                <table class="table table-bordered text-center text-center" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered text-center text-center" id="dataTable" width="100%"
+                    cellspacing="0">
                     <thead>
                         <tr>
                             <th>No.</th>
@@ -137,6 +159,45 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="importModalLabel">Import Produk</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post" action="{{ route('import.product') }}" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            @csrf
+                            <div class="card card-outline card-primary mb-3">
+                                <div class="card-header">
+                                    <h5 class="modal-title">Petunjuk :</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Kolom 1 = Kode Produk</li>
+                                        <li>Kolom 2 = Jenis Produk</li>
+                                        <li>Kolom 3 = Merk Produk</li>
+                                        <li>Kolom 4 = Satuan Berat</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <label>Pilih File</label>
+                            <div class="form-group">
+                                <input type="file" name="file" required="required">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Import</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

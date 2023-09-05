@@ -13,7 +13,6 @@ class StoreController extends Controller
     public function index()
     {
         $store = Store::where('sales_id', auth()->user()->id)->get();
-        // $store = Store::where('sales_id', auth()->user()->id)->latest()->get();
 
         return response()->json([
             'data' => StoreResource::collection($store),
@@ -42,7 +41,8 @@ class StoreController extends Controller
             'store_name' => $request->store_name,
             'address' => $request->address,
             'store_number' => $request->store_number,
-            'city_branch' => auth()->user()->city,
+            'city_id' => auth()->user()->city_id,
+            'city_branch_id' => auth()->user()->city_branch_id,
             'sales_id' => auth()->user()->id
         ]);
 

@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-
     <div class="d-flex justify-content-center">
-        <div class="card shadow mb-3 crd-edit col-5">
+        <div class="card shadow mb-3 crd-edit col-10">
             <div class="card-header btcolor text-white mb-0">
                 <h6 class="font-weight-bold">Edit Toko</h6>
             </div>
@@ -13,8 +12,8 @@
                     @method('put')
                     <div class="form-group ">
                         <label for="store_name">Nama Toko</label>
-                        <input type="text" class="form-control @error('store_name') is-invalid @enderror" name="store_name"
-                            id="store_name" value="{{ old('store_name', $store->store_name ?? '') }}">
+                        <input type="text" class="form-control @error('store_name') is-invalid @enderror"
+                            name="store_name" id="store_name" value="{{ old('store_name', $store->store_name ?? '') }}">
 
                         @error('store_name')
                             <span class="invalid-feedback" role="alert">
@@ -46,31 +45,35 @@
                             </span>
                         @enderror
                     </div>
-                        <div class="form-group ">
+                    <div class="form-group ">
                         <label for="sales_id">Sales Pengelola Toko</label>
                         <select class="form-control mb-3" name="sales_id" id="sales_id">
-                            <option value="{{ $store->sales_id }}">{{ $store->sales_name }}</option>
+                            <option value="{{ $store->sales_id }}">{{ $store->sales->sales_name }}</option>
                             @foreach ($sales as $s)
                                 <option value="{{ $s->id }}">{{ $s->sales_name }}</option>
                             @endforeach
                         </select>
                     </div>
-                        @error('sales_id')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                        <div class="form-group ">
+                    @error('sales_id')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                    <div class="form-group ">
                         <label for="city_branch">Kota Toko</label>
                         <select class="form-control mb-3" name="city_branch" id="city_branch" disabled>
-                            <option>{{ $store->city_branch }}</option>
+                            <option>{{ $store->city->city }}</option>
+                        </select>
+                    </div>
+                    <div class="form-group ">
+                        <label for="city_branch">Cabang Kota</label>
+                        <select class="form-control mb-3" name="city_branch" id="city_branch" disabled>
+                            <option>{{ $store->city_branch->branch }}</option>
                         </select>
                     </div>
                     <div class="form-group" style="text-align:right;">
-                        <a href="{{ route('store.index') }}"
-                            class="btn btn-secondary">Batal</a>
-                            <button type="submit" class="btn btcolor ml-2 text-white">Edit Toko</button>
-
+                        <a href="{{ route('store.index') }}" class="btn btn-secondary">Batal</a>
+                        <button type="submit" class="btn btcolor ml-2 text-white">Simpan</button>
                     </div>
                 </form>
             </div>

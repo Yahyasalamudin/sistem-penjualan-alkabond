@@ -82,17 +82,17 @@
                                     </div>
 
                                     <div class="form-group row mb-4">
-                                        <label for="city" class="col-sm-2 col-form-label">Pilih Kota</label>
-                                        <div class="col-sm">
-                                            <select class="form-control  @error('city') is-invalid @enderror" name="city"
-                                                id="city">
+                                        <label for="city_id" class="col-sm-2 col-form-label">Pilih Kota</label>
+                                        <div class="col-4">
+                                            <select class="form-control  @error('city_id') is-invalid @enderror"
+                                                name="city_id" id="city_id">
                                                 <option value="">- Pilih Kota -</option>
                                                 @foreach ($cities as $city)
-                                                    <option value="{{ $city->city }}">{{ $city->city }}</option>
+                                                    <option value="{{ $city->id }}">{{ $city->city }}</option>
                                                 @endforeach
                                             </select>
 
-                                            @error('city')
+                                            @error('city_id')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -134,10 +134,10 @@
                                             Password</label>
                                         <div class="col">
                                             <input type="password"
-                                                class="form-control @error('current_password') is-invalid @enderror "
+                                                class="form-control @error('current_password') is-invalid @enderror"
                                                 name="current_password" id="current_password"
                                                 value="{{ old('current_password') }}"
-                                                placeholder="Masukkan kembali password!! ">
+                                                placeholder="Masukkan kembali password">
 
 
                                             @error('current_password')
@@ -145,7 +145,7 @@
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
-                                            <p class="mt-2">NB:Harus sama dengan password disamping!!"</p>
+                                            <p class="mt-2">NB:Harus sama dengan password disamping</p>
                                         </div>
                                     </div>
 

@@ -3,7 +3,9 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CityBranchController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ImportController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SalesController;
@@ -29,6 +31,8 @@ Route::get('/clear-cache', function () {
     Artisan::call('config:clear');
     Artisan::call('cache:clear');
     Artisan::call('config:cache');
+    Artisan::call('route:cache');
+    Artisan::call('view:cache');
     return 'DONE';
 });
 
@@ -51,13 +55,21 @@ Route::post('/process-login', [AuthController::class, 'actionLogin'])->name('act
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::post('/filterkota', [DashboardController::class, 'filterKota'])->name('filterKota');
+    Route::post('/filter-kota', [DashboardController::class, 'filterKota'])->name('filterKota');
+    Route::post('/filter-cabang-kota', [DashboardController::class, 'filterCabangKota'])->name('filterCabangKota');
 
     // CRUD Data City
     Route::get('/cities', [CityController::class, 'index'])->name('city.index');
     Route::post('/cities', [CityController::class, 'store'])->name('city.store');
     Route::put('/city/{id}/update', [CityController::class, 'update'])->name('city.update');
     Route::delete('/city/{id}/delete', [CityController::class, 'destroy'])->name('city.destroy');
+
+    // CRUD Data Branch
+    Route::get('/city-branches', [CityBranchController::class, 'index'])->name('city-branch.index');
+    Route::post('/city-branches', [CityBranchController::class, 'store'])->name('city-branch.store');
+    Route::put('/city-branch/{id}/update', [CityBranchController::class, 'update'])->name('city-branch.update');
+    Route::delete('/city-branch/{id}/delete', [CityBranchController::class, 'destroy'])->name('city-branch.destroy');
+    Route::get('/city-branches/{id}/get', [CityBranchController::class, 'get_city_branches'])->name('city-branch.get-city-branches');
 
     // CRUD Data Type Product
     Route::get('/types', [TypeController::class, 'index'])->name('type.index');
@@ -119,11 +131,17 @@ Route::middleware('auth')->group(function () {
     Route::put('/sales/update/{id}', [SalesController::class, 'update'])->name('sales.update');
     Route::delete('/sales/delete/{id}', [SalesController::class, 'destroy'])->name('sales.destroy');
 
+    // Import
+    Route::post('/import/product', [ImportController::class, 'import_product'])->name('import.product');
+    Route::post('/import/store', [ImportController::class, 'import_store'])->name('import.store');
+    Route::post('/import/sales', [ImportController::class, 'import_sales'])->name('import.sales');
+
     // Laporan
     Route::get('/laporan/surat-jalan={invoice}', [ReportController::class, 'suratJalan'])->name('suratjalan');
     Route::get('/laporan/struk={invoice}', [ReportController::class, 'struk'])->name('struk');
     Route::get('/laporan/transaksi', [ReportController::class, 'transaction_report'])->name('report.transaction');
     Route::post('/laporan/transaksi', [ReportController::class, 'printTransactionReport'])->name('print.transactionReport');
+    Route::get('/laporan/barang-terjual', [ReportController::class, 'bestSellerProductReport'])->name('report.bestSellerProductReport');
     Route::get('/laporan/pendapatan', [ReportController::class, 'incomeReport'])->name('incomeReport');
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');

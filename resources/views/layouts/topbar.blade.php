@@ -1,10 +1,23 @@
+@php
+    $user = auth()->user();
+@endphp
 @push('js')
     <script>
         const input_filter_kota = document.getElementById("input-filter-kota");
         const filterKotaForm = document.getElementById("filterKotaForm");
 
-        input_filter_kota.addEventListener("change", function() {
-            filterKotaForm.submit();
+        if (input_filter_kota) {
+            input_filter_kota.addEventListener("change", function() {
+                filterKotaForm.submit();
+            })
+        }
+
+        const input_cabang_kota = document.getElementById("input-filter-cabang-kota");
+        const filterCabangKotaForm = document.getElementById("filterCabangKotaForm");
+
+        input_cabang_kota.addEventListener("change", function() {
+            console.log('test2')
+            filterCabangKotaForm.submit();
         })
     </script>
 @endpush
@@ -15,21 +28,42 @@
         <i class="fa fa-bars"></i>
     </button>
 
-    @if (auth()->user()->role == 'owner')
-        <label for="input-filter-kota" class="col-sm-1 col-form-label text-center">Cabang Kota</label>
+    @if ($user->role == 'owner')
+        <label for="input-filter-kota" class="col-sm-1 col-form-label text-center">Kota</label>
         <div class="col-2">
             <form action="{{ route('filterKota') }}" method="post" id="filterKotaForm">
                 @csrf
                 <select class="form-control  @error('active') is-invalid @enderror" name="filterKota"
                     id="input-filter-kota">
                     <option value="">Semua Kota</option>
-                    @foreach ($kota as $k)
-                        <option {{ session('filterKota') == $k->city ? 'selected' : '' }}>{{ $k->city }}</option>
+                    @foreach ($cities as $city)
+                        <option value="{{ $city->id }}" {{ session('filterKota') == $city->id ? 'selected' : '' }}>
+                            {{ $city->city }}</option>
                     @endforeach
                 </select>
             </form>
         </div>
     @endif
+
+    <label for="input-filter-cabang-kota" class="col-sm-1 col-form-label text-center">Cabang Kota</label>
+    <div class="col-2">
+        <form action="{{ route('filterCabangKota') }}" method="post" id="filterCabangKotaForm">
+            @csrf
+            <select class="form-control  @error('active') is-invalid @enderror" name="filterCabangKota"
+                id="input-filter-cabang-kota">
+                <option value="">Semua Cabang</option>
+                @foreach ($city_branches_topbar as $branch)
+                    @if (
+                        ($user->role === 'owner' && $branch->city_id == session('filterKota')) ||
+                            ($user->role === 'admin' && $branch->city_id == $user->city_id))
+                        <option value="{{ $branch->id }}"
+                            {{ session('filterCabangKota') == $branch->id ? 'selected' : '' }}>
+                            {{ $branch->branch }}</option>
+                    @endif
+                @endforeach
+            </select>
+        </form>
+    </div>
 
     <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown no-arrow d-sm-none">
@@ -60,7 +94,7 @@
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }}</span>
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ $user->name }}</span>
                 <img class="img-profile rounded-circle" src="{{ asset('img/blank-profile-picture-973460_1280.webp') }}">
             </a>
             <!-- Dropdown - User Information -->

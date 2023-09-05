@@ -32,8 +32,16 @@
              <div class="bg-white py-2 collapse-inner rounded">
                  <h6 class="collapse-header">Master Data :</h6>
 
-                 <a class="collapse-item {{ Route::is('city*') ? 'active' : '' }}" href="{{ route('city.index') }}">
-                     Kota
+                 @if (auth()->user()->role == 'owner')
+                     <a class="collapse-item {{ Route::is('city.*') ? 'active' : '' }}"
+                         href="{{ route('city.index') }}">
+                         Kota
+                     </a>
+                 @endif
+
+                 <a class="collapse-item {{ Route::is('city-branch*') ? 'active' : '' }}"
+                     href="{{ route('city-branch.index') }}">
+                     Cabang Kota
                  </a>
 
                  <a class="collapse-item {{ Route::is('type*') ? 'active' : '' }}" href="{{ route('type.index') }}">
@@ -136,14 +144,14 @@
                  <span>Owner</span>
              </a>
          </li>
-     @endif
 
-     <li class="nav-item {{ Route::is('admin*') ? 'active' : '' }}">
-         <a class="nav-link" href="{{ route('admin.index') }}">
-             <i class="fas fa-fw fa-user-friends"></i>
-             <span>Admin</span>
-         </a>
-     </li>
+         <li class="nav-item {{ Route::is('admin*') ? 'active' : '' }}">
+             <a class="nav-link" href="{{ route('admin.index') }}">
+                 <i class="fas fa-fw fa-user-friends"></i>
+                 <span>Admin</span>
+             </a>
+         </li>
+     @endif
 
      <!-- Nav Item - Tables -->
      <li class="nav-item {{ Route::is('sales*') ? 'active' : '' }}">
@@ -162,6 +170,12 @@
          <a class="nav-link" href="{{ route('report.transaction') }}">
              <i class="fas fa-fw fa-solid fa-file-pdf"></i>
              <span>Laporan Transaksi</span>
+         </a>
+     </li>
+     <li class="nav-item ">
+         <a class="nav-link" href="{{ route('report.bestSellerProductReport') }}">
+             <i class="fas fa-fw fa-solid fa-file-pdf"></i>
+             <span>Laporan Barang Terjual</span>
          </a>
      </li>
      <li class="nav-item ">

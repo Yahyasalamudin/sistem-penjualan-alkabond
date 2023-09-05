@@ -39,7 +39,7 @@
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                cancelButtonText: 'Kembali',
+                cancelButtonText: 'Batal',
                 confirmButtonText: confirmBtnText,
                 reverseButtons: true,
             }).then((result) => {
@@ -95,6 +95,7 @@
                             <th>Alamat Toko</th>
                             <th>Nomer Toko</th>
                             <th>Kota</th>
+                            <th>Cabang Kota</th>
                             <th>Total Harga</th>
                             <th>Opsi</th>
                         </tr>
@@ -118,7 +119,8 @@
                                 <td>{{ $transaction->stores->store_name }}</td>
                                 <td>{{ $transaction->stores->address }}</td>
                                 <td>{{ $transaction->stores->store_number }}</td>
-                                <td>{{ $transaction->stores->city_branch }}</td>
+                                <td>{{ $transaction->stores->city->city }}</td>
+                                <td>{{ $transaction->stores->city_branch->branch }}</td>
                                 <td class="col-md-2">
                                     Rp {{ number_format($transaction->grand_total) }}
                                 </td>

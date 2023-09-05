@@ -21,6 +21,26 @@ class CitySeeder extends Seeder
             ['city' => 'Jember']
         ];
 
+        $city_branch = [
+            [
+                'city_id' => 1,
+                'branch' => 'Kepanjen'
+            ],
+            [
+                'city_id' => 2,
+                'branch' => 'Rungkut'
+            ],
+            [
+                'city_id' => 3,
+                'branch' => 'Bekasi Selatan'
+            ],
+            [
+                'city_id' => 4,
+                'branch' => 'Semboro'
+            ]
+        ];
+
         \App\Models\City::insert($city);
+        \App\Models\CityBranch::insert($city_branch);
     }
 }

@@ -16,7 +16,7 @@ class AdminController extends Controller
         $users = User::where('role', 'admin')->latest()->whereNotIn('id', [$auth->id]);
 
         if ($auth->role == 'owner' && !empty($city)) {
-            $users = $users->where('city', $city);
+            $users = $users->where('city_id', $city);
         }
 
         return view('admins.index', [
@@ -41,7 +41,7 @@ class AdminController extends Controller
             'phone_number' => 'required',
             'password' => 'required',
             'current_password' => 'required|same:password',
-            'city' => 'required',
+            'city_id' => 'required',
         ]);
 
         if ($request->email) {
@@ -56,7 +56,7 @@ class AdminController extends Controller
             'email' => $request->email,
             'phone_number' => $request->phone_number,
             'password' => Hash::make($request->password),
-            'city' => $request->city,
+            'city_id' => $request->city_id,
             'role' => 'admin',
         ]);
 
@@ -90,14 +90,14 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required',
             'phone_number' => 'required',
-            'city' => 'required',
+            'city_id' => 'required',
         ]);
 
         if (empty($request->password)) {
             User::find($id)->update([
                 'name' => $request->name,
                 'phone_number' => $request->phone_number,
-                'city' => $request->city,
+                'city_id' => $request->city_id,
                 'active' => $request->active,
             ]);
         } else {
@@ -109,7 +109,7 @@ class AdminController extends Controller
             User::find($id)->update([
                 'name' => $request->name,
                 'phone_number' => $request->phone_number,
-                'city' => $request->city,
+                'city_id' => $request->city_id,
                 'active' => $request->active,
                 'password' => Hash::make($request->password),
             ]);

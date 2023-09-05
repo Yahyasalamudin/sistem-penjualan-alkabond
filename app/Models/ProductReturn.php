@@ -9,7 +9,7 @@ class ProductReturn extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['return', 'description_return'];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     public function transaction_detail()
     {

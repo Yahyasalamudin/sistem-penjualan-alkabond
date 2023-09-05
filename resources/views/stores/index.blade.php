@@ -1,9 +1,36 @@
 @extends('layouts.app')
+@push('js')
+    <script>
+        const input_sales_id = document.getElementById("sales_id");
 
+        input_sales_id.addEventListener("change", function() {
+            let url = "{{ route('city-branch.get-city-branches', ':id') }}";
+            url = url.replace(':id', input_sales_id.value) + '?sales=' + 1;
+            $.ajax({
+                url: url,
+                success: function(result) {
+                    $("label[for='city_branch_id']").attr('hidden', false);
+                    $("#city_branch_id").attr('hidden', false);
+                    $("#city_branch_id").empty();
+
+                    const option = document.createElement('option');
+                    option.text = " - Pilih Cabang Kota - ";
+                    option.value = "";
+                    $("#city_branch_id").append(option);
+
+                    result.forEach(item => {
+                        const option = document.createElement('option');
+                        option.text = item.branch;
+                        option.value = item.id;
+                        $("#city_branch_id").append(option);
+                    });
+                }
+            })
+        })
+    </script>
+@endpush
 @section('content')
     <h1 class="h3 mb-3 text-gray-800"> Data Toko</h1>
-
-
 
     @if (session('success'))
         <div class="alert alert-success alert-dismissible" id="flash_data" role="alert">
@@ -46,12 +73,18 @@
             {{ $message }}
         </div>
     @enderror
+    @error('city_branch_id')
+        <div class="alert alert-danger alert-dismissible" id="flash_data3" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ $message }}
+        </div>
+    @enderror
 
-    <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Table Toko</h6>
-
             <button type="button" class="btn btcolor text-white" data-toggle="modal" data-target="#exampleModal">
                 Tambah Toko
             </button>
@@ -88,6 +121,11 @@
                                     <option value="{{ $s->id }}">{{ $s->sales_name }}</option>
                                 @endforeach
                             </select>
+
+                            <label for="city_branch_id" hidden>Cabang Kota</label>
+                            <select class="form-control mb-3" name="city_branch_id" id="city_branch_id" hidden>
+                                <option value=""> - Pilih Cabang Kota - </option>
+                            </select>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -99,17 +137,22 @@
         </div>
 
         <div class="card-body">
+            <div class="mb-3">
+                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#importModal">
+                    <i class="fas fa-file-upload"></i> Import
+                </button>
+            </div>
             <div class="table-responsive">
-
-
-                <table class="table table-bordered text-center text-center" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered text-center text-center" id="dataTable" width="100%"
+                    cellspacing="0">
                     <thead>
                         <tr>
                             <th>No.</th>
                             <th>Toko</th>
                             <th>Alamat</th>
                             <th>Nomer Hp</th>
-                            <th>Toko Kota</th>
+                            <th>Kota</th>
+                            <th>Cabang Kota</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -123,7 +166,8 @@
                                 <td>{{ $store->store_name }}</td>
                                 <td>{{ $store->address }}</td>
                                 <td>{{ $store->store_number }}</td>
-                                <td>{{ $store->city_branch }}</td>
+                                <td>{{ $store->city->city }}</td>
+                                <td>{{ $store->city_branch->branch }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
                                         <a href="{{ route('store.edit', Crypt::encrypt($store->id)) }}"
@@ -146,5 +190,47 @@
                 </table>
             </div>
         </div>
+
+        <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="importModalLabel">Import Toko</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post" action="{{ route('import.store') }}" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            @csrf
+                            <div class="card card-outline card-primary mb-3">
+                                <div class="card-header">
+                                    <h5 class="modal-title">Petunjuk :</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Kolom 1 = Nama Toko</li>
+                                        <li>Kolom 2 = Alamat</li>
+                                        <li>Kolom 3 = Nomer Toko</li>
+                                        <li>Kolom 4 = Kota</li>
+                                        <li>Kolom 5 = Cabang Kota</li>
+                                        <li>Kolom 6 = Sales (Pengelola Toko)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <label>Pilih File</label>
+                            <div class="form-group">
+                                <input type="file" name="file" required="required">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Import</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 @endsection

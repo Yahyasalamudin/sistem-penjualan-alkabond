@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\City;
+use App\Models\CityBranch;
 use App\Models\Sales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,14 +14,9 @@ class SalesController extends Controller
     {
         $user = auth()->user();
         $city = session('filterKota');
+        $city_branch = session('filterCabangKota');
 
-        $sales = Sales::where(function ($query) use ($city, $user) {
-            if ($user->role == 'owner' && !empty($city)) {
-                $query->where('city', $city);
-            } elseif ($user->rol == 'admin') {
-                $query->where('city', $user->city);
-            }
-        })->get();
+        $sales = Sales::filterCity($user, $city)->filterBranch($city_branch)->get();
 
         return view('sales.index', [
             'title' => 'Sales',
@@ -30,9 +26,18 @@ class SalesController extends Controller
 
     public function create()
     {
-        $cities = City::all();
+        $user = auth()->user();
+        $cities = City::when($user->role == 'admin', function ($query) use ($user) {
+            $query->where('id', $user->city_id);
+        })->get();
+        $city_branches = CityBranch::where('city_id', $user->city_id)->get();
 
-        return view('sales.create', ['title' => 'Sales Create', 'cities' => $cities]);
+        return view('sales.create', [
+            'title' => 'Sales Create',
+            'cities' => $cities,
+            'city_branches' => $city_branches,
+            'user' => $user
+        ]);
     }
 
     public function store(Request $request)
@@ -43,7 +48,8 @@ class SalesController extends Controller
             'phone_number' => 'required',
             'password' => 'required',
             'current_password' => 'required|same:password',
-            'city' => 'required'
+            'city_id' => 'required',
+            'city_branch_id' => 'required'
         ]);
 
         if ($request->email) {
@@ -58,7 +64,8 @@ class SalesController extends Controller
             'email' => $request->email,
             'phone_number' => $request->phone_number,
             'password' => Hash::make($request->password),
-            'city' => $request->city
+            'city_id' => $request->city_id,
+            'city_branch_id' => $request->city_branch_id
         ]);
 
         return redirect('sales')->with('success', 'Sales berhasil ditambahkan');
@@ -76,13 +83,17 @@ class SalesController extends Controller
 
     public function edit($id)
     {
+        $user = auth()->user();
         $sales = Sales::find($id);
         $cities = City::all();
+        $city_branches = CityBranch::where('city_id', $sales->city_id)->get();
 
         return view('sales.edit', [
             'title' => 'Edit Sales',
             'sales' => $sales,
+            'user' => $user,
             'cities' => $cities,
+            'city_branches' => $city_branches,
         ]);
     }
 
@@ -91,7 +102,8 @@ class SalesController extends Controller
         $request->validate([
             'sales_name' => 'required',
             'phone_number' => 'required',
-            'city' => 'required',
+            'city_id' => 'required',
+            'city_branch_id' => 'required',
         ]);
 
         if (empty($request->password)) {
@@ -99,7 +111,8 @@ class SalesController extends Controller
                 'sales_name' => $request->sales_name,
                 'phone_number' => $request->phone_number,
                 'email' => $request->email,
-                'city' => $request->city,
+                'city_id' => $request->city_id,
+                'city_branch_id' => $request->city_branch_id,
                 'active' => $request->active,
             ]);
         } else {
@@ -112,7 +125,8 @@ class SalesController extends Controller
                 'sales_name' => $request->sales_name,
                 'phone_number' => $request->phone_number,
                 'email' => $request->email,
-                'city' => $request->city,
+                'city_id' => $request->city_id,
+                'city_branch_id' => $request->city_branch_id,
                 'active' => $request->active,
                 'password' => Hash::make($request->password),
             ]);

@@ -45,21 +45,6 @@ class CityController extends Controller
 
         $city = City::find($id);
 
-        $users = User::where('city', $city->city)->get();
-        foreach ($users as $user) {
-            $user->update(['city' => $request->city]);
-        }
-
-        $sales = Sales::where('city', $city->city)->get();
-        foreach ($sales as $s) {
-            $s->update(['city' => $request->city]);
-        }
-
-        $stores = Store::where('city_branch', $city->city)->get();
-        foreach ($stores as $store) {
-            $store->update(['city_branch' => $request->city]);
-        }
-
         $city->update([
             'city' => $request->city
         ]);
