@@ -17,7 +17,7 @@ class PaymentResource extends JsonResource
         // return parent::toArray($request);
         return [
             'id' => $this->id,
-            'total_pay' => $this->total_pay,
+            'total_pay' => (int)$this->total_pay,
             'transaction_id' => $this->transaction_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
