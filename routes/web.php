@@ -31,23 +31,12 @@ Route::get('/clear-cache', function () {
     Artisan::call('config:clear');
     Artisan::call('cache:clear');
     Artisan::call('config:cache');
-    Artisan::call('route:cache');
-    Artisan::call('view:cache');
     return 'DONE';
-});
-
-Route::fallback(function () {
-    return view('errors.404');
 });
 
 Route::get('/', function () {
     return redirect('login');
 });
-
-// Error Handle
-Route::get('/Unauthorized', function () {
-    return view('errors.401');
-})->name('unauthorized');
 
 // Login
 Route::get('/login', [AuthController::class, 'login'])->name('login');

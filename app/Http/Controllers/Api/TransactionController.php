@@ -95,7 +95,7 @@ class TransactionController extends Controller
             'store_id' => 'required',
             'details' => 'required|array',
             'details.*.product_id' => 'required',
-            // 'details.*.quantity' => 'required',
+            'details.*.quantity' => 'required',
             'details.*.price' => 'required',
         ]);
 
@@ -148,7 +148,7 @@ class TransactionController extends Controller
             ->where('delivery_status', 'unsent')
             ->first();
 
-        foreach ($request->detail as $detail) {
+        foreach ($request->details as $detail) {
             $check_detail = TransactionDetail::where('transaction_id', $check_transactions['id'])->where('product_id', $detail['product_id'])->first();
             if (empty($check_detail)) {
                 $transaction = TransactionDetail::create([

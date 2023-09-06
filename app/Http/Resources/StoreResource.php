@@ -21,7 +21,7 @@ class StoreResource extends JsonResource
             'store_number' => $this->store_number,
             'city' => $this->city->city,
             'city_branch' => $this->city_branch->branch,
-            'sales_id' => $this->sales_id,
+            'sales_id' => (int)$this->sales_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
