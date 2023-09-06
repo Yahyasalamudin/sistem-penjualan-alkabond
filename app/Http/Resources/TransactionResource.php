@@ -24,6 +24,7 @@ class TransactionResource extends JsonResource
             'payment_method' => $this->payment_method,
             'status' => $this->status,
             'delivery_status' => $this->delivery_status,
+            'city' => $this->sales->city->city,
             'store_name' => $this->stores->store_name,
             'address' => $this->stores->address,
             'store_number' => $this->stores->store_number,

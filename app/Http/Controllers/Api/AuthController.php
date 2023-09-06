@@ -43,8 +43,8 @@ class AuthController extends Controller
             $user = Sales::where('username', $request['email'])->firstOrFail();
         } else {
             return response()->json([
-                'message' => 'Unauthorized',
-                'status_code' => 401
+                'message' => 'username or password is incorrect',
+                'status_code' => 400
             ]);
         }
 

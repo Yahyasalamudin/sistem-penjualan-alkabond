@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CityBranchResource;
 use App\Http\Resources\StoreResource;
+use App\Models\CityBranch;
 use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -13,10 +15,11 @@ class StoreController extends Controller
     public function index()
     {
         $store = Store::where('sales_id', auth()->user()->id)->get();
+        $city_branch = CityBranch::where('city_id', auth()->user()->city_id)->get();
 
         return response()->json([
-            'data' => StoreResource::collection($store),
-            'message' => 'Fetch all Store',
+            'data' => ['stores' => StoreResource::collection($store), 'city_branches' => CityBranchResource::collection($city_branch)],
+            'message' => 'Fetch Store and City Branch',
             'status_code' => 200
         ]);
     }
@@ -42,7 +45,7 @@ class StoreController extends Controller
             'address' => $request->address,
             'store_number' => $request->store_number,
             'city_id' => auth()->user()->city_id,
-            'city_branch_id' => auth()->user()->city_branch_id,
+            'city_branch_id' => $request->city_branch_id,
             'sales_id' => auth()->user()->id
         ]);
 

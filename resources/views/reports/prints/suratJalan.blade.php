@@ -31,6 +31,7 @@
             font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
             border-collapse: collapse;
             width: 100%;
+            table-layout: fixed
         }
 
         #table td,
@@ -56,22 +57,18 @@
 
         .tengah {
             text-align: center;
-            line-height: 3px;
         }
 
         .kiri {
             text-align: left;
-            line-height: 3px;
         }
 
         .kanan {
             text-align: right;
-            line-height: 3px;
         }
 
         .jarak {
             font-size: 15px;
-
         }
     </style>
 </head>
@@ -195,58 +192,27 @@
         <br><br><br>
         <table>
             <tr class="jarak tengah">
-                <td>Dibuat
-                </td>
+                <td width="120">Dibuat</td>
                 <td width="120">Diperiksa</td>
-                <td width="210">Dikirim</td>
-                <td>Penerima </td>
+                <td width="120">Dikirim</td>
+                <td width="120">Penerima </td>
             </tr>
             <br><br><br><br><br>
             <tr class="jarak tengah">
-                <td>( {{ auth()->user()->name }} )
-                </td>
-                <td width="">(..................................)</td>
-                <td width="210">(..................................)</td>
+                <td>{{ auth()->user()->name }}</td>
+                <td>(..................................)</td>
+                <td>(..................................)</td>
                 <td>{{ $transaction->stores->store_name }}</td>
             </tr>
             <br>
             <tr class="jarak tengah ">
-                <td>Admin
-                </td>
-                <td width="">Gudang</td>
-                <td width="210">Sopir</td>
-                <td>
-
-                </td>
+                <td>Admin</td>
+                <td>Gudang</td>
+                <td>Sopir</td>
+                <td></td>
             </tr>
         </table>
     </div>
-
-
-
-    {{-- <div style="float: right;">
-        <div class="jarak">
-            <div>
-            </div>
-            <div width="220"></div>
-            <div>Penerima</div>
-            <div></div>
-        </div>
-
-
-        <div class="jarak" >
-            <div>
-            </div>
-            <div width="220"></div>
-            <div style="font-weight:bold;">
-                <div>Bpk. Purwono / {{ $transaction->stores->store_name }}</div>
-
-    </div>
-    <div></div>
-    </div>
-
-    </div> --}}
-
 </body>
 
 </html>
