@@ -14,7 +14,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|min:5',
+            'email' => 'required',
             'password' => 'required|min:5'
         ]);
 
@@ -26,7 +26,9 @@ class AuthController extends Controller
             ]);
         }
 
-        $cek_active = Sales::where('email', $request->email)->first();
+        $fieldType = filter_var($request->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        $cek_active = Sales::where($fieldType, $request->email)->first();
 
         if (isset($cek_active->active) && $cek_active->active == 0) {
             return response()->json([
@@ -37,9 +39,9 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        if (Auth::guard('sales')->attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
+        if (Auth::guard('sales')->attempt(['email' => $credentials['email'], 'password' => $credentials['password']], true)) {
             $user = Sales::where('email', $request['email'])->firstOrFail();
-        } else if (Auth::guard('sales')->attempt(['username' => $credentials['email'], 'password' => $credentials['password']])) {
+        } else if (Auth::guard('sales')->attempt(['username' => $credentials['email'], 'password' => $credentials['password']], true)) {
             $user = Sales::where('username', $request['email'])->firstOrFail();
         } else {
             return response()->json([

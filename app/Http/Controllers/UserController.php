@@ -32,7 +32,6 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'username' => 'required|unique:users',
-            // 'email' => 'required|unique:users|email',
             'phone_number' => 'required',
             'password' => 'required',
             'current_password' => 'required|same:password',
@@ -96,8 +95,8 @@ class UserController extends Controller
             ]);
         } else {
             $request->validate([
-                'password' => 'required|min:6',
-                'current_password' => 'required|same:password|min:6',
+                'password' => 'required|min:5',
+                'current_password' => 'required|same:password|min:5',
             ]);
 
             User::find($id)->update([
