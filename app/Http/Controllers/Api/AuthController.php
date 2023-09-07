@@ -39,9 +39,9 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        if (Auth::guard('sales')->attempt(['email' => $credentials['email'], 'password' => $credentials['password']], true)) {
+        if (Auth::guard('sales')->attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
             $user = Sales::where('email', $request['email'])->firstOrFail();
-        } else if (Auth::guard('sales')->attempt(['username' => $credentials['email'], 'password' => $credentials['password']], true)) {
+        } else if (Auth::guard('sales')->attempt(['username' => $credentials['email'], 'password' => $credentials['password']])) {
             $user = Sales::where('username', $request['email'])->firstOrFail();
         } else {
             return response()->json([
