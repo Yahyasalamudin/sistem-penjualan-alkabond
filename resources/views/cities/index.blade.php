@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="h3 mb-3 text-gray-800">Data Kota</h1>
+    <h1 class="h3 mb-3 text-gray-800">Data Cabang</h1>
 
     @if (session('success'))
         <div class="alert alert-success alert-dismissible" id="flash_data" role="alert">
@@ -22,15 +22,11 @@
     @enderror
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
-        {{-- <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Data Kota</h6>
-        </div> --}}
-
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">Tabel Kota</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Tabel Cabang</h6>
 
             <button type="button" class="btn btcolor text-white" data-toggle="modal" data-target="#exampleModal">
-                Tambah Kota
+                Tambah Cabang
             </button>
         </div>
 
@@ -40,7 +36,7 @@
                     <thead>
                         <tr>
                             <th>No.</th>
-                            <th>Kota</th>
+                            <th>Cabang</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -77,7 +73,7 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="editModalLabel">Edit Kota</h5>
+                                            <h5 class="modal-title" id="editModalLabel">Edit Cabang</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -86,9 +82,9 @@
                                             @csrf
                                             @method('put')
                                             <div class="modal-body">
-                                                <label for="city">Nama Kota</label>
+                                                <label for="city">Nama Cabang</label>
                                                 <input class="form-control" type="text" name="city" id="city"
-                                                    placeholder="Masukkan Nama Kota" value="{{ $c->city }}">
+                                                    placeholder="Masukkan Nama Cabang" value="{{ $c->city }}">
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
@@ -110,7 +106,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Tambah Kota</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Tambah Cabang</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -118,9 +114,9 @@
                 <form action="{{ route('city.store') }}" method="post">
                     @csrf
                     <div class="modal-body">
-                        <label for="city">Nama Kota</label>
+                        <label for="city">Nama Cabang</label>
                         <input class="form-control" type="text" name="city" id="city"
-                            placeholder="Masukkan Nama Kota">
+                            placeholder="Masukkan Nama Cabang">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>

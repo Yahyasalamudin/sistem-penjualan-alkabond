@@ -12,7 +12,7 @@ class UserController extends Controller
     public function index()
     {
         $auth = auth()->user();
-        $users = User::where('role', 'owner')->latest()->whereNotIn('id', [$auth->id])->get();
+        $users = User::where('role', 'owner')->latest()->whereNotIn('id', [$auth->id])->whereNotIn('username', 'tester')->get();
 
         return view('users.index', [
             'title' => 'User',

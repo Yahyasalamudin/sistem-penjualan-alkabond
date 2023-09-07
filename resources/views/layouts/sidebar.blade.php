@@ -35,13 +35,13 @@
                  @if (auth()->user()->role == 'owner')
                      <a class="collapse-item {{ Route::is('city.*') ? 'active' : '' }}"
                          href="{{ route('city.index') }}">
-                         Kota
+                         Cabang Gudang
                      </a>
                  @endif
 
                  <a class="collapse-item {{ Route::is('city-branch*') ? 'active' : '' }}"
                      href="{{ route('city-branch.index') }}">
-                     Cabang Kota
+                     Kota
                  </a>
 
                  <a class="collapse-item {{ Route::is('type*') ? 'active' : '' }}" href="{{ route('type.index') }}">
@@ -104,11 +104,6 @@
                      href="{{ route('transaction.index', 'proccess') }}">
                      Proses
                  </a>
-
-                 {{-- <a class="collapse-item {{ Request::is('transactions/sent*') ? 'active' : '' }}"
-                     href="{{ route('transaction.index', 'sent') }}">
-                     Dikirim
-                 </a> --}}
 
                  <a class="collapse-item {{ Request::is('transactions/partial*') || Request::is('transactions/sent*') ? 'active' : '' }}"
                      href="{{ route('transaction.index', 'partial') }}">

@@ -16,7 +16,6 @@
         const filterCabangKotaForm = document.getElementById("filterCabangKotaForm");
 
         input_cabang_kota.addEventListener("change", function() {
-            console.log('test2')
             filterCabangKotaForm.submit();
         })
     </script>
@@ -29,13 +28,13 @@
     </button>
 
     @if ($user->role == 'owner')
-        <label for="input-filter-kota" class="col-sm-1 col-form-label text-center">Kota</label>
+        <label for="input-filter-kota" class="col-sm-1 col-form-label text-center">Cabang Gudang</label>
         <div class="col-2">
             <form action="{{ route('filterKota') }}" method="post" id="filterKotaForm">
                 @csrf
                 <select class="form-control  @error('active') is-invalid @enderror" name="filterKota"
                     id="input-filter-kota">
-                    <option value="">Semua Kota</option>
+                    <option value="">Semua Cabang</option>
                     @foreach ($cities as $city)
                         <option value="{{ $city->id }}" {{ session('filterKota') == $city->id ? 'selected' : '' }}>
                             {{ $city->city }}</option>
@@ -45,13 +44,13 @@
         </div>
     @endif
 
-    <label for="input-filter-cabang-kota" class="col-sm-1 col-form-label text-center">Cabang Kota</label>
+    <label for="input-filter-cabang-kota" class="col-sm-1 col-form-label text-center">Kota</label>
     <div class="col-2">
         <form action="{{ route('filterCabangKota') }}" method="post" id="filterCabangKotaForm">
             @csrf
             <select class="form-control  @error('active') is-invalid @enderror" name="filterCabangKota"
                 id="input-filter-cabang-kota">
-                <option value="">Semua Cabang</option>
+                <option value="">Semua Kota</option>
                 @foreach ($city_branches_topbar as $branch)
                     @if (
                         ($user->role === 'owner' && $branch->city_id == session('filterKota')) ||

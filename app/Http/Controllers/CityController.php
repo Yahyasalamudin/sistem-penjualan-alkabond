@@ -13,7 +13,7 @@ class CityController extends Controller
 {
     public function index()
     {
-        $title = 'Data Kota';
+        $title = 'Data Cabang Gudang';
 
         $city = City::get();
 
@@ -23,24 +23,20 @@ class CityController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'city' => 'required|string|regex:/^[a-zA-Z\s]*$/|unique:cities'
-        ], [
-            'city.regex' => 'Kota tidak boleh berupa angka'
+            'city' => 'required|string|unique:cities'
         ]);
 
         City::create([
             'city' => $request->city
         ]);
 
-        return back()->with('success', 'Kota berhasil ditambahkan');
+        return back()->with('success', 'Cabang berhasil ditambahkan');
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'city' => 'required|regex:/^[a-zA-Z\s]*$/|unique:cities'
-        ], [
-            'city.regex' => 'Kota tidak boleh berupa angka'
+            'city' => 'required|unique:cities'
         ]);
 
         $city = City::find($id);
@@ -49,13 +45,13 @@ class CityController extends Controller
             'city' => $request->city
         ]);
 
-        return redirect('cities')->with('success', 'Kota berhasil diubah');
+        return redirect('cities')->with('success', 'Cabang berhasil diubah');
     }
 
     public function destroy($id)
     {
         City::find($id)->delete();
 
-        return back()->with('success', 'Kota berhasil dihapus');
+        return back()->with('success', 'Cabang berhasil dihapus');
     }
 }

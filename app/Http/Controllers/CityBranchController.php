@@ -11,7 +11,7 @@ class CityBranchController extends Controller
 {
     public function index()
     {
-        $title = 'Data Cabang Kota';
+        $title = 'Data Kota';
         $user = auth()->user();
 
         $cities = City::get();
@@ -28,7 +28,7 @@ class CityBranchController extends Controller
             'city_id' => 'required',
             'branch' => 'required|string|regex:/^[a-zA-Z\s]*$/'
         ], [
-            'branch.regex' => 'Cabang Kota tidak boleh berupa angka'
+            'branch.regex' => 'Kota tidak boleh berupa angka'
         ]);
 
         CityBranch::create([
@@ -36,7 +36,7 @@ class CityBranchController extends Controller
             'branch' => $request->branch
         ]);
 
-        return back()->with('success', 'Cabang Kota berhasil ditambahkan');
+        return back()->with('success', 'Kota berhasil ditambahkan');
     }
 
     public function update(Request $request, $id)
@@ -45,7 +45,7 @@ class CityBranchController extends Controller
             'city_id' => 'required',
             'branch' => 'required|string|regex:/^[a-zA-Z\s]*$/'
         ], [
-            'branch.regex' => 'Cabang Kota tidak boleh berupa angka'
+            'branch.regex' => 'Kota tidak boleh berupa angka'
         ]);
 
         $city_branch = CityBranch::find($id);
@@ -55,14 +55,14 @@ class CityBranchController extends Controller
             'branch' => $request->branch
         ]);
 
-        return back()->with('success', 'Cabang Kota berhasil diubah');
+        return back()->with('success', 'Kota berhasil diubah');
     }
 
     public function destroy($id)
     {
         CityBranch::find($id)->delete();
 
-        return back()->with('success', 'Cabang Kota berhasil dihapus');
+        return back()->with('success', 'Kota berhasil dihapus');
     }
 
     public function get_city_branches(Request $request, $id)

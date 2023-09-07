@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="h3 mb-3 text-gray-800">Data Cabang Kota</h1>
+    <h1 class="h3 mb-3 text-gray-800">Data Kota</h1>
 
     @if (session('success'))
         <div class="alert alert-success alert-dismissible" id="flash_data" role="alert">
@@ -33,7 +33,7 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">Tabel Cabang Kota</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Tabel Kota</h6>
 
             <button type="button" class="btn btcolor text-white" data-toggle="modal" data-target="#exampleModal">
                 Tambah Kota
@@ -46,8 +46,8 @@
                     <thead>
                         <tr>
                             <th>No.</th>
+                            <th>Cabang Gudang</th>
                             <th>Kota</th>
-                            <th>Cabang Kota</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -93,18 +93,20 @@
                                             @csrf
                                             @method('put')
                                             <div class="modal-body">
-                                                <label for="city_id">Kota</label>
+                                                <label for="city_id">Cabang Gudang</label>
                                                 <select class="form-control" name="city_id" id="city_id">
-                                                    <option value="">- Pilih Kota -</option>
+                                                    <option value="">- Pilih Cabang Gudang -</option>
                                                     @foreach ($cities as $c)
-                                                        <option value="{{ $c->id }}" {{ $c->id == $cb->city_id ? 'selected' : '' }}>{{ $c->city }}</option>
+                                                        <option value="{{ $c->id }}"
+                                                            {{ $c->id == $cb->city_id ? 'selected' : '' }}>
+                                                            {{ $c->city }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                             <div class="modal-body">
-                                                <label for="city">Cabang Kota</label>
+                                                <label for="city">Kota</label>
                                                 <input class="form-control" type="text" name="branch" id="branch"
-                                                    placeholder="Masukkan Cabang Kota" value="{{ $cb->branch }}">
+                                                    placeholder="Masukkan Kota" value="{{ $cb->branch }}">
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
@@ -126,7 +128,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Tambah Cabang Kota</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Tambah Kota</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -134,18 +136,18 @@
                 <form action="{{ route('city-branch.store') }}" method="post">
                     @csrf
                     <div class="modal-body">
-                        <label for="city_id">Kota</label>
+                        <label for="city_id">Cabang Gudang</label>
                         <select class="form-control" name="city_id" id="city_id">
-                            <option value="">- Pilih Kota -</option>
+                            <option value="">- Pilih Cabang Gudang -</option>
                             @foreach ($cities as $c)
                                 <option value="{{ $c->id }}">{{ $c->city }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="modal-body">
-                        <label for="branch">Cabang Kota</label>
+                        <label for="branch">Kota</label>
                         <input class="form-control" type="text" name="branch" id="branch"
-                            placeholder="Masukkan Cabang Kota">
+                            placeholder="Masukkan Kota">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
