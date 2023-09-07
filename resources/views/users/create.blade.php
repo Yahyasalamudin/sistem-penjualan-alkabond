@@ -6,10 +6,8 @@
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="h3 mb-3 text-gray-800">Registrasi Owner</h1>
-
             </div>
-        </div><!-- /.row -->
-
+        </div>
     </div>
 
     <div class="row">
@@ -80,41 +78,6 @@
                                             @enderror
                                         </div>
                                     </div>
-
-                                    <div class="form-group row mb-4">
-                                        <label for="city_id" class="col-sm-2 col-form-label">Pilih Kota</label>
-                                        <div class="col-4">
-                                            <select class="form-control  @error('city_id') is-invalid @enderror"
-                                                name="city_id" id="city_id">
-                                                <option value="">- Pilih Kota -</option>
-                                                @foreach ($cities as $city)
-                                                    <option value="{{ $city->id }}">{{ $city->city }}</option>
-                                                @endforeach
-                                            </select>
-
-                                            @error('city_id')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                        {{-- <label for="role" class="col-sm-2 col-form-label">Pilih Role</label>
-                                        <div class="col">
-                                            <select class="form-control  @error('role') is-invalid @enderror" name="role"
-                                                id="role">
-                                                <option value="">- Pilih Level Pengguna -</option>
-                                                <option value="owner">owner</option>
-                                                <option value="admin">admin</option>
-                                            </select>
-
-                                            @error('role')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div> --}}
-                                    </div>
-
 
                                     <div class="form-group row mb-4">
                                         <label for="password" class="col-sm-2 col-form-label">Password</label>

@@ -60,13 +60,13 @@
                         </span>
                     @enderror
                     <div class="form-group ">
-                        <label for="city_branch">Kota Toko</label>
+                        <label for="city_branch">Cabang Toko</label>
                         <select class="form-control mb-3" name="city_branch" id="city_branch" disabled>
                             <option>{{ $store->city->city }}</option>
                         </select>
                     </div>
                     <div class="form-group ">
-                        <label for="city_branch">Cabang Kota</label>
+                        <label for="city_branch">Kota</label>
                         <select class="form-control mb-3" name="city_branch" id="city_branch" disabled>
                             <option>{{ $store->city_branch->branch }}</option>
                         </select>

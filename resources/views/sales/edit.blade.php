@@ -15,7 +15,7 @@
                     $("#city_branch_id").empty();
 
                     const option = document.createElement('option');
-                    option.text = " - Pilih Cabang Kota - ";
+                    option.text = " - Pilih Kota - ";
                     option.value = "";
                     $("#city_branch_id").append(option);
 
@@ -100,7 +100,7 @@
                                     </div>
 
                                     <div class="form-group row mb-4">
-                                        <label for="city_id" class="col-sm-2 col-form-label">Pilih Kota</label>
+                                        <label for="city_id" class="col-sm-2 col-form-label">Pilih Cabang Gudang</label>
                                         <div class="col-sm-4">
                                             <select class="form-control @error('city_id') is-invalid @enderror"
                                                 name="city_id" id="city_id"
@@ -124,12 +124,11 @@
                                             @enderror
                                         </div>
 
-                                        <label for="city_branch_id" class="col-sm-2 col-form-label">Kota
-                                            Cabang</label>
+                                        <label for="city_branch_id" class="col-sm-2 col-form-label">Kota</label>
                                         <div class="col-sm">
                                             <select class="form-control @error('city_branch_id') is-invalid @enderror"
                                                 name="city_branch_id" id="city_branch_id">
-                                                <option value=""> - Pilih Cabang Kota - </option>
+                                                <option value=""> - Pilih Kota - </option>
                                                 <option value="{{ $sales->city_branch_id }}" selected>
                                                     {{ $sales->city_branch->branch }}</option>
                                                 @foreach ($city_branches as $item)

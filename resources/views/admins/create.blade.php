@@ -79,11 +79,11 @@
                                     </div>
 
                                     <div class="form-group row mb-4">
-                                        <label for="city_id" class="col-sm-2 col-form-label">Pilih Kota</label>
+                                        <label for="city_id" class="col-sm-2 col-form-label">Pilih Cabang</label>
                                         <div class="col-sm-4">
                                             <select class="form-control  @error('city_id') is-invalid @enderror"
                                                 name="city_id" id="city_id">
-                                                <option value="">- Pilih Kota -</option>
+                                                <option value="">- Pilih Cabang -</option>
                                                 @foreach ($cities as $city)
                                                     <option value="{{ $city->id }}">{{ $city->city }}</option>
                                                 @endforeach

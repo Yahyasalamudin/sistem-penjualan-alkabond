@@ -42,7 +42,6 @@
                             <th>Username</th>
                             <th>Email</th>
                             <th>Nomer Hp</th>
-                            <th>Kota</th>
                             @if (auth()->user()->role == 'owner')
                                 <th>Opsi</th>
                             @endif
@@ -59,7 +58,6 @@
                                 <td class="col-lg-7">{{ $user->username }}</td>
                                 <td class="col-lg-7">{{ $user->email }}</td>
                                 <td class="col-lg-7">{{ $user->phone_number }}</td>
-                                <td class="col-lg-7">{{ $user->city->city }}</td>
                                 @if (auth()->user()->role == 'owner')
                                     <td>
                                         <div class="d-flex justify-content-center">

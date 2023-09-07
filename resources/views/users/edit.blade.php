@@ -75,42 +75,6 @@
                                     </div>
 
                                     <div class="form-group row mb-4">
-                                        <label for="city_id" class="col-sm-2 col-form-label">Pilih Kota</label>
-                                        <div class="col-sm-4">
-                                            <select class="form-control  @error('city_id') is-invalid @enderror"
-                                                name="city_id" id="city_id">
-                                                <option value="{{ $user->city_id }}">{{ $user->city->city }}</option>
-                                                @foreach ($cities as $city)
-                                                    @if ($city->id != $user->city_id)
-                                                        <option value="{{ $city->id }}">{{ $city->city }}</option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-
-                                            @error('city_id')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                        <label for="role" class="col-sm-2 col-form-label">Pilih Role</label>
-                                        <div class="col">
-                                            <select class="form-control  @error('role') is-invalid @enderror" name="role"
-                                                id="role" disabled>
-                                                <option value="">{{ $user->role }}</option>
-                                            </select>
-
-                                            @error('role')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-
-
-                                    <div class="form-group row mb-4">
                                         <label for="password" class="col-sm-2 col-form-label">Password</label>
                                         <div class="col-sm-4">
                                             <input type="password"
@@ -119,7 +83,6 @@
                                                 placeholder="Masukkan Password">
                                             <span class="font-italic">NB : Kosongkan password jika tidak ingin
                                                 diganti</span>
-
 
                                             @error('password')
                                                 <span class="invalid-feedback" role="alert">

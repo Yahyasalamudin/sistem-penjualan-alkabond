@@ -46,8 +46,8 @@
                             <th>Username</th>
                             <th>Email</th>
                             <th>Nomer Hp</th>
+                            <th>Cabang Gudang</th>
                             <th>Kota</th>
-                            <th>Cabang Kota</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -117,8 +117,8 @@
                                         <li>Kolom 3 = Email (opsional)</li>
                                         <li>Kolom 4 = Nomer HP</li>
                                         <li>Kolom 5 = Password</li>
-                                        <li>Kolom 6 = Kota</li>
-                                        <li>Kolom 7 = Cabang Kota</li>
+                                        <li>Kolom 6 = Cabang Gudang</li>
+                                        <li>Kolom 7 = Kota</li>
                                     </ul>
                                 </div>
                             </div>

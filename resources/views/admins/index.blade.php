@@ -42,7 +42,7 @@
                             <th>Username</th>
                             <th>Email</th>
                             <th>Nomer Hp</th>
-                            <th>Kota</th>
+                            <th>Cabang Gudang</th>
                             <th>Status</th>
                             @if (auth()->user()->role == 'owner')
                                 <th>Opsi</th>

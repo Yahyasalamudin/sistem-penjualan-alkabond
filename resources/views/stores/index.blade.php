@@ -14,7 +14,7 @@
                     $("#city_branch_id").empty();
 
                     const option = document.createElement('option');
-                    option.text = " - Pilih Cabang Kota - ";
+                    option.text = " - Pilih Kota - ";
                     option.value = "";
                     $("#city_branch_id").append(option);
 
@@ -122,9 +122,9 @@
                                 @endforeach
                             </select>
 
-                            <label for="city_branch_id" hidden>Cabang Kota</label>
+                            <label for="city_branch_id" hidden>Kota</label>
                             <select class="form-control mb-3" name="city_branch_id" id="city_branch_id" hidden>
-                                <option value=""> - Pilih Cabang Kota - </option>
+                                <option value=""> - Pilih Kota - </option>
                             </select>
                         </div>
                         <div class="modal-footer">
@@ -151,8 +151,8 @@
                             <th>Toko</th>
                             <th>Alamat</th>
                             <th>Nomer Hp</th>
+                            <th>Cabang Gudang</th>
                             <th>Kota</th>
-                            <th>Cabang Kota</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -212,8 +212,8 @@
                                         <li>Kolom 1 = Nama Toko</li>
                                         <li>Kolom 2 = Alamat</li>
                                         <li>Kolom 3 = Nomer Toko</li>
-                                        <li>Kolom 4 = Kota</li>
-                                        <li>Kolom 5 = Cabang Kota</li>
+                                        <li>Kolom 4 = Cabang Gudang</li>
+                                        <li>Kolom 5 = Kota</li>
                                         <li>Kolom 6 = Sales (Pengelola Toko)</li>
                                     </ul>
                                 </div>
