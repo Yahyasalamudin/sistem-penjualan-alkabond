@@ -40,14 +40,18 @@ class StoreController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $rules = [
             'store_name' => 'required|max:255',
             'address' => 'required|max:255',
             'sales_id' => 'required',
             'city_branch_id' => 'required',
-            'store_number' => 'sometimes|numeric|digits_between:10,14',
-        ]);
+        ];
 
+        if (!empty($request->store_number)) {
+            $rules['store_number'] = 'numeric|digits_between:10,14';
+        }
+
+        $request->validate($rules);
         $sales = Sales::find($request->sales_id);
 
         Store::create([
@@ -81,13 +85,18 @@ class StoreController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $rules = [
             'store_name' => 'required|max:255',
             'address' => 'required|max:255',
-            'store_number' => 'sometimes|digits_between:10,14',
-            'sales_id' => 'required'
-        ]);
+            'sales_id' => 'required',
+            'city_branch_id' => 'required',
+        ];
 
+        if (!empty($request->store_number)) {
+            $rules['store_number'] = 'numeric|digits_between:10,14';
+        }
+
+        $request->validate($rules);
         $sales = Sales::find($request->sales_id);
 
         Store::find($id)->update([
