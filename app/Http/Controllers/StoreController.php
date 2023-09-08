@@ -40,13 +40,12 @@ class StoreController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
             'store_name' => 'required|max:255',
             'address' => 'required|max:255',
-            'store_number' => 'digits_between:10,14',
             'sales_id' => 'required',
-            'city_branch_id' => 'required'
+            'city_branch_id' => 'required',
+            'store_number' => 'sometimes|numeric|digits_between:10,14',
         ]);
 
         $sales = Sales::find($request->sales_id);
@@ -85,7 +84,7 @@ class StoreController extends Controller
         $request->validate([
             'store_name' => 'required|max:255',
             'address' => 'required|max:255',
-            'store_number' => 'digits_between:10,14',
+            'store_number' => 'sometimes|digits_between:10,14',
             'sales_id' => 'required'
         ]);
 

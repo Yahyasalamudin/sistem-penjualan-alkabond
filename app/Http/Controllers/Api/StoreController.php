@@ -26,11 +26,16 @@ class StoreController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'store_name' => 'required',
             'address' => 'required',
-            'store_number' => 'digits_between:10,14'
-        ]);
+        ];
+
+        if (!empty($request->store_number)) {
+            $rules['store_number'] = 'numeric|digits_between:10,14';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json([
