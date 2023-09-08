@@ -44,7 +44,7 @@ class StoreController extends Controller
         $request->validate([
             'store_name' => 'required|max:255',
             'address' => 'required|max:255',
-            'store_number' => 'required|numeric|digits_between:10,14',
+            'store_number' => 'numeric|digits_between:10,14',
             'sales_id' => 'required',
             'city_branch_id' => 'required'
         ]);
@@ -85,7 +85,7 @@ class StoreController extends Controller
         $request->validate([
             'store_name' => 'required|max:255',
             'address' => 'required|max:255',
-            'store_number' => 'required|numeric|digits_between:10,14',
+            'store_number' => 'numeric|digits_between:10,14',
             'sales_id' => 'required'
         ]);
 

@@ -29,7 +29,7 @@ class StoreController extends Controller
         $validator = Validator::make($request->all(), [
             'store_name' => 'required',
             'address' => 'required',
-            'store_number' => 'required|numeric|digits_between:10,14'
+            'store_number' => 'numeric|digits_between:10,14'
         ]);
 
         if ($validator->fails()) {
