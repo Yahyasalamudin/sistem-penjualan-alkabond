@@ -28,7 +28,6 @@ class StoreController extends Controller
     {
         $rules = [
             'store_name' => 'required',
-            'address' => 'required',
         ];
 
         if (!empty($request->store_number)) {

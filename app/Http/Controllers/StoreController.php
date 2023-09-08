@@ -42,7 +42,6 @@ class StoreController extends Controller
     {
         $rules = [
             'store_name' => 'required|max:255',
-            'address' => 'required|max:255',
             'sales_id' => 'required',
             'city_branch_id' => 'required',
         ];
@@ -87,7 +86,6 @@ class StoreController extends Controller
     {
         $rules = [
             'store_name' => 'required|max:255',
-            'address' => 'required|max:255',
             'sales_id' => 'required',
             'city_branch_id' => 'required',
         ];

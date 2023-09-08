@@ -153,6 +153,7 @@
                             <th>Nomer Hp</th>
                             <th>Cabang Gudang</th>
                             <th>Kota</th>
+                            <th>Sales</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -168,6 +169,7 @@
                                 <td>{{ $store->store_number }}</td>
                                 <td>{{ $store->city->city }}</td>
                                 <td>{{ $store->city_branch->branch }}</td>
+                                <td>{{ $store->sales->sales_name }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
                                         <a href="{{ route('store.edit', Crypt::encrypt($store->id)) }}"
@@ -231,6 +233,5 @@
                 </div>
             </div>
         </div>
-
     </div>
 @endsection
