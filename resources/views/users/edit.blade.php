@@ -2,14 +2,11 @@
 
 @section('content')
     <div class="content-header">
-
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="h3 mb-3  text-gray-800">Edit Owner</h1>
-
             </div>
-        </div><!-- /.row -->
-
+        </div>
     </div>
 
     <div class="row">
@@ -21,7 +18,7 @@
                     </div>
 
                     <div class="row-lg-12">
-                        <form action="{{ route('user.update', $user->id) }}" method="post">
+                        <form action="{{ route('user.update', hashid_encode($user->id)) }}" method="post">
                             @csrf
                             @method('put')
 
@@ -50,7 +47,6 @@
                                     </div>
 
                                     <div class="form-group row mb-4">
-
                                         <label for="email" class="col-sm-2 col-form-label">Email</label>
                                         <div class="col-sm-4">
                                             <input type="email" class="form-control " name="email" id="email"

@@ -67,7 +67,7 @@
                                 </td>
                             </tr>
 
-                            <!-- Data Modal -->
+                            <!-- Edit Modal -->
                             <div class="modal fade" id="editModal{{ $t->id }}" tabindex="-1"
                                 aria-labelledby="editModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">

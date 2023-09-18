@@ -35,7 +35,6 @@ class UserController extends Controller
             'phone_number' => 'required',
             'password' => 'required',
             'current_password' => 'required|same:password',
-            'city_id' => 'required',
         ]);
 
         if ($request->email) {
@@ -50,26 +49,22 @@ class UserController extends Controller
             'email' => $request->email,
             'phone_number' => $request->phone_number,
             'password' => Hash::make($request->password),
-            'city_id' => $request->city_id,
             'role' => 'owner'
         ]);
 
-        return redirect('users')->with('success', 'User berhasil ditambahkan');
+        return redirect('users')->with('success', 'Owner berhasil ditambahkan');
     }
 
-    public function show($id)
+    public function show(User $user)
     {
-        $user = User::find($id);
-
         return view('users.detail', [
             'title' => 'Detail User',
             'user' => $user,
         ]);
     }
 
-    public function edit($id)
+    public function edit(User $user)
     {
-        $user = User::find($id);
         $cities = City::all();
 
         return view('users.edit', [
@@ -79,41 +74,38 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
         $request->validate([
             'name' => 'required',
-            'phone_number' => 'required',
-            'city_id' => 'required',
+            'phone_number' => 'required'
         ]);
 
         if (empty($request->password)) {
-            User::find($id)->update([
+            $user->update([
                 'name' => $request->name,
-                'phone_number' => $request->phone_number,
-                'city_id' => $request->city_id,
+                'phone_number' => $request->phone_number
             ]);
         } else {
             $request->validate([
                 'password' => 'required|min:5',
-                'current_password' => 'required|same:password|min:5',
+                'current_password' => 'required|same:password|min:5'
             ]);
 
-            User::find($id)->update([
+            $user->update([
                 'name' => $request->name,
                 'phone_number' => $request->phone_number,
-                'city_id' => $request->city_id,
-                'password' => Hash::make($request->password),
+                'password' => Hash::make($request->password)
             ]);
         }
 
-        return redirect('users')->with('success', 'Informasi User berhasil diubah');
+        return redirect('users')->with('success', "Owner {$user->name} berhasil diubah");
     }
 
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        User::find($id)->delete();
+        $user->delete();
 
-        return back()->with('success', 'Pengguna berhasil dihapus');
+        return back()->with('success', "Owner {$user->name} berhasil dihapus");
     }
 }

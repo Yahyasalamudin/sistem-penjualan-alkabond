@@ -53,7 +53,14 @@ class TypeController extends Controller
 
     public function destroy($id)
     {
-        Type::find($id)->delete();
+        $type = Type::find($id);
+        $products = Product::where('product_name', $type->type)->get();
+
+        foreach ($products as $product) {
+            $product->delete();
+        }
+
+        $type->delete();
 
         return back()->with('success', 'Jenis Produk berhasil dihapus');
     }

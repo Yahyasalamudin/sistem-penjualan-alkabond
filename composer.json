@@ -17,7 +17,8 @@
         "laravel/tinker": "^2.5",
         "livewire/livewire": "^2.12",
         "maatwebsite/excel": "^3.1",
-        "realrashid/sweet-alert": "^7.0"
+        "realrashid/sweet-alert": "^7.0",
+        "vinkla/hashids": "^9.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -32,7 +33,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/HashidsHelper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

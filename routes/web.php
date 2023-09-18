@@ -50,8 +50,8 @@ Route::middleware('auth')->group(function () {
     // CRUD Data City
     Route::get('/cities', [CityController::class, 'index'])->name('city.index');
     Route::post('/cities', [CityController::class, 'store'])->name('city.store');
-    Route::put('/city/{id}/update', [CityController::class, 'update'])->name('city.update');
-    Route::delete('/city/{id}/delete', [CityController::class, 'destroy'])->name('city.destroy');
+    Route::put('/city/update/{id}', [CityController::class, 'update'])->name('city.update');
+    Route::delete('/city/delete/{id}', [CityController::class, 'destroy'])->name('city.destroy');
 
     // CRUD Data Branch
     Route::get('/city-branches', [CityBranchController::class, 'index'])->name('city-branch.index');
@@ -76,9 +76,8 @@ Route::middleware('auth')->group(function () {
     // CRUD Data Product
     Route::get('/products', [ProductController::class, 'index'])->name('product.index');
     Route::post('/products', [ProductController::class, 'store'])->name('product.store');
-    Route::get('/product/{id}/edit', [ProductController::class, 'edit'])->name('product.edit');
-    Route::put('/product/{id}/update', [ProductController::class, 'update'])->name('product.update');
-    Route::delete('/product/{id}/delete', [ProductController::class, 'destroy'])->name('product.destroy');
+    Route::put('/product/update/{id}', [ProductController::class, 'update'])->name('product.update');
+    Route::delete('/product/delete/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
 
     // Transaction
     Route::get('/transactions/{status}', [TransactionController::class, 'index'])->name('transaction.index');
@@ -97,10 +96,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('user.create');
     Route::post('/users/create', [UserController::class, 'store'])->name('user.store');
-    Route::get('/user/show/{id}', [UserController::class, 'show'])->name('user.show');
-    Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
-    Route::put('/user/update/{id}', [UserController::class, 'update'])->name('user.update');
-    Route::delete('/user/delete/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::get('/user/show/{user}', [UserController::class, 'show'])->name('user.show');
+    Route::get('/user/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
+    Route::put('/user/update/{user}', [UserController::class, 'update'])->name('user.update');
+    Route::delete('/user/delete/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 
     //Admin
     Route::get('/admins', [AdminController::class, 'index'])->name('admin.index');
