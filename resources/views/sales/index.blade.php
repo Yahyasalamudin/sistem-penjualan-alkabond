@@ -75,10 +75,11 @@
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('sales.edit', $s->id) }}" class="btn btn-sm btn-success">
+                                        <a href="{{ route('sales.edit', hashid_encode($s->id)) }}"
+                                            class="btn btn-sm btn-success">
                                             Edit
                                         </a>
-                                        <form action="{{ route('sales.destroy', $s->id) }}" method="post">
+                                        <form action="{{ route('sales.destroy', hashid_encode($s->id)) }}" method="post">
                                             @csrf
                                             @method('delete')
                                             <button type="submit" class="btn btn-sm btn-danger ml-2">

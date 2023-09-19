@@ -47,7 +47,7 @@
                         <h6 class="m-0 font-weight-bold text-white ">Tambah Sales</h6>
                     </div>
                     <div class="row-lg-12">
-                        <form action="{{ route('sales.update', $sales->id) }}" method="post">
+                        <form action="{{ route('sales.update', hashid_encode($sales->id)) }}" method="post">
                             @csrf
                             @method('put')
                             <div class="col-md-12">

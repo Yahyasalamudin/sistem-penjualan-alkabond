@@ -151,12 +151,12 @@
                                     @else
                                         <div class="d-flex justify-content-center align-items-center">
                                             @if ($transaction->status == 'unpaid')
-                                                <a href="{{ route('transaction.show', ['status' => $transaction->delivery_status, 'id' => $transaction->id]) }}"
+                                                <a href="{{ route('transaction.show', ['status' => $transaction->delivery_status, 'transaction' => hashid_encode($transaction->id)]) }}"
                                                     class="btn btn-warning">
                                                     Detail
                                                 </a>
                                             @else
-                                                <a href="{{ route('transaction.show', ['status' => $transaction->status, 'id' => $transaction->id]) }}"
+                                                <a href="{{ route('transaction.show', ['status' => $transaction->status, 'transaction' => hashid_encode($transaction->id)]) }}"
                                                     class="btn btn-warning">
                                                     Detail
                                                 </a>

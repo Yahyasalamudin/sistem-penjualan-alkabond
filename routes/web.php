@@ -63,15 +63,15 @@ Route::middleware('auth')->group(function () {
     // CRUD Data Type Product
     Route::get('/types', [TypeController::class, 'index'])->name('type.index');
     Route::post('/types', [TypeController::class, 'store'])->name('type.store');
-    Route::put('/type/{id}/update', [TypeController::class, 'update'])->name('type.update');
-    Route::delete('/type/{id}/delete', [TypeController::class, 'destroy'])->name('type.destroy');
+    Route::put('/type/update/{id}', [TypeController::class, 'update'])->name('type.update');
+    Route::delete('/type/delete/{id}', [TypeController::class, 'destroy'])->name('type.destroy');
 
     // CRUD Data Store
     Route::get('/stores', [StoreController::class, 'index'])->name('store.index');
     Route::post('/stores', [StoreController::class, 'store'])->name('store.store');
-    Route::get('/store/{id}/edit', [StoreController::class, 'edit'])->name('store.edit');
-    Route::put('/store/{id}/update', [StoreController::class, 'update'])->name('store.update');
-    Route::delete('/store/{id}/delete', [StoreController::class, 'destroy'])->name('store.destroy');
+    Route::get('/store/edit/{store}', [StoreController::class, 'edit'])->name('store.edit');
+    Route::put('/store/update/{id}', [StoreController::class, 'update'])->name('store.update');
+    Route::delete('/store/delete/{id}', [StoreController::class, 'destroy'])->name('store.destroy');
 
     // CRUD Data Product
     Route::get('/products', [ProductController::class, 'index'])->name('product.index');
@@ -86,7 +86,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/transactions/archive/all', [TransactionController::class, 'archive'])->name('transaction.archive');
     Route::put('/transactions/archive/{id}', [TransactionController::class, 'restore'])->name('transaction.restore');
     Route::delete('/transactions/archive/{id}', [TransactionController::class, 'kill'])->name('transaction.kill');
-    Route::get('/transactions/{status}/detail-transaction/{id}', [TransactionController::class, 'show'])->name('transaction.show');
+    Route::get('/transactions/{status}/detail-transaction/{transaction}', [TransactionController::class, 'show'])->name('transaction.show');
     Route::put('/transactions/{delivery_status}/{id}', [TransactionController::class, 'update_delivery'])->name('transaction.update');
     Route::delete('/transactions/{id}/delete', [TransactionController::class, 'destroy'])->name('transaction.destroy');
     Route::post('/transaction/pay/{id}', [TransactionController::class, 'payment'])->name('transaction.pay');
@@ -105,19 +105,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/admins', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/admins/create', [AdminController::class, 'create'])->name('admin.create');
     Route::post('/admins/create', [AdminController::class, 'store'])->name('admin.store');
-    Route::get('/admin/show/{id}', [AdminController::class, 'show'])->name('admin.show');
-    Route::get('/admin/edit/{id}', [AdminController::class, 'edit'])->name('admin.edit');
-    Route::put('/admin/update/{id}', [AdminController::class, 'update'])->name('admin.update');
-    Route::delete('/admin/delete/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
+    Route::get('/admin/show/{user}', [AdminController::class, 'show'])->name('admin.show');
+    Route::get('/admin/edit/{user}', [AdminController::class, 'edit'])->name('admin.edit');
+    Route::put('/admin/update/{user}', [AdminController::class, 'update'])->name('admin.update');
+    Route::delete('/admin/delete/{user}', [AdminController::class, 'destroy'])->name('admin.destroy');
 
     // Sales
     Route::get('/sales', [SalesController::class, 'index'])->name('sales.index');
     Route::get('/sales/create', [SalesController::class, 'create'])->name('sales.create');
     Route::post('/sales/create', [SalesController::class, 'store'])->name('sales.store');
-    Route::get('/sales/show/{id}', [SalesController::class, 'show'])->name('sales.show');
-    Route::get('/sales/edit/{id}', [SalesController::class, 'edit'])->name('sales.edit');
-    Route::put('/sales/update/{id}', [SalesController::class, 'update'])->name('sales.update');
-    Route::delete('/sales/delete/{id}', [SalesController::class, 'destroy'])->name('sales.destroy');
+    Route::get('/sales/show/{sales}', [SalesController::class, 'show'])->name('sales.show');
+    Route::get('/sales/edit/{sales}', [SalesController::class, 'edit'])->name('sales.edit');
+    Route::put('/sales/update/{sales}', [SalesController::class, 'update'])->name('sales.update');
+    Route::delete('/sales/delete/{sales}', [SalesController::class, 'destroy'])->name('sales.destroy');
 
     // Import
     Route::post('/import/product', [ImportController::class, 'import_product'])->name('import.product');

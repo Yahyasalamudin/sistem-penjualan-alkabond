@@ -71,20 +71,17 @@ class SalesController extends Controller
         return redirect('sales')->with('success', 'Sales berhasil ditambahkan');
     }
 
-    public function show($id)
+    public function show(Sales $sales)
     {
-        $sales = Sales::find($id);
-
         return view('sales.detail', [
             'title' => 'Detail Sales',
             'sales' => $sales,
         ]);
     }
 
-    public function edit($id)
+    public function edit(Sales $sales)
     {
         $user = auth()->user();
-        $sales = Sales::find($id);
         $cities = City::all();
         $city_branches = CityBranch::where('city_id', $sales->city_id)->get();
 
@@ -97,7 +94,7 @@ class SalesController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Sales $sales)
     {
         $request->validate([
             'sales_name' => 'required',
@@ -107,7 +104,7 @@ class SalesController extends Controller
         ]);
 
         if (empty($request->password)) {
-            Sales::find($id)->update([
+            $sales->update([
                 'sales_name' => $request->sales_name,
                 'phone_number' => $request->phone_number,
                 'email' => $request->email,
@@ -121,7 +118,7 @@ class SalesController extends Controller
                 'current_password' => 'required|same:password|min:5',
             ]);
 
-            Sales::find($id)->update([
+            $sales->update([
                 'sales_name' => $request->sales_name,
                 'phone_number' => $request->phone_number,
                 'email' => $request->email,
@@ -132,13 +129,13 @@ class SalesController extends Controller
             ]);
         }
 
-        return redirect('sales')->with('success', 'Informasi Sales berhasil diubah');
+        return redirect('sales')->with('success', "Data Sales {$sales->sales_name} berhasil diubah");
     }
 
-    public function destroy($id)
+    public function destroy(Sales $sales)
     {
-        Sales::find($id)->delete();
+        $sales->delete();
 
-        return back()->with('success', 'Sales berhasil dihapus');
+        return back()->with('success', "Sales {$sales->sales_name} berhasil dihapus");
     }
 }

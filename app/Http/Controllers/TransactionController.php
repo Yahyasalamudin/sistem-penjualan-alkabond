@@ -100,10 +100,8 @@ class TransactionController extends Controller
         return back()->with('success', 'Berhasil menghapus transaksi.');
     }
 
-    public function show($status, $id)
+    public function show($status, Transaction $transaction)
     {
-        $transaction = Transaction::findTransaction($id);
-
         return view('transactions.detail', compact('transaction'));
     }
 
@@ -199,13 +197,9 @@ class TransactionController extends Controller
 
     public function edit_payment(Request $request, $id)
     {
-        $request->validate([
-            'total_pay' => 'required'
-        ]);
-
         $payment = Payment::find($id);
         $transaction = Transaction::find($payment->transaction_id);
-        $total_pay = str_replace(['Rp. ', '.', ','], '', $request->total_pay);
+        $total_pay = $request->total_pay ? str_replace(['Rp. ', '.', ','], '', $request->total_pay) : 0;
 
         if ($payment->total_pay > $total_pay) {
             $pay = $payment->total_pay - $total_pay;

@@ -71,10 +71,12 @@
                                 @if (auth()->user()->role == 'owner')
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <a href="{{ route('admin.edit', $user->id) }}" class="btn btn-sm btn-success">
+                                            <a href="{{ route('admin.edit', hashid_encode($user->id)) }}"
+                                                class="btn btn-sm btn-success">
                                                 Edit
                                             </a>
-                                            <form action="{{ route('admin.destroy', $user->id) }}" method="post">
+                                            <form action="{{ route('admin.destroy', hashid_encode($user->id)) }}"
+                                                method="post">
                                                 @csrf
                                                 @method('delete')
                                                 <button type="submit" class="btn btn-sm btn-danger ml-2">
