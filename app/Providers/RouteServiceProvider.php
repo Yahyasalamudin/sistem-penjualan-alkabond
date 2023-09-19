@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Models\Sales;
+use App\Models\Store;
+use App\Models\Transaction;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -57,6 +60,33 @@ class RouteServiceProvider extends ServiceProvider
             }
 
             return User::findOrFail($id[0]);
+        });
+
+        Route::bind('sales', function ($value) {
+            $id = Hashids::decode($value);
+            if (count($id) === 0) {
+                abort(404);
+            }
+
+            return Sales::findOrFail($id[0]);
+        });
+
+        Route::bind('store', function ($value) {
+            $id = Hashids::decode($value);
+            if (count($id) === 0) {
+                abort(404);
+            }
+
+            return Store::findOrFail($id[0]);
+        });
+
+        Route::bind('transaction', function ($value) {
+            $id = Hashids::decode($value);
+            if (count($id) === 0) {
+                abort(404);
+            }
+
+            return Transaction::findOrFail($id[0]);
         });
     }
 

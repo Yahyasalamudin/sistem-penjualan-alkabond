@@ -99,7 +99,7 @@ class UserController extends Controller
             ]);
         }
 
-        return redirect('users')->with('success', "Owner {$user->name} berhasil diubah");
+        return redirect('users')->with('success', "Data Owner {$user->name} berhasil diubah");
     }
 
     public function destroy(User $user)

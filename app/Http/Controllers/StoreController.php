@@ -72,11 +72,8 @@ class StoreController extends Controller
         return view('stores.detail', compact('store'));
     }
 
-    public function edit($id)
+    public function edit(Store $store)
     {
-        $id = Crypt::decrypt($id);
-        $store = Store::find($id);
-
         $sales = Sales::where('city_id', $store->city_id)->whereNotIn('id', [$store->sales_id])->get();
 
         return view('stores.edit', compact('store', 'sales'));

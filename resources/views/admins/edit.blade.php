@@ -5,7 +5,6 @@
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="h3 mb-3  text-gray-800">Edit Admin</h1>
-
             </div>
         </div>
     </div>
@@ -19,7 +18,7 @@
                     </div>
 
                     <div class="row-lg-12">
-                        <form action="{{ route('admin.update', $user->id) }}" method="post">
+                        <form action="{{ route('admin.update', hashid_encode($user->id)) }}" method="post">
                             @csrf
                             @method('put')
                             <div class="col-md-12">
@@ -47,7 +46,6 @@
                                     </div>
 
                                     <div class="form-group row mb-4">
-
                                         <label for="email" class="col-sm-2 col-form-label">Email</label>
                                         <div class="col-sm-4">
                                             <input type="email" class="form-control " name="email" id="email"

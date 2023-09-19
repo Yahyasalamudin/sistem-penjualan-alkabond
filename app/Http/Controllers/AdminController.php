@@ -60,22 +60,19 @@ class AdminController extends Controller
             'role' => 'admin',
         ]);
 
-        return redirect('admins')->with('success', 'User berhasil ditambahkan');
+        return redirect('admins')->with('success', 'Admin berhasil ditambahkan');
     }
 
-    public function show($id)
+    public function show(User $user)
     {
-        $user = User::find($id);
-
         return view('admins.detail', [
             'title' => 'Detail User',
             'user' => $user,
         ]);
     }
 
-    public function edit($id)
+    public function edit(User $user)
     {
-        $user = User::find($id);
         $cities = City::all();
 
         return view('admins.edit', [
@@ -85,7 +82,7 @@ class AdminController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
         $request->validate([
             'name' => 'required',
@@ -94,7 +91,7 @@ class AdminController extends Controller
         ]);
 
         if (empty($request->password)) {
-            User::find($id)->update([
+            $user->update([
                 'name' => $request->name,
                 'phone_number' => $request->phone_number,
                 'city_id' => $request->city_id,
@@ -106,7 +103,7 @@ class AdminController extends Controller
                 'current_password' => 'required|same:password|min:5',
             ]);
 
-            User::find($id)->update([
+            $user->update([
                 'name' => $request->name,
                 'phone_number' => $request->phone_number,
                 'city_id' => $request->city_id,
@@ -115,13 +112,13 @@ class AdminController extends Controller
             ]);
         }
 
-        return redirect('admins')->with('success', 'Informasi User berhasil diubah');
+        return redirect('admins')->with('success', "Data Admin {$user->name} berhasil diubah");
     }
 
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        User::find($id)->delete();
+        $user->delete();
 
-        return back()->with('success', 'Pengguna berhasil dihapus');
+        return back()->with('success', "Admin {$user->name} berhasil dihapus");
     }
 }

@@ -172,7 +172,7 @@
                                 <td>{{ $store->sales->sales_name }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('store.edit', Crypt::encrypt($store->id)) }}"
+                                        <a href="{{ route('store.edit', hashid_encode($store->id)) }}"
                                             class="btn btn-sm btn-success ">
                                             Edit
                                         </a>
