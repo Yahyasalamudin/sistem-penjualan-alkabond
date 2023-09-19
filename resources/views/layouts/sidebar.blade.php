@@ -168,13 +168,13 @@
          </a>
      </li>
      <li class="nav-item ">
-         <a class="nav-link" href="{{ route('report.bestSellerProductReport') }}">
+         <a class="nav-link" href="{{ route('report.best-seller-product') }}">
              <i class="fas fa-fw fa-solid fa-file-pdf"></i>
              <span>Laporan Barang Terjual</span>
          </a>
      </li>
      <li class="nav-item ">
-         <a class="nav-link" href="{{ route('incomeReport') }}" target="_blank">
+         <a class="nav-link" href="{{ route('income-report') }}" target="_blank">
              <i class="fas fa-fw fa-solid fa-file-pdf"></i>
              <span>Laporan Pendapatan</span>
          </a>

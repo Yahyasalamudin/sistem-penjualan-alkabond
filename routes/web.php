@@ -43,15 +43,39 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/process-login', [AuthController::class, 'actionLogin'])->name('actionLogin');
 
 Route::middleware('auth')->group(function () {
+    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::post('/filter-kota', [DashboardController::class, 'filterKota'])->name('filterKota');
-    Route::post('/filter-cabang-kota', [DashboardController::class, 'filterCabangKota'])->name('filterCabangKota');
 
-    // CRUD Data City
-    Route::get('/cities', [CityController::class, 'index'])->name('city.index');
-    Route::post('/cities', [CityController::class, 'store'])->name('city.store');
-    Route::put('/city/update/{id}', [CityController::class, 'update'])->name('city.update');
-    Route::delete('/city/delete/{id}', [CityController::class, 'destroy'])->name('city.destroy');
+    // Filter City
+    Route::post('/filter-city', [DashboardController::class, 'filter_city'])->name('filter-city');
+    Route::post('/filter-city-branch', [DashboardController::class, 'filter_city_branch'])->name('filter-city-branch');
+
+    // Owner
+    Route::middleware('owner')->group(function () {
+        // CRUD Data City
+        Route::get('/cities', [CityController::class, 'index'])->name('city.index');
+        Route::post('/cities', [CityController::class, 'store'])->name('city.store');
+        Route::put('/city/update/{id}', [CityController::class, 'update'])->name('city.update');
+        Route::delete('/city/delete/{id}', [CityController::class, 'destroy'])->name('city.destroy');
+
+        // User
+        Route::get('/users', [UserController::class, 'index'])->name('user.index');
+        Route::get('/users/create', [UserController::class, 'create'])->name('user.create');
+        Route::post('/users/create', [UserController::class, 'store'])->name('user.store');
+        Route::get('/user/show/{user}', [UserController::class, 'show'])->name('user.show');
+        Route::get('/user/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
+        Route::put('/user/update/{user}', [UserController::class, 'update'])->name('user.update');
+        Route::delete('/user/delete/{user}', [UserController::class, 'destroy'])->name('user.destroy');
+
+        //Admin
+        Route::get('/admins', [AdminController::class, 'index'])->name('admin.index');
+        Route::get('/admins/create', [AdminController::class, 'create'])->name('admin.create');
+        Route::post('/admins/create', [AdminController::class, 'store'])->name('admin.store');
+        Route::get('/admin/show/{user}', [AdminController::class, 'show'])->name('admin.show');
+        Route::get('/admin/edit/{user}', [AdminController::class, 'edit'])->name('admin.edit');
+        Route::put('/admin/update/{user}', [AdminController::class, 'update'])->name('admin.update');
+        Route::delete('/admin/delete/{user}', [AdminController::class, 'destroy'])->name('admin.destroy');
+    });
 
     // CRUD Data Branch
     Route::get('/city-branches', [CityBranchController::class, 'index'])->name('city-branch.index');
@@ -92,24 +116,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/transaction/pay/{id}', [TransactionController::class, 'payment'])->name('transaction.pay');
     Route::put('/transaction/pay/edit/{id}', [TransactionController::class, 'edit_payment'])->name('transaction.pay.edit');
 
-    // User
-    Route::get('/users', [UserController::class, 'index'])->name('user.index');
-    Route::get('/users/create', [UserController::class, 'create'])->name('user.create');
-    Route::post('/users/create', [UserController::class, 'store'])->name('user.store');
-    Route::get('/user/show/{user}', [UserController::class, 'show'])->name('user.show');
-    Route::get('/user/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
-    Route::put('/user/update/{user}', [UserController::class, 'update'])->name('user.update');
-    Route::delete('/user/delete/{user}', [UserController::class, 'destroy'])->name('user.destroy');
-
-    //Admin
-    Route::get('/admins', [AdminController::class, 'index'])->name('admin.index');
-    Route::get('/admins/create', [AdminController::class, 'create'])->name('admin.create');
-    Route::post('/admins/create', [AdminController::class, 'store'])->name('admin.store');
-    Route::get('/admin/show/{user}', [AdminController::class, 'show'])->name('admin.show');
-    Route::get('/admin/edit/{user}', [AdminController::class, 'edit'])->name('admin.edit');
-    Route::put('/admin/update/{user}', [AdminController::class, 'update'])->name('admin.update');
-    Route::delete('/admin/delete/{user}', [AdminController::class, 'destroy'])->name('admin.destroy');
-
     // Sales
     Route::get('/sales', [SalesController::class, 'index'])->name('sales.index');
     Route::get('/sales/create', [SalesController::class, 'create'])->name('sales.create');
@@ -124,13 +130,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/import/store', [ImportController::class, 'import_store'])->name('import.store');
     Route::post('/import/sales', [ImportController::class, 'import_sales'])->name('import.sales');
 
-    // Laporan
-    Route::get('/laporan/surat-jalan={invoice}', [ReportController::class, 'suratJalan'])->name('suratjalan');
-    Route::get('/laporan/struk={invoice}', [ReportController::class, 'struk'])->name('struk');
-    Route::get('/laporan/transaksi', [ReportController::class, 'transaction_report'])->name('report.transaction');
-    Route::post('/laporan/transaksi', [ReportController::class, 'printTransactionReport'])->name('print.transactionReport');
-    Route::get('/laporan/barang-terjual', [ReportController::class, 'bestSellerProductReport'])->name('report.bestSellerProductReport');
-    Route::get('/laporan/pendapatan', [ReportController::class, 'incomeReport'])->name('incomeReport');
+    // Report
+    Route::get('/report/delivery-letter={invoice}', [ReportController::class, 'delivery_letter'])->name('delivery-letter');
+    Route::get('/report/struk={invoice}', [ReportController::class, 'struk'])->name('struk');
+    Route::get('/report/transaction', [ReportController::class, 'transaction_report'])->name('report.transaction');
+    Route::get('/report/product-sold', [ReportController::class, 'best_seller_product_report'])->name('report.best-seller-product');
+    Route::get('/report/income', [ReportController::class, 'income_report'])->name('income-report');
 
+    // Logout
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });

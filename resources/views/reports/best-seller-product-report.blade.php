@@ -27,7 +27,7 @@
         </div>
 
         <div class="card-body">
-            <form action="{{ route('report.bestSellerProductReport') }}">
+            <form action="{{ route('report.best-seller-product') }}">
                 <div class="d-inline-flex flex-column">
                     <div class="form-group mr-4">
                         <label for="start_month">Bulan</label>
@@ -67,11 +67,11 @@
             <div class="row">
                 <div class="col">
                     <div class="table-responsive">
-                        <a href="{{ route('report.bestSellerProductReport', array_merge(request()->all(), ['excel' => true])) }}"
+                        <a href="{{ route('report.best-seller-product', array_merge(request()->all(), ['excel' => true])) }}"
                             class="btn btn-success btn-sm my-3">
                             <i class="far fa-file-excel mr-1"></i> Excel
                         </a>
-                        <a href="{{ route('report.bestSellerProductReport', array_merge(request()->all(), ['pdf' => true])) }}"
+                        <a href="{{ route('report.best-seller-product', array_merge(request()->all(), ['pdf' => true])) }}"
                             class="btn btn-danger btn-sm my-3" target="_blank">
                             <i class="far fa-file-pdf mr-1"></i> PDF
                         </a>

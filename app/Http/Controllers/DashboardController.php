@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Traits\DashboardTrait;
+use App\Models\City;
 use Illuminate\Http\Request;
 use App\Models\Payment;
 use App\Models\Product;
@@ -14,17 +15,17 @@ class DashboardController extends Controller
 {
     use DashboardTrait;
 
-    public function filterKota(Request $request)
+    public function filter_city(Request $request)
     {
-        session(['filterKota' => $request->filterKota ?? ""]);
-        session(['filterCabangKota' => ""]);
+        session(['filter-city' => $request->filter_city ?? ""]);
+        session(['filter-city-branch' => ""]);
 
         return back();
     }
 
-    public function filterCabangKota(Request $request)
+    public function filter_city_branch(Request $request)
     {
-        session(['filterCabangKota' => $request->filterCabangKota ?? ""]);
+        session(['filter-city-branch' => $request->filter_city_branch ?? ""]);
 
         return back();
     }
@@ -32,8 +33,8 @@ class DashboardController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $city = session('filterKota');
-        $city_branch = session('filterCabangKota');
+        $city = session('filter-city');
+        $city_branch = session('filter-city-branch');
 
         $transaction = Transaction::where('deleted_at', null)
             ->filterCity($user, $city, $city_branch)->count();

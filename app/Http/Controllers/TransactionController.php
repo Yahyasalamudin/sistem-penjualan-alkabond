@@ -17,8 +17,8 @@ class TransactionController extends Controller
     {
         $title = 'Daftar Transaksi';
         $user = auth()->user();
-        $city = session('filterKota');
-        $city_branch = session('filterCabangKota');
+        $city = session('filter-city');
+        $city_branch = session('filter-city-branch');
 
         $transactions = Transaction::filterCity($user, $city, $city_branch)->status($status)->get();
 
@@ -32,8 +32,8 @@ class TransactionController extends Controller
         $title = 'Tambah Transaksi';
 
         $user = auth()->user();
-        $city = session('filterKota');
-        $city_branch = session('filterCabangKota');
+        $city = session('filter-city');
+        $city_branch = session('filter-city-branch');
 
         $stores = Store::filterCity($user, $city, $city_branch)->get();
 
@@ -75,8 +75,8 @@ class TransactionController extends Controller
     {
         $title = 'Daftar Arsip Transaksi';
         $user = auth()->user();
-        $city = session('filterKota');
-        $city_branch = session('filterCabangKota');
+        $city = session('filter-city');
+        $city_branch = session('filter-city-branch');
         $status = 'archive';
 
         $transactions = Transaction::onlyTrashed()->filterCity($user, $city, $city_branch)->get();

@@ -17,11 +17,11 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
-    public function suratJalan($invoice)
+    public function delivery_letter($invoice)
     {
         $transaction = Transaction::with('sales')->with('stores')->with('transaction_details')->where('invoice_code', $invoice)->first();
 
-        $pdf = Pdf::loadview('reports.prints.suratJalan', compact("transaction"));
+        $pdf = Pdf::loadview('reports.prints.delivery-letter', compact("transaction"));
         return $pdf->stream();
     }
 
@@ -86,46 +86,7 @@ class ReportController extends Controller
         return view('reports.transaction-report', compact('transactions', 'stores'));
     }
 
-    public function printTransactionReport(Request $request)
-    {
-        $filter = $request->status;
-        $tgl_awal = $request->tgl_awal;
-        $tgl_akhir = $request->tgl_akhir;
-
-        $transactions = Transaction::whereBetween('created_at', [$tgl_awal, $tgl_akhir])->get();
-
-        if ($filter != "semua") {
-            switch ($filter) {
-                case 'unsent':
-                    $transactions = $transactions->where('delivery_status', 'unsent');
-                    break;
-                case 'process':
-                    $transactions = $transactions->where('delivery_status', 'proccess');
-                    break;
-                case 'sent':
-                    $transactions = $transactions
-                        ->where('status', 'unpaid')
-                        ->where('delivery_status', 'sent');
-                    break;
-                case 'partial':
-                    $transactions = $transactions
-                        ->where('payment_method', 'tempo')
-                        ->where('status', 'partial');
-                    break;
-                case 'paid':
-                    $transactions = $transactions->where('status', 'paid');
-                    break;
-                default:
-                    $pdf = Pdf::loadview('reports.prints.transactionReport', compact('transactions', 'tgl_awal', 'tgl_akhir'));
-                    return $pdf->stream();
-            }
-        }
-
-        $pdf = Pdf::loadview('reports.prints.transactionReport', compact('transactions', 'tgl_awal', 'tgl_akhir'));
-        return $pdf->stream();
-    }
-
-    public function bestSellerProductReport(Request $request)
+    public function best_seller_product_report(Request $request)
     {
         $months = [];
         for ($i = 1; $i <= 12; $i++) {
@@ -159,7 +120,7 @@ class ReportController extends Controller
         return view('reports.best-seller-product-report', compact('months', 'productTypes', 'products'));
     }
 
-    public function incomeReport()
+    public function income_report()
     {
         $transactions = Transaction::select(
             DB::raw('YEAR(created_at) as year'),
@@ -172,7 +133,7 @@ class ReportController extends Controller
             ->orderBy('year')
             ->get();
 
-        $pdf = Pdf::loadview('reports.prints.incomeReport', compact('transactions'));
+        $pdf = Pdf::loadview('reports.prints.income-report', compact('transactions'));
         return $pdf->stream();
     }
 }

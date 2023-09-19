@@ -13,8 +13,8 @@ class SalesController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $city = session('filterKota');
-        $city_branch = session('filterCabangKota');
+        $city = session('filter-city');
+        $city_branch = session('filter-city-branch');
 
         $sales = Sales::filterCity($user, $city)->filterBranch($city_branch)->get();
 

@@ -91,8 +91,8 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
-        session(['filterKota' => ""]);
-        session(['filterCabangKota' => ""]);
+        session(['filter-city' => ""]);
+        session(['filter-city-branch' => ""]);
         return redirect('/login')->withCookie(Cookie::forget('remember_token'));
     }
 }

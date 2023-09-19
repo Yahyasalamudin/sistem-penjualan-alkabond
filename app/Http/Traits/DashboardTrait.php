@@ -10,8 +10,8 @@ trait DashboardTrait
 {
     public function topSelling($limit)
     {
-        $city = session('filterKota');
-        $city_branch = session('filterCabangKota');
+        $city = session('filter-city');
+        $city_branch = session('filter-city-branch');
         $topSellingProducts = TransactionDetail::select('product_id', DB::raw('SUM(quantity) as totalQuantity'))
             ->groupBy('product_id')
             ->orderByDesc('totalQuantity')

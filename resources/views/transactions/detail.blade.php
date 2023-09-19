@@ -179,7 +179,7 @@
                             onclick="showConfirmAlert('Apakah yakin transaksi sudah terkirim?', 'Lanjut', 'Transaksi berhasil terkirim.', handleSend)">Dikirim</button>
                     </form>
                 @endif
-                <a href="{{ route('suratjalan', $transaction->invoice_code) }}" class="btn btn-info mb-1 mx-2"
+                <a href="{{ route('delivery-letter', $transaction->invoice_code) }}" class="btn btn-info mb-1 mx-2"
                     target="_blank">
                     Cetak Surat Jalan
                 </a>

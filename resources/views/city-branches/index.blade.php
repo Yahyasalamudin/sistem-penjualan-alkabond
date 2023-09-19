@@ -93,20 +93,25 @@
                                             @csrf
                                             @method('put')
                                             <div class="modal-body">
-                                                <label for="city_id">Cabang Gudang</label>
-                                                <select class="form-control" name="city_id" id="city_id">
-                                                    <option value="">- Pilih Cabang Gudang -</option>
-                                                    @foreach ($cities as $c)
-                                                        <option value="{{ $c->id }}"
-                                                            {{ $c->id == $cb->city_id ? 'selected' : '' }}>
-                                                            {{ $c->city }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="modal-body">
-                                                <label for="city">Kota</label>
-                                                <input class="form-control" type="text" name="branch" id="branch"
-                                                    placeholder="Masukkan Kota" value="{{ $cb->branch }}">
+                                                @if (auth()->user()->role == 'owner')
+                                                    <div class="form-group">
+                                                        <label for="city_id">Cabang Gudang</label>
+                                                        <select class="form-control" name="city_id" id="city_id">
+                                                            <option value="">- Pilih Cabang Gudang -</option>
+                                                            @foreach ($cities as $c)
+                                                                <option value="{{ $c->id }}"
+                                                                    {{ $c->id == $cb->city_id ? 'selected' : '' }}>
+                                                                    {{ $c->city }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                @endif
+
+                                                <div class="form-group">
+                                                    <label for="city">Kota</label>
+                                                    <input class="form-control" type="text" name="branch" id="branch"
+                                                        placeholder="Masukkan Kota" value="{{ $cb->branch }}">
+                                                </div>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
@@ -136,18 +141,23 @@
                 <form action="{{ route('city-branch.store') }}" method="post">
                     @csrf
                     <div class="modal-body">
-                        <label for="city_id">Cabang Gudang</label>
-                        <select class="form-control" name="city_id" id="city_id">
-                            <option value="">- Pilih Cabang Gudang -</option>
-                            @foreach ($cities as $c)
-                                <option value="{{ $c->id }}">{{ $c->city }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="modal-body">
-                        <label for="branch">Kota</label>
-                        <input class="form-control" type="text" name="branch" id="branch"
-                            placeholder="Masukkan Kota">
+                        @if (auth()->user()->role == 'owner')
+                            <div class="form-group">
+                                <label for="city_id">Cabang Gudang</label>
+                                <select class="form-control" name="city_id" id="city_id">
+                                    <option value="">- Pilih Cabang Gudang -</option>
+                                    @foreach ($cities as $c)
+                                        <option value="{{ $c->id }}">{{ $c->city }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+
+                        <div class="form-group">
+                            <label for="branch">Kota</label>
+                            <input class="form-control" type="text" name="branch" id="branch"
+                                placeholder="Masukkan Kota">
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>

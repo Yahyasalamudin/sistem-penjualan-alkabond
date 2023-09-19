@@ -24,15 +24,21 @@ class CityBranchController extends Controller
 
     public function store(Request $request)
     {
+        $user = auth()->user();
+        if ($user->role == 'owner') {
+            $request->validate([
+                'city_id' => 'required',
+            ]);
+        }
+
         $request->validate([
-            'city_id' => 'required',
             'branch' => 'required|string|regex:/^[a-zA-Z\s]*$/'
         ], [
             'branch.regex' => 'Kota tidak boleh berupa angka'
         ]);
 
         CityBranch::create([
-            'city_id' => $request->city_id,
+            'city_id' => $request->city_id ? $request->city_id : $user->city_id,
             'branch' => $request->branch
         ]);
 
@@ -41,8 +47,14 @@ class CityBranchController extends Controller
 
     public function update(Request $request, $id)
     {
+        $user = auth()->user();
+        if ($user->role == 'owner') {
+            $request->validate([
+                'city_id' => 'required',
+            ]);
+        }
+
         $request->validate([
-            'city_id' => 'required',
             'branch' => 'required|string|regex:/^[a-zA-Z\s]*$/'
         ], [
             'branch.regex' => 'Kota tidak boleh berupa angka'
@@ -51,7 +63,7 @@ class CityBranchController extends Controller
         $city_branch = CityBranch::find($id);
 
         $city_branch->update([
-            'city_id' => $request->city_id,
+            'city_id' => $request->city_id ? $request->city_id : $user->city_id,
             'branch' => $request->branch
         ]);
 

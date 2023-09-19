@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="h3 mb-3 text-gray-800"> Data Pengguna</h1>
+    <h1 class="h3 mb-3 text-gray-800">Data Owner</h1>
     @if (session('success'))
         <div class="alert alert-success alert-dismissible" id="flash_data" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -23,11 +23,11 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">Tabel Pengguna</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Tabel Owner</h6>
 
             @if (auth()->user()->role == 'owner')
                 <a href="{{ route('user.create') }}" class="btn btcolor text-white">
-                    Registrasi Pengguna
+                    Registrasi Owner
                 </a>
             @endif
         </div>

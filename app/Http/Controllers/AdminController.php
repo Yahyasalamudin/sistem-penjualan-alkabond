@@ -12,7 +12,7 @@ class AdminController extends Controller
     public function index()
     {
         $auth = auth()->user();
-        $city = session('filterKota');
+        $city = session('filter-city');
         $users = User::where('role', 'admin')->latest()->whereNotIn('id', [$auth->id]);
 
         if ($auth->role == 'owner' && !empty($city)) {
@@ -20,7 +20,7 @@ class AdminController extends Controller
         }
 
         return view('admins.index', [
-            'title' => 'User',
+            'title' => 'Admin',
             'users' => $users->get()
         ]);
     }

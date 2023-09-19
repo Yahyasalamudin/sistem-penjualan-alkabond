@@ -15,7 +15,7 @@ class UserController extends Controller
         $users = User::where('role', 'owner')->latest()->whereNotIn('id', [$auth->id])->whereNotIn('username', ['tester'])->get();
 
         return view('users.index', [
-            'title' => 'User',
+            'title' => 'Owner',
             'users' => $users
         ]);
     }

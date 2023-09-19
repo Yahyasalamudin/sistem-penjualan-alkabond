@@ -17,8 +17,8 @@ class StoreController extends Controller
         $title = 'Daftar Toko';
 
         $user = auth()->user();
-        $city = session('filterKota');
-        $city_branch = session('filterCabangKota');
+        $city = session('filter-city');
+        $city_branch = session('filter-city-branch');
 
         $stores = Store::filterCity($user, $city, $city_branch)->get();
 
