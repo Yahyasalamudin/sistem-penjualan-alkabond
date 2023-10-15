@@ -36,6 +36,7 @@ Route::get('/clear-cache', function () {
 
 route::get('/migrate', function () {
     Artisan::call('migrate');
+    return "DONE";
 });
 
 Route::get('/', function () {
