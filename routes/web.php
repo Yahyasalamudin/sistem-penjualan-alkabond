@@ -34,9 +34,14 @@ Route::get('/clear-cache', function () {
     return 'DONE';
 });
 
-route::get('/migrate', function () {
-    Artisan::call('migrate');
-    return "DONE";
+Route::get('/migrate', function () {
+    Artisan::call('migrate',
+    [
+    '--path' => 'database/migrations',
+    '--database' => 'dynamicdb',
+    '--force' => false
+    ]);
+    return 'DONE';
 });
 
 Route::get('/', function () {
