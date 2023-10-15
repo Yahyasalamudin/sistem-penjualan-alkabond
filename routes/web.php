@@ -34,6 +34,10 @@ Route::get('/clear-cache', function () {
     return 'DONE';
 });
 
+route::get('/migrate', function () {
+    Artisan::call('migrate');
+});
+
 Route::get('/', function () {
     return redirect('login');
 });

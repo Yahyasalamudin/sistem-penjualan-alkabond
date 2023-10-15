@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\TransactionController;
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('/get-my-data', [AuthController::class, 'getMyData']);
     Route::get('/dashboard', [DashboardController::class, 'index']);
 
     Route::get('/product', [ProductController::class, 'index']);
