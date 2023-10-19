@@ -40,7 +40,15 @@ class AuthController extends Controller
             ]);
         }
 
-        $user = Sales::where($fieldType, $email)->firstOrFail();
+        $user = Sales::where($fieldType, $email)->first();
+
+        if (empty($user)) {
+            return response()->json([
+                'message' => 'username or password is incorrect',
+                'status_code' => 400
+            ]);
+        }
+
         $device_token = Uuid::uuid4()->toString();
 
         if($user->device == 0) {
