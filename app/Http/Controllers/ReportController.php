@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\BestSellerProductExport;
 use App\Exports\TransactionExport;
 use App\Models\Product;
+use App\Models\Sales;
 use App\Models\Store;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
@@ -35,47 +36,45 @@ class ReportController extends Controller
 
     public function transaction_report(Request $request)
     {
+        $user = auth()->user();
+        $city = session('filter-city');
+        $city_branch = session('filter-city-branch');
         $filter = $request->status;
         $start_date = $request->start_date ?: now();
         $end_date = $request->end_date ?: now();
-        $stores = Store::all();
+        $sales = Sales::filterCity($user, $city)->get();
+        $stores = Store::filterCity($user, $city, $city_branch)->where('sales_id', $request->sales_id)->get();
 
         $transactions = Transaction::when($request->store_id, function ($query) use ($request) {
             return $query->where('store_id', $request->store_id);
-        })->whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date)->get();
+        })->when($request->sales_id, function ($query) use ($request) {
+            $query->where('sales_id', $request->sales_id);
+        })->whereDate('created_at', '>=', $start_date)
+            ->whereDate('created_at', '<=', $end_date);
 
-        if ($filter != "semua") {
-            switch ($filter) {
-                case 'unsent':
-                    $transactions = $transactions->where('delivery_status', 'unsent');
-                    break;
-                case 'process':
-                    $transactions = $transactions->where('delivery_status', 'proccess');
-                    break;
-                case 'sent':
-                    $transactions = $transactions
-                        ->where('status', 'unpaid')
-                        ->where('delivery_status', 'sent');
-                    break;
-                case 'partial':
-                    $transactions = $transactions
-                        ->where('payment_method', 'tempo')
-                        ->where('status', 'partial');
-                    break;
-                case 'paid':
-                    $transactions = $transactions->where('status', 'paid');
-                    break;
-                default:
-                    if ($request->excel == 1) {
-                        return Excel::download(new TransactionExport($transactions, $start_date, $end_date), 'transactions.xlsx');
-                    } elseif ($request->pdf == 1) {
-                        $pdf = Pdf::loadview('reports.prints.transaction-pdf', compact('transactions', 'start_date', 'end_date'));
-                        return $pdf->stream();
-                    }
-
-                    return view('reports.transaction-report', compact('transactions', 'stores'));
-            }
+        switch ($filter) {
+            case 'unsent':
+                $transactions = $transactions->where('delivery_status', 'unsent');
+                break;
+            case 'process':
+                $transactions = $transactions->where('delivery_status', 'proccess');
+                break;
+            case 'sent':
+                $transactions = $transactions
+                    ->where('status', 'unpaid')
+                    ->where('delivery_status', 'sent');
+                break;
+            case 'partial':
+                $transactions = $transactions
+                    ->where('payment_method', 'tempo')
+                    ->where('status', 'partial');
+                break;
+            case 'paid':
+                $transactions = $transactions->where('status', 'paid');
+                break;
         }
+
+        $transactions = $transactions->get();
 
         if ($request->excel == 1) {
             return Excel::download(new TransactionExport($transactions, $start_date, $end_date), 'transactions.xlsx');
@@ -83,7 +82,8 @@ class ReportController extends Controller
             $pdf = Pdf::loadview('reports.prints.transaction-pdf', compact('transactions', 'start_date', 'end_date'));
             return $pdf->stream();
         }
-        return view('reports.transaction-report', compact('transactions', 'stores'));
+
+        return view('reports.transaction-report', compact('transactions', 'stores', 'sales'));
     }
 
     public function best_seller_product_report(Request $request)

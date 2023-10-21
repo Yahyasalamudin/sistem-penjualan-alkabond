@@ -98,6 +98,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/store/edit/{store}', [StoreController::class, 'edit'])->name('store.edit');
     Route::put('/store/update/{id}', [StoreController::class, 'update'])->name('store.update');
     Route::delete('/store/delete/{id}', [StoreController::class, 'destroy'])->name('store.destroy');
+    Route::get('/stores/get-by-sales', [StoreController::class, 'get_stores_by_sales'])->name('store.get-store');
 
     // CRUD Data Product
     Route::get('/products', [ProductController::class, 'index'])->name('product.index');

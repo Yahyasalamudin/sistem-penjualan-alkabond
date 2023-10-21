@@ -112,4 +112,11 @@ class StoreController extends Controller
 
         return back()->with('success', 'Data Toko telah dihapus');
     }
+
+    public function get_stores_by_sales(Request $request)
+    {
+        $stores = Store::where('sales_id', $request->sales)->get();
+
+        return response()->json($stores);
+    }
 }

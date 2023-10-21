@@ -1,9 +1,37 @@
 @php
     use Carbon\Carbon;
-    
+
     Carbon::setLocale('id');
 @endphp
 @extends('layouts.app')
+@push('js')
+    <script>
+        const input_sales_id = document.getElementById("sales_id");
+
+        input_sales_id.addEventListener("change", function() {
+            const value = input_sales_id.value;
+            let url = `{{ route('store.get-store', ['sales' => '']) }}${value}`;
+            $.ajax({
+                url: url,
+                success: function(result) {
+                    $("#store_id").empty();
+
+                    const option = document.createElement('option');
+                    option.text = "Semua Toko";
+                    option.value = "";
+                    $("#store_id").append(option);
+
+                    result.forEach(item => {
+                        const option = document.createElement('option');
+                        option.text = item.store_name;
+                        option.value = item.id;
+                        $("#store_id").append(option);
+                    });
+                }
+            })
+        })
+    </script>
+@endpush
 @push('datatables')
     "ordering": false,
     "dom": 'Bfrtip',
@@ -46,8 +74,8 @@
                                                         {{ request('status') === 'unsent' ? 'selected' : '' }}>
                                                         Pre-Order
                                                     </option>
-                                                    <option
-                                                        value="process"{{ request('status') === 'process' ? 'selected' : '' }}>
+                                                    <option value="process"
+                                                        {{ request('status') === 'process' ? 'selected' : '' }}>
                                                         Proses
                                                     </option>
                                                     <option value="sent"
@@ -64,6 +92,22 @@
                                                     </option>
                                                 </select>
                                             </div>
+
+                                            <div class="col">
+                                                <label for="sales_id">Pilih Sales</label>
+                                                <select name="sales_id" id="sales_id" class="form-control">
+                                                    <option value="" {{ request('sales') == '' ? 'selected' : '' }}>
+                                                        Semua Sales
+                                                    </option>
+                                                    @foreach ($sales as $data)
+                                                        <option value="{{ $data->id }}"
+                                                            {{ request('sales_id') == $data->id ? 'selected' : '' }}>
+                                                            {{ $data->sales_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
                                             <div class="col">
                                                 <label for="store_id">Pilih Toko</label>
                                                 <select name="store_id" id="store_id" class="form-control">
@@ -71,6 +115,7 @@
                                                         {{ request('store_id') == '' ? 'selected' : '' }}>
                                                         Semua Toko
                                                     </option>
+
                                                     @foreach ($stores as $store)
                                                         <option value="{{ $store->id }}"
                                                             {{ request('store_id') == $store->id ? 'selected' : '' }}>
